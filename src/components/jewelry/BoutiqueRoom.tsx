@@ -123,7 +123,7 @@ export default function BoutiqueRoom({ visible, focusProgress = 0 }: BoutiqueRoo
           <>
             {/* Left shelf PNG */}
             <img
-              src="/shelf.png?v=4"
+              src="/shelf.png?v=5"
               alt=""
               aria-hidden
               className="absolute pointer-events-none"
@@ -174,7 +174,7 @@ export default function BoutiqueRoom({ visible, focusProgress = 0 }: BoutiqueRoo
 
             {/* Center shelf PNG */}
             <img
-              src="/shelf.png?v=4"
+              src="/shelf.png?v=5"
               alt=""
               aria-hidden
               className="absolute pointer-events-none"
@@ -225,7 +225,7 @@ export default function BoutiqueRoom({ visible, focusProgress = 0 }: BoutiqueRoo
 
             {/* Right shelf PNG */}
             <img
-              src="/shelf.png?v=4"
+              src="/shelf.png?v=5"
               alt=""
               aria-hidden
               className="absolute pointer-events-none"
@@ -290,7 +290,7 @@ export default function BoutiqueRoom({ visible, focusProgress = 0 }: BoutiqueRoo
         >
           {/* SHELF */}
           <div className="relative flex flex-col items-center justify-end" style={{ width: "clamp(120px, 20vw, 300px)", height: "clamp(80px, calc(38vh - 100px), 380px)" }}>
-            <img src="/shelf.png?v=4" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+            <img src="/shelf.png?v=5" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
                 <LineShelfProductMini config={getCustomProductConfig("pro3", 0, "left")} mountDelay={120} />
@@ -300,7 +300,7 @@ export default function BoutiqueRoom({ visible, focusProgress = 0 }: BoutiqueRoo
 
           {/* SHELF */}
           <div className="relative flex flex-col items-center justify-end" style={{ width: "clamp(120px, 20vw, 300px)", height: "clamp(80px, calc(38vh - 100px), 380px)" }}>
-            <img src="/shelf.png?v=4" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+            <img src="/shelf.png?v=5" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
                 <LineShelfProductMini config={getCustomProductConfig("pro4", 1, "left")} mountDelay={240} />
@@ -310,7 +310,7 @@ export default function BoutiqueRoom({ visible, focusProgress = 0 }: BoutiqueRoo
 
           {/* SHELF */}
           <div className="relative flex flex-col items-center justify-end" style={{ width: "clamp(120px, 20vw, 300px)", height: "clamp(80px, calc(38vh - 100px), 380px)" }}>
-            <img src="/shelf.png?v=4" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+            <img src="/shelf.png?v=5" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
                 <LineShelfProductMini config={getCustomProductConfig("pro5", 2, "right")} mountDelay={360} />
