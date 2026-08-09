@@ -31,18 +31,13 @@ function resolveGlbBase(): string {
   const configured = process.env.NEXT_PUBLIC_GLB_BASE_URL?.trim();
   if (configured) return configured.replace(/\/$/, "");
 
-  if (isLocalDevHost()) return "";
-
-  return GLB_CDN_BASE;
+  // Always use local public directory
+  return "";
 }
 
 export function getModelUrl(filename: string): string {
   const name = filename.replace(/^\//, "");
   const base = resolveGlbBase();
-  const lfsFiles = ["pro2.glb", "proo.glb", "pro222.glb"];
-  if (lfsFiles.includes(name)) {
-    return `${GLB_CDN_BASE}/${name}`;
-  }
   return base ? `${base}/${name}` : `/${name}`;
 }
 
