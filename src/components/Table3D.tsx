@@ -5,7 +5,7 @@ import { useGLTF, Html, Environment, ContactShadows, View, PerspectiveCamera } f
 import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { getModelUrl, extendGltfLoader } from "@/lib/modelAssets";
-import { optimizeModelForGpu } from "@/lib/gpuModelOptimize";
+import { optimizeModelForGpu, optimizeModelForGpuAsync } from "@/lib/gpuModelOptimize";
 import { getDeviceProfile } from "@/lib/deviceProfile";
 import { useRouter } from "next/navigation";
 
@@ -96,6 +96,7 @@ function SingleShowcaseProduct({
     cloned.position.z = -center.z * targetScale;
 
     optimizeModelForGpu(cloned, textureMax);
+    optimizeModelForGpuAsync(cloned, textureMax);
     return cloned;
   }, [rawScene, config.targetMaxDim, config.colorHex, textureMax]);
 
@@ -189,8 +190,10 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
     lightsToRemove.forEach((light) => {
       light.parent?.remove(light);
     });
+    optimizeModelForGpu(cloned, textureMax);
+    optimizeModelForGpuAsync(cloned, textureMax);
     return cloned;
-  }, [scene]);
+  }, [scene, textureMax]);
 
   useEffect(() => {
     if (!clonedScene) return;

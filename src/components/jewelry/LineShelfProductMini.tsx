@@ -16,7 +16,7 @@ import {
 } from "@/lib/lineShelfProductLayout";
 import { SHOP_GLB_FILES } from "@/lib/glbConfig";
 import { SHOP_LINE_SHELF_PRODUCTS_ENABLED } from "@/lib/shopTableEnabled";
-import { optimizeModelForGpu } from "@/lib/gpuModelOptimize";
+import { optimizeModelForGpu, optimizeModelForGpuAsync } from "@/lib/gpuModelOptimize";
 import { getDeviceProfile } from "@/lib/deviceProfile";
 import { prefetchProductGlb } from "@/lib/modelPreload";
 
@@ -105,6 +105,7 @@ const ShelfProductGlb = memo(function ShelfProductGlb({
   useLayoutEffect(() => {
     fitProductToUniformSize(scene, config.displaySize);
     optimizeModelForGpu(scene, textureMax);
+    optimizeModelForGpuAsync(scene, textureMax);
     if (config.productId !== "proo") {
       prepareProductMaterials(scene, { castShadow: true, receiveShadow: true, customization, productId: config.productId });
     }
@@ -188,6 +189,7 @@ const ShelfProductFbx = memo(function ShelfProductFbx({
   useLayoutEffect(() => {
     fitProductToUniformSize(scene, config.displaySize);
     optimizeModelForGpu(scene, textureMax);
+    optimizeModelForGpuAsync(scene, textureMax);
     if (config.productId !== "proo") {
       prepareProductMaterials(scene, { castShadow: true, receiveShadow: true, customization, productId: config.productId });
     }
