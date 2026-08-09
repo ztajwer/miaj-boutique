@@ -4,15 +4,16 @@ import BoutiqueRoom from "./BoutiqueRoom";
 
 interface ShopExperienceProps {
   visible: boolean;
+  entered?: boolean;
   focusProgress: number;
 }
 
-export default function ShopExperience({ visible, focusProgress }: ShopExperienceProps) {
+export default function ShopExperience({ visible, entered = false, focusProgress }: ShopExperienceProps) {
   if (!visible) return null;
 
   return (
     <div className="shop-experience boutique-hero-stage fixed inset-0 z-[40] overflow-hidden pointer-events-none">
-      <BoutiqueRoom visible={visible} focusProgress={focusProgress} />
+      <BoutiqueRoom visible={visible} entered={entered} focusProgress={focusProgress} />
     </div>
   );
 }

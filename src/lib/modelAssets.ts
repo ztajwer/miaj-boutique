@@ -1,4 +1,3 @@
-import { GLB_CDN_BASE } from "./glbConfig";
 
 /**
  * 3D models live in Git LFS. Vercel serves ~134-byte pointer files from /public,

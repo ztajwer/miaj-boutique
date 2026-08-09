@@ -5,6 +5,16 @@ import dynamic from "next/dynamic";
 
 const Experience = dynamic(() => import("@/components/Experience"), {
   ssr: false,
+  loading: () => (
+    <div className="fixed inset-0 flex flex-col items-center justify-center bg-maj-cream">
+      <div className="animate-pulse font-serif text-lg tracking-widest text-[#D4AF37]">
+        MAJ BOUTIQUE
+      </div>
+      <p className="mt-4 font-sans text-[10px] uppercase tracking-[0.3em] text-[#3E2723]/60">
+        Loading...
+      </p>
+    </div>
+  ),
 });
 
 class HomeErrorBoundary extends Component<{ children: ReactNode }, { failed: boolean }> {

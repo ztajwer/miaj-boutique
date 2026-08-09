@@ -21,6 +21,7 @@ import { applyJewelryRendererSettings } from "@/lib/productModelUtils";
 
 interface BoutiqueRoomProps {
   visible: boolean;
+  entered?: boolean;
   focusProgress?: number;
 }
 
@@ -80,7 +81,7 @@ function getCarouselProductConfig(
   };
 }
 
-export default function BoutiqueRoom({ visible, focusProgress = 0 }: BoutiqueRoomProps) {
+export default function BoutiqueRoom({ visible, entered = false, focusProgress = 0 }: BoutiqueRoomProps) {
   const roomRef = useRef<HTMLDivElement>(null);
   const motionRef = useRef(createBoutiqueParallaxMotion());
   const [mounted, setMounted] = useState(false);
@@ -151,7 +152,7 @@ export default function BoutiqueRoom({ visible, focusProgress = 0 }: BoutiqueRoo
             >
               <div className="pointer-events-auto" style={{ position: "absolute", top: "75%", left: "50%", transform: "translate(-50%, -93%)" }}>
                 <div style={{ position: "relative", zIndex: 20 }}>
-                  <LineShelfProductMini config={getCustomProductConfig("pro1", 0, "left")} mountDelay={120} />
+                  {entered && <LineShelfProductMini config={getCustomProductConfig("pro1", 0, "left")} mountDelay={120} />}
                 </div>
                 {/* Display Pedestal Box */}
                 <div 
@@ -202,7 +203,7 @@ export default function BoutiqueRoom({ visible, focusProgress = 0 }: BoutiqueRoo
             >
               <div className="pointer-events-auto" style={{ position: "absolute", top: "75%", left: "50%", transform: "translate(-50%, -93%)" }}>
                 <div style={{ position: "relative", zIndex: 20 }}>
-                  <LineShelfProductMini config={getCustomProductConfig("pro6", 1, "left")} mountDelay={240} />
+                  {entered && <LineShelfProductMini config={getCustomProductConfig("pro6", 1, "left")} mountDelay={240} />}
                 </div>
                 {/* Display Pedestal Box */}
                 <div 
@@ -253,7 +254,7 @@ export default function BoutiqueRoom({ visible, focusProgress = 0 }: BoutiqueRoo
             >
               <div className="pointer-events-auto" style={{ position: "absolute", top: "75%", left: "50%", transform: "translate(-50%, -93%)" }}>
                 <div style={{ position: "relative", zIndex: 20 }}>
-                  <LineShelfProductMini config={getCustomProductConfig("pro3", 2, "right")} mountDelay={360} />
+                  {entered && <LineShelfProductMini config={getCustomProductConfig("pro3", 2, "right")} mountDelay={360} />}
                 </div>
                 {/* Display Pedestal Box */}
                 <div 
@@ -293,7 +294,7 @@ export default function BoutiqueRoom({ visible, focusProgress = 0 }: BoutiqueRoo
             <img src="/shelf.png?v=5" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
-                <LineShelfProductMini config={getCustomProductConfig("pro3", 0, "left")} mountDelay={120} />
+                {entered && <LineShelfProductMini config={getCustomProductConfig("pro3", 0, "left")} mountDelay={120} />}
               </div>
             </div>
           </div>
@@ -303,7 +304,7 @@ export default function BoutiqueRoom({ visible, focusProgress = 0 }: BoutiqueRoo
             <img src="/shelf.png?v=5" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
-                <LineShelfProductMini config={getCustomProductConfig("pro4", 1, "left")} mountDelay={240} />
+                {entered && <LineShelfProductMini config={getCustomProductConfig("pro4", 1, "left")} mountDelay={240} />}
               </div>
             </div>
           </div>
@@ -313,7 +314,7 @@ export default function BoutiqueRoom({ visible, focusProgress = 0 }: BoutiqueRoo
             <img src="/shelf.png?v=5" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
-                <LineShelfProductMini config={getCustomProductConfig("pro5", 2, "right")} mountDelay={360} />
+                {entered && <LineShelfProductMini config={getCustomProductConfig("pro5", 2, "right")} mountDelay={360} />}
               </div>
             </div>
           </div>
@@ -330,7 +331,7 @@ export default function BoutiqueRoom({ visible, focusProgress = 0 }: BoutiqueRoo
           zIndex: 60,
           willChange: "transform"
         }}>
-          <Table3D opacity={1} isMobile={isMobile} />
+          {entered && <Table3D opacity={1} isMobile={isMobile} />}
 
         </div>
 

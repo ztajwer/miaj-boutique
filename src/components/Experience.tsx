@@ -158,7 +158,7 @@ function ExperienceInner() {
       {!showCursorGlitter ? null : <CursorGlitterTrail />}
       {!skipIntro && <Loader onComplete={handleLoadComplete} />}
 
-      {ready && <ShopExperience visible={true} focusProgress={finalFocusProgress} />}
+      {ready && <ShopExperience visible={true} entered={entered} focusProgress={finalFocusProgress} />}
 
       {/* Glass doors — shown while user hasn't yet scrolled in */}
       {onDoorScreen && (
