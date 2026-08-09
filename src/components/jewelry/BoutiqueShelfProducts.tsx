@@ -18,10 +18,6 @@ import { extendGltfLoader, getModelUrl } from "@/lib/modelAssets";
 const MOBILE_MAX_WIDTH = 767;
 const SHELF_MODEL_URL = getModelUrl("shelf.glb");
 
-if (typeof window !== "undefined" && SHOP_SHELVES_ENABLED) {
-  useGLTF.preload(SHELF_MODEL_URL, false, false, extendGltfLoader);
-}
-
 function fitShelfToSize(root: THREE.Object3D, targetSpan: number) {
   root.scale.set(1, 1, 1);
   root.position.set(0, 0, 0);

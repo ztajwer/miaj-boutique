@@ -334,7 +334,4 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
   );
 }
 
-// Preload the large table model on the client side only
-if (typeof window !== "undefined") {
-  useGLTF.preload(getModelUrl("Kiosk_Centre.glb"), false, false, extendGltfLoader);
-}
+
