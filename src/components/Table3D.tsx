@@ -106,20 +106,7 @@ function SingleShowcaseProduct({
     }
   });
 
-  const [mountDelayPassed, setMountDelayPassed] = useState(false);
-
-  useEffect(() => {
-    // Stagger loading to prevent massive RAM spikes
-    const delay = config.mountDelay || 0;
-    if (delay <= 0) {
-      setMountDelayPassed(true);
-      return;
-    }
-    const timer = setTimeout(() => setMountDelayPassed(true), delay);
-    return () => clearTimeout(timer);
-  }, [config.mountDelay]);
-
-  if (!clonedScene || !mountDelayPassed) return null;
+  if (!clonedScene) return null;
 
   return (
     <group position={position}>
@@ -141,15 +128,43 @@ function SingleShowcaseProduct({
   );
 }
 
+function DelayedShowcaseProduct({
+  config,
+  textureMax,
+  position,
+  rotation = [0, 0, 0],
+}: {
+  config: ShowcaseProductConfig;
+  textureMax: number;
+  position: [number, number, number];
+  rotation?: [number, number, number];
+}) {
+  const [ready, setReady] = useState(false);
+
+  useEffect(() => {
+    const delay = config.mountDelay || 0;
+    if (delay <= 0) {
+      setReady(true);
+      return;
+    }
+    const timer = setTimeout(() => setReady(true), delay);
+    return () => clearTimeout(timer);
+  }, [config.mountDelay]);
+
+  if (!ready) return null;
+
+  return <SingleShowcaseProduct config={config} textureMax={textureMax} position={position} rotation={rotation} />;
+}
+
 function ShowcaseProductsGroup({ textureMax, tablePosition }: { textureMax: number; tablePosition: [number, number, number] }) {
   // Restored exactly to the perfect offset plus a 5px lift (from 0.56 to 0.58)
   const yOffset = 0.58; 
   return (
     <group position={tablePosition}>
       {/* Exact hexagon bay coordinates */}
-      <SingleShowcaseProduct config={SHOWCASE_PRODUCTS[0]} textureMax={textureMax} position={[-0.415, yOffset, 0.24]} rotation={[0, Math.PI / 6, 0]} />
-      <SingleShowcaseProduct config={SHOWCASE_PRODUCTS[1]} textureMax={textureMax} position={[0, yOffset, 0.48]} />
-      <SingleShowcaseProduct config={SHOWCASE_PRODUCTS[2]} textureMax={textureMax} position={[0.415, yOffset, 0.24]} rotation={[0, -Math.PI / 6, 0]} />
+      <DelayedShowcaseProduct config={SHOWCASE_PRODUCTS[0]} textureMax={textureMax} position={[-0.415, yOffset, 0.24]} rotation={[0, Math.PI / 6, 0]} />
+      <DelayedShowcaseProduct config={SHOWCASE_PRODUCTS[1]} textureMax={textureMax} position={[0, yOffset, 0.48]} />
+      <DelayedShowcaseProduct config={SHOWCASE_PRODUCTS[2]} textureMax={textureMax} position={[0.415, yOffset, 0.24]} rotation={[0, -Math.PI / 6, 0]} />
     </group>
   );
 }
