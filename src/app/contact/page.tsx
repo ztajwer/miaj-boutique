@@ -121,7 +121,7 @@ export default function ContactPage() {
         <div className="rounded-[20px] md:rounded-[30px] border border-[#e8caa9] bg-white/75 backdrop-blur-md p-6 md:p-10 shadow-[0_30px_60px_rgba(77,52,36,0.08)]">
           <div className="text-center">
             <div className="mx-auto w-36 md:w-44">
-              <Image src="/wh_logo.png" alt="MAJ Boutique" width={288} height={96} className="mx-auto" />
+              <Image src="/logo.png" alt="MAJ Boutique" width={288} height={96} className="mx-auto" />
             </div>
             <h2
               className="mt-6 text-2xl md:text-3xl font-semibold text-[#b78a4f]"

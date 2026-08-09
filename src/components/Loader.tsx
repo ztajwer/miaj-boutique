@@ -107,7 +107,7 @@ export default function Loader({ onComplete }: LoaderProps) {
                   aria-hidden
                 />
                 <Image
-                  src="/wh_logo-removebg-preview.png"
+                  src="/logo.png"
                   alt="MAJ Boutique"
                   fill
                   priority

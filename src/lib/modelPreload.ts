@@ -11,7 +11,7 @@ let shopStarted = false;
 
 const SHOP_IMAGES = ["/imagemob.png", "/image.png"] as const;
 const DOOR_IMAGES = ["/door_sm.png", "/door_bg.png"] as const;
-const LOADER_IMAGES = ["/bg.png", "/logo_outline.png", "/wh_logo-removebg-preview.png"] as const;
+const LOADER_IMAGES = ["/bg.png", "/logo_outline.png", "/logo.png"] as const;
 
 function collectShopGlbUrls(): string[] {
   const urls = new Set<string>();

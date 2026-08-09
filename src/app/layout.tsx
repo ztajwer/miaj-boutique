@@ -110,7 +110,7 @@ export default function RootLayout({
         <link rel="preload" href="/bback.png" as="image" />
         <link rel="preload" href="/main_mob_bg.png" as="image" />
         <link rel="preload" href="/logo_outline.png" as="image" />
-        <link rel="preload" href="/wh_logo-removebg-preview.png" as="image" />
+        <link rel="preload" href="/logo.png" as="image" />
       </head>
       <body className="font-sans antialiased" suppressHydrationWarning>
         <CustomizationProvider>
