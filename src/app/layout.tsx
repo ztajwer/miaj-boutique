@@ -3,7 +3,7 @@ import { Cormorant_Garamond, Inter } from "next/font/google";
 import SeoJsonLd from "@/components/SeoJsonLd";
 import EarlyModelPreload from "@/components/EarlyModelPreload";
 import { siteConfig } from "@/lib/site";
-import { CustomizationProvider } from "@/components/CustomizationProvider";
+
 import { SHOP_SHELVES_ENABLED } from "@/lib/shopTableEnabled";
 import "./globals.css";
 
