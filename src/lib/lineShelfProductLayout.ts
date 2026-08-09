@@ -14,13 +14,13 @@ export const LINE_SHELF_MERCH_ROWS = [
     row: 0,
     tier: "upper" as const,
     left: "pro2.glb",
-    right: "pro3.glb",
+    right: "pro3_opt.glb",
   },
   {
     row: 1,
     tier: "middle" as const,
-    left: "pro1.glb",
-    right: "pro4.glb",
+    left: "pro1_opt.glb",
+    right: "pro4_opt.glb",
   },
   {
     row: 2,

@@ -1,2 +1,4 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+*opt.glb -filter -diff -merge text=auto

@@ -23,7 +23,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
     tagline: "Timeless elegance, crafted to endure",
     materials: "GOLD VERMEIL • DIAMOND ACCENT",
     features: ["Hand-finished band", "Heritage-inspired silhouette", "Comfort-fit interior"],
-    modelFile: "pro1.glb",
+    modelFile: "pro1_opt.glb",
     price: "PKR 48,500",
     description:
       "Inspired by heirloom atelier archives, this ring balances sculptural presence with everyday refinement. Each curve is finished by hand for a weight that feels intentional on the finger.",
@@ -47,7 +47,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
     tagline: "Regal adornment in rose-gold warmth",
     materials: "GOLD VERMEIL • ENAMEL",
     features: ["Layer-ready profile", "Enamel inlay detail", "Weighted luxury feel"],
-    modelFile: "pro3.glb",
+    modelFile: "pro3_opt.glb",
     price: "PKR 85,000",
     description:
       "Ornate bangle pair inspired by royal court motifs — peacock enamel, pearl florals, and warm gold vermeil combine for a statement rooted in South Asian craft tradition.",
@@ -59,7 +59,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
     tagline: "Fluid brilliance that drapes the décolletage",
     materials: "GOLD PLATE • CRYSTAL",
     features: ["Multi-drop cascade", "Adjustable extender", "Light-catching stones"],
-    modelFile: "pro4.glb",
+    modelFile: "pro4_opt.glb",
     price: "PKR 72,500",
     description:
       "A cascading silhouette designed to frame the neckline with graduated drops that shimmer under boutique lighting. Layered luxury for the woman who leads every room she enters.",
