@@ -153,7 +153,11 @@ function DelayedShowcaseProduct({
 
   if (!ready) return null;
 
-  return <SingleShowcaseProduct config={config} textureMax={textureMax} position={position} rotation={rotation} />;
+  return (
+    <Suspense fallback={null}>
+      <SingleShowcaseProduct config={config} textureMax={textureMax} position={position} rotation={rotation} />
+    </Suspense>
+  );
 }
 
 function ShowcaseProductsGroup({ textureMax, tablePosition }: { textureMax: number; tablePosition: [number, number, number] }) {

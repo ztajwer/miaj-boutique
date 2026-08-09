@@ -1,19 +1,19 @@
 import type { Metadata, Viewport } from "next";
-import { Cormorant_Garamond, Inter } from "next/font/google";
+import { Arial, Arial } from "next/font/google";
 import SeoJsonLd from "@/components/SeoJsonLd";
 import EarlyModelPreload from "@/components/EarlyModelPreload";
 import { siteConfig } from "@/lib/site";
 import { SHOP_SHELVES_ENABLED } from "@/lib/shopTableEnabled";
 import "./globals.css";
 
-const cormorant = Cormorant_Garamond({
+const cormorant = Arial({
   subsets: ["latin"],
   weight: ["300", "400", "500"],
   variable: "--font-cormorant",
   display: "swap",
 });
 
-const inter = Inter({
+const inter = Arial({
   subsets: ["latin"],
   variable: "--font-inter",
   display: "swap",
