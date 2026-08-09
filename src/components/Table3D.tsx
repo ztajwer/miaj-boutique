@@ -14,12 +14,13 @@ interface ShowcaseProductConfig {
   modelFile: string;
   targetMaxDim: number;
   colorHex?: number;
+  mountDelay?: number;
 }
 
 const SHOWCASE_PRODUCTS: ShowcaseProductConfig[] = [
-  { productId: "pro1", modelFile: "pro1.glb", targetMaxDim: 0.12 }, // Left (Gold)
-  { productId: "pro3", modelFile: "pro3.glb", targetMaxDim: 0.12, colorHex: 0xF2F2F2 }, // Center (Shiny Silver)
-  { productId: "pro4", modelFile: "pro4.glb", targetMaxDim: 0.12 }, // Right (Gold)
+  { productId: "pro1", modelFile: "pro1_opt.glb", targetMaxDim: 0.12, mountDelay: 400 }, // Left (Gold)
+  { productId: "pro3", modelFile: "pro3.glb", targetMaxDim: 0.12, colorHex: 0xF2F2F2, mountDelay: 800 }, // Center (Shiny Silver)
+  { productId: "pro4", modelFile: "pro4.glb", targetMaxDim: 0.12, mountDelay: 1200 }, // Right (Gold)
 ];
 
 function SingleShowcaseProduct({
@@ -105,7 +106,20 @@ function SingleShowcaseProduct({
     }
   });
 
-  if (!clonedScene) return null;
+  const [mountDelayPassed, setMountDelayPassed] = useState(false);
+
+  useEffect(() => {
+    // Stagger loading to prevent massive RAM spikes
+    const delay = config.mountDelay || 0;
+    if (delay <= 0) {
+      setMountDelayPassed(true);
+      return;
+    }
+    const timer = setTimeout(() => setMountDelayPassed(true), delay);
+    return () => clearTimeout(timer);
+  }, [config.mountDelay]);
+
+  if (!clonedScene || !mountDelayPassed) return null;
 
   return (
     <group position={position}>
@@ -141,7 +155,7 @@ function ShowcaseProductsGroup({ textureMax, tablePosition }: { textureMax: numb
 }
 
 function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: boolean }) {
-  const { scene } = useGLTF(getModelUrl("Kiosk_Centre.glb"), false, false, extendGltfLoader);
+  const { scene } = useGLTF(getModelUrl("Kiosk_Centre_opt.glb"), false, false, extendGltfLoader);
   const groupRef = useRef<THREE.Group>(null);
 
   const clonedScene = useMemo(() => {
