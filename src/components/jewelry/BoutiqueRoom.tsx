@@ -36,8 +36,6 @@ const PRODUCT_SHELF_SCALES: Record<ProductId, number> = {
   pro3: 0.30, 
   pro4: 0.30, 
   pro5: 0.30, 
-  pro6: 0.45, 
-  proo: 1.04, 
 };
 
 // Custom resolver to build correct metadata config for any product in any slot
@@ -203,7 +201,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
             >
               <div className="pointer-events-auto" style={{ position: "absolute", top: "75%", left: "50%", transform: "translate(-50%, -93%)" }}>
                 <div style={{ position: "relative", zIndex: 20 }}>
-                  {entered && <LineShelfProductMini config={getCustomProductConfig("pro6", 1, "left")} mountDelay={100} />}
+                  {entered && <LineShelfProductMini config={getCustomProductConfig("pro1", 1, "left")} mountDelay={100} />}
                 </div>
                 {/* Display Pedestal Box */}
                 <div 

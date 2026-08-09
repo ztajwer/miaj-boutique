@@ -15,15 +15,6 @@ function meshLabel(mesh: THREE.Mesh, mat?: THREE.MeshStandardMaterial): string {
 function classifyJewelryMaterial(mesh: THREE.Mesh, mat: THREE.MeshStandardMaterial, productId?: string): JewelryMaterialKind {
   const name = meshLabel(mesh, mat);
 
-  // Special overrides for products
-  if (productId === "pro6") {
-    // pro6.glb (Perfume Showcase) override
-    if (/Object_(4|5|8|11|12)$/i.test(mesh.name)) {
-      return "gem";
-    }
-    return "gold"; // Everything else is metallic body
-  }
-
   if (productId === "pro5") {
     if (/dmesh/i.test(mesh.name) || /Material_2/i.test(mat.name)) {
       return "gem";

@@ -25,7 +25,7 @@ export const LINE_SHELF_MERCH_ROWS = [
   {
     row: 2,
     tier: "lower" as const,
-    left: "pro6.glb",
+    left: "pro2.glb",
     right: "pro5.glb",
   },
 ] as const;

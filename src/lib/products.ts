@@ -1,6 +1,6 @@
 import { getProductFilenameFromUrl } from "@/lib/modelAssets";
 
-export const PRODUCT_IDS = ["pro1", "pro2", "pro3", "pro4", "pro5", "pro6", "proo"] as const;
+export const PRODUCT_IDS = ["pro1", "pro2", "pro3", "pro4", "pro5"] as const;
 export type ProductId = (typeof PRODUCT_IDS)[number];
 
 export interface Product {
@@ -75,29 +75,6 @@ export const PRODUCTS: Record<ProductId, Product> = {
     price: "PKR 38,900",
     description:
       "Starlight earrings offer a constellation of micro-facets that catch candlelight and daylight with equal grace — refined enough for daily wear, radiant enough for celebration.",
-  },
-  pro6: {
-    id: "pro6",
-    title: "Signature Showcase",
-    category: "Featured",
-    tagline: "A centerpiece crafted for the spotlight",
-    materials: "GOLD VERMEIL • PRECIOUS STONE",
-    features: ["Hero display piece", "Hand-set accents", "Boutique signature finish"],
-    modelFile: "pro6.glb",
-    price: "PKR 95,000",
-    description:
-      "Our signature showcase piece anchors the boutique display — designed to draw the eye with refined proportion, warm gold tones, and artisan-level finishing throughout.",
-  },
-  proo: {
-    id: "proo",
-    title: "Exclusive Addition",
-    category: "Featured",
-    tagline: "A new standard of luxury",
-    materials: "CUSTOM",
-    features: ["Exclusive design"],
-    modelFile: "proo.glb",
-    price: "PKR 0",
-    description: "Newly added custom showcase product.",
   },
 };
 

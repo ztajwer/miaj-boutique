@@ -10,5 +10,4 @@ export const SHOP_GLB_FILES = [
   "pro3.glb",
   "pro4.glb",
   "pro5.glb",
-  "pro6.glb",
 ] as const;

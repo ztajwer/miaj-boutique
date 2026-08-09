@@ -14,8 +14,6 @@ const CAROUSEL_SCALES: Record<ProductId, number> = {
   pro3: 0.50, // Royal Bangles
   pro4: 0.54, // Cascade Necklace
   pro5: 0.38, // Starlight Earrings (Sovereign Pendant)
-  pro6: 0.32, // Signature Perfume Showcase
-  proo: 0.40, // New exclusive addition
 };
 
 function getCarouselProductConfig(productId: ProductId, index: number): LineShelfProductConfig {
@@ -35,7 +33,7 @@ function getCarouselProductConfig(productId: ProductId, index: number): LineShel
 }
 
 export default function ProductCarousel3D() {
-  const productIds: ProductId[] = ["proo", "proo", "proo"];
+  const productIds: ProductId[] = CAROUSEL_PRODUCT_IDS;
 
   return (
     <div className="flex flex-row items-center justify-center w-full pointer-events-auto overflow-visible" style={{ gap: "10px", marginLeft: "0px", marginRight: "0px" }}>

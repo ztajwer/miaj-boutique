@@ -106,9 +106,7 @@ const ShelfProductGlb = memo(function ShelfProductGlb({
     fitProductToUniformSize(scene, config.displaySize);
     optimizeModelForGpu(scene, textureMax);
     optimizeModelForGpuAsync(scene, textureMax);
-    if (config.productId !== "proo") {
-      prepareProductMaterials(scene, { castShadow: true, receiveShadow: true, customization, productId: config.productId });
-    }
+    prepareProductMaterials(scene, { castShadow: true, receiveShadow: true, customization, productId: config.productId });
     scene.traverse((child) => {
       const mesh = child as THREE.Mesh;
       if (mesh.isMesh) mesh.renderOrder = 12;
@@ -190,9 +188,7 @@ const ShelfProductFbx = memo(function ShelfProductFbx({
     fitProductToUniformSize(scene, config.displaySize);
     optimizeModelForGpu(scene, textureMax);
     optimizeModelForGpuAsync(scene, textureMax);
-    if (config.productId !== "proo") {
-      prepareProductMaterials(scene, { castShadow: true, receiveShadow: true, customization, productId: config.productId });
-    }
+    prepareProductMaterials(scene, { castShadow: true, receiveShadow: true, customization, productId: config.productId });
     scene.traverse((child) => {
       const mesh = child as THREE.Mesh;
       if (mesh.isMesh) mesh.renderOrder = 12;
