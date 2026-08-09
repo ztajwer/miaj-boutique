@@ -1,0 +1,16 @@
+file:///Users/zimal/Zimal%20Tajwer/The%20Bit%20Vista/Shelfs%20implemnt%20/shelfs/node_modules/puppeteer-core/lib/puppeteer/node/BrowserLauncher.js:319
+            throw new Error(`Could not find ${getBrowserTypeDisplayName(browserType)} (ver. ${browserVersion}). This can occur if either\n` +
+                  ^
+
+Error: Could not find Chrome (ver. 150.0.7871.24). This can occur if either
+ 1. you did not perform an installation before running the script (e.g. `npx puppeteer browsers install chrome`) or
+ 2. your cache path is incorrectly configured (which is: /Users/zimal/.cache/puppeteer).
+For (2), check out our guide on configuring puppeteer at https://pptr.dev/guides/configuration.
+    at ChromeLauncher.resolveExecutablePath (file:///Users/zimal/Zimal%20Tajwer/The%20Bit%20Vista/Shelfs%20implemnt%20/shelfs/node_modules/puppeteer-core/lib/puppeteer/node/BrowserLauncher.js:319:19)
+    at async ChromeLauncher.computeLaunchArguments (file:///Users/zimal/Zimal%20Tajwer/The%20Bit%20Vista/Shelfs%20implemnt%20/shelfs/node_modules/puppeteer-core/lib/puppeteer/node/ChromeLauncher.js:92:19)
+    at async ChromeLauncher.launch (file:///Users/zimal/Zimal%20Tajwer/The%20Bit%20Vista/Shelfs%20implemnt%20/shelfs/node_modules/puppeteer-core/lib/puppeteer/node/BrowserLauncher.js:67:28)
+    at async ChromeLauncher.launch (file:///Users/zimal/Zimal%20Tajwer/The%20Bit%20Vista/Shelfs%20implemnt%20/shelfs/node_modules/puppeteer-core/lib/puppeteer/node/ChromeLauncher.js:39:16)
+    at async PuppeteerNode.launch (file:///Users/zimal/Zimal%20Tajwer/The%20Bit%20Vista/Shelfs%20implemnt%20/shelfs/node_modules/puppeteer-core/lib/puppeteer/node/PuppeteerNode.js:120:16)
+    at async /Users/zimal/Zimal Tajwer/The Bit Vista/Shelfs implemnt /shelfs/scrape.js:4:19
+
+Node.js v24.18.0

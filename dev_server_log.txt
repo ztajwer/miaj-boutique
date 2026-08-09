@@ -1,0 +1,136 @@
+
+> maj-boutique@1.0.0 dev
+> lsof -ti:3000 | xargs kill -9 2>/dev/null || true && next dev -H 127.0.0.1 -p 3000
+
+   ▲ Next.js 15.5.19
+   - Local:        http://127.0.0.1:3000
+   - Network:      http://127.0.0.1:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1316ms
+ ○ Compiling / ...
+ ✓ Compiled / in 5.3s (1890 modules)
+ GET / 200 in 5760ms
+ ✓ Compiled in 398ms (1863 modules)
+ GET / 200 in 345ms
+[ReferenceError: ProgressEvent is not defined]
+ ⨯ unhandledRejection: [ReferenceError: ProgressEvent is not defined]
+ ⨯ unhandledRejection:  [ReferenceError: ProgressEvent is not defined]
+Single item size exceeds maxSize
+ GET / 200 in 128ms
+ ○ Compiling /product/[id] ...
+ ✓ Compiled /product/[id] in 778ms (1895 modules)
+ GET /product/pro2 200 in 1763ms
+ GET / 200 in 80ms
+ ✓ Compiled in 587ms (1907 modules)
+ GET / 200 in 88ms
+ ✓ Compiled in 579ms (1899 modules)
+ GET / 200 in 112ms
+ GET / 200 in 442ms
+[ReferenceError: ProgressEvent is not defined]
+ ⨯ unhandledRejection: [ReferenceError: ProgressEvent is not defined]
+ ⨯ unhandledRejection:  [ReferenceError: ProgressEvent is not defined]
+ ✓ Compiled in 580ms (1899 modules)
+ GET / 200 in 98ms
+ ✓ Compiled in 363ms (1899 modules)
+ GET / 200 in 135ms
+ ⨯ ReferenceError: useCallback is not defined
+    at ExperienceInner (src/components/Experience.tsx:43:30)
+  41 |
+  42 |
+> 43 |   const handleLoadComplete = useCallback(() => {
+     |                              ^
+  44 |     setReady(true);
+  45 |   }, []);
+  46 | {
+  digest: '1371892596'
+}
+ GET / 500 in 398ms
+[ReferenceError: ProgressEvent is not defined]
+ ⨯ unhandledRejection: [ReferenceError: ProgressEvent is not defined]
+ ⨯ unhandledRejection:  [ReferenceError: ProgressEvent is not defined]
+ ⨯ ReferenceError: useCallback is not defined
+    at ExperienceInner (src/components/Experience.tsx:43:30)
+  41 |
+  42 |
+> 43 |   const handleLoadComplete = useCallback(() => {
+     |                              ^
+  44 |     setReady(true);
+  45 |   }, []);
+  46 | {
+  digest: '1371892596'
+}
+ GET / 500 in 92ms
+ ⨯ ReferenceError: useCallback is not defined
+    at ExperienceInner (src/components/Experience.tsx:43:30)
+  41 |
+  42 |
+> 43 |   const handleLoadComplete = useCallback(() => {
+     |                              ^
+  44 |     setReady(true);
+  45 |   }, []);
+  46 | {
+  digest: '1371892596'
+}
+ GET / 500 in 59ms
+ ⨯ ./src/components/Experience.tsx
+Error:   [31mx[0m Expression expected
+    ,-[[36;1;4m/Users/zimal/Zimal Tajwer/The Bit Vista/Shelfs implemnt /shelfs/src/components/Experience.tsx[0m:47:1]
+ [2m44[0m |     setReady(true);
+ [2m45[0m |   };
+ [2m46[0m |     setReady(true);
+ [2m47[0m |   }, []);
+    : [35;1m   ^[0m
+ [2m48[0m | 
+ [2m49[0m |   const onDoorScreen = ready && !entered;
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/Experience.tsx
+./src/components/HomeClient.tsx
+ ○ Compiling /_error ...
+ ⨯ ./src/components/Experience.tsx
+Error:   [31mx[0m Expression expected
+    ,-[[36;1;4m/Users/zimal/Zimal Tajwer/The Bit Vista/Shelfs implemnt /shelfs/src/components/Experience.tsx[0m:47:1]
+ [2m44[0m |     setReady(true);
+ [2m45[0m |   };
+ [2m46[0m |     setReady(true);
+ [2m47[0m |   }, []);
+    : [35;1m   ^[0m
+ [2m48[0m | 
+ [2m49[0m |   const onDoorScreen = ready && !entered;
+    `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./src/components/Experience.tsx
+./src/components/HomeClient.tsx
+ GET / 500 in 2117ms
+ GET / 500 in 444ms
+ GET / 500 in 23ms
+ GET / 500 in 20ms
+Single item size exceeds maxSize
+ ✓ Compiled /_error in 1543ms (2246 modules)
+ ⚠ Fast Refresh had to perform a full reload due to a runtime error.
+ GET / 200 in 18ms
+ GET / 200 in 893ms
+[ReferenceError: ProgressEvent is not defined]
+ ⨯ unhandledRejection: [ReferenceError: ProgressEvent is not defined]
+ ⨯ unhandledRejection:  [ReferenceError: ProgressEvent is not defined]
+ GET / 200 in 94ms
+Single item size exceeds maxSize
+Single item size exceeds maxSize
+ GET / 200 in 285ms
+ GET / 200 in 112ms
+ GET / 200 in 147ms
+ GET / 200 in 149ms
+ GET / 200 in 71ms
+ GET / 200 in 69ms
+ GET / 200 in 48ms
+ GET / 200 in 83ms

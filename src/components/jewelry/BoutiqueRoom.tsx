@@ -1,0 +1,359 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { startShopModelLoads } from "@/lib/modelPreload";
+import { createBoutiqueParallaxMotion } from "@/lib/boutiqueParallaxMotion";
+import BoutiqueParallaxBg from "./BoutiqueParallaxBg";
+import Table3D from "../Table3D";
+import LineShelfProductMini from "./LineShelfProductMini";
+import { getFocusBgScale, getFocusTableTranslateY, getFocusTableOuterScale } from "@/lib/shopScrollFocus";
+import ProductCarousel3D from "./ProductCarousel3D";
+import { PRODUCTS, type ProductId } from "@/lib/products";
+import { getModelUrl } from "@/lib/modelAssets";
+import {
+  LINE_SHELF_PRODUCT_SIZE_PX,
+  type LineShelfProductConfig,
+} from "@/lib/lineShelfProductLayout";
+import { Canvas } from "@react-three/fiber";
+import { View } from "@react-three/drei";
+import { EffectComposer, DepthOfField, Vignette } from "@react-three/postprocessing";
+import { applyJewelryRendererSettings } from "@/lib/productModelUtils";
+
+interface BoutiqueRoomProps {
+  visible: boolean;
+  focusProgress?: number;
+}
+
+const BOUTIQUE_IMAGE = "/bback.png";
+const BOUTIQUE_VIDEO_MOBILE = "";
+const BOUTIQUE_IMAGE_MOBILE_POSTER = "/main_mob_bg.png";
+
+// Custom premium scales for realistic real-world jewelry sizing on display shelves
+const PRODUCT_SHELF_SCALES: Record<ProductId, number> = {
+  pro1: 0.38, 
+  pro2: 0.61, 
+  pro3: 0.30, 
+  pro4: 0.30, 
+  pro5: 0.30, 
+  pro6: 0.45, 
+  proo: 1.04, 
+};
+
+// Custom resolver to build correct metadata config for any product in any slot
+function getCustomProductConfig(
+  productId: ProductId,
+  slotIndex: number,
+  side: "left" | "right"
+): LineShelfProductConfig {
+  const product = PRODUCTS[productId];
+  const rowIndex = Math.floor(slotIndex / 2);
+  const tier = rowIndex === 0 ? "upper" : rowIndex === 1 ? "middle" : "lower";
+
+  return {
+    slotIndex,
+    rowIndex,
+    side,
+    tier,
+    url: getModelUrl(product.modelFile),
+    modelFile: product.modelFile,
+    productId,
+    productSizePx: LINE_SHELF_PRODUCT_SIZE_PX,
+    displaySize: PRODUCT_SHELF_SCALES[productId] ?? 0.48,
+  };
+}
+
+function getCarouselProductConfig(
+  productId: ProductId,
+  slotIndex: number
+): LineShelfProductConfig {
+  const product = PRODUCTS[productId];
+  return {
+    slotIndex,
+    rowIndex: 0,
+    side: "left",
+    tier: "middle",
+    url: getModelUrl(product.modelFile),
+    modelFile: product.modelFile,
+    productId,
+    productSizePx: 80,
+    displaySize: 0.48,
+  };
+}
+
+export default function BoutiqueRoom({ visible, focusProgress = 0 }: BoutiqueRoomProps) {
+  const roomRef = useRef<HTMLDivElement>(null);
+  const motionRef = useRef(createBoutiqueParallaxMotion());
+  const [mounted, setMounted] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+    if (!visible) return;
+    startShopModelLoads();
+
+    const img = new window.Image();
+    img.src = BOUTIQUE_IMAGE;
+    
+    const checkMobile = () => setIsMobile(window.innerWidth < 768);
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, [visible]);
+
+  if (!visible || !mounted) return null;
+
+  return (
+    <div
+      ref={roomRef}
+      className="boutique-room boutique-hero"
+      aria-label="MAJ Boutique showroom"
+    >
+      <BoutiqueParallaxBg
+        mobileVideoSrc={BOUTIQUE_VIDEO_MOBILE}
+        mobilePosterSrc={BOUTIQUE_IMAGE_MOBILE_POSTER}
+        desktopSrc={BOUTIQUE_IMAGE}
+        roomRef={roomRef}
+        active={visible}
+        motionRef={motionRef}
+        focusProgress={focusProgress}
+      >
+
+        {/* OLD MOBILE LAYOUT (Only on Mobile) */}
+        {isMobile && (
+          <>
+            {/* Left shelf PNG */}
+            <img
+              src="/shelf.png?v=4"
+              alt=""
+              aria-hidden
+              className="absolute pointer-events-none"
+              style={{
+                top: "calc(32% + 5px)",
+                left: "7%", 
+                width: "clamp(85px, calc(40vw - 25px), 500px)",
+                height: "clamp(45px, calc(34vh - 145px), 330px)",
+                objectFit: "fill",
+                transform: "scaleX(1.35) scaleY(0.9)",
+                zIndex: 10,
+              }}
+            />
+            {/* Left shelf 3D products overlay container */}
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                top: "calc(32% + 5px)",
+                left: "7%",
+                width: "clamp(85px, calc(40vw - 25px), 500px)",
+                height: "clamp(45px, calc(34vh - 145px), 330px)",
+                transform: "scaleX(1.35) scaleY(0.9)",
+                zIndex: 15,
+              }}
+            >
+              <div className="pointer-events-auto" style={{ position: "absolute", top: "75%", left: "50%", transform: "translate(-50%, -93%)" }}>
+                <div style={{ position: "relative", zIndex: 20 }}>
+                  <LineShelfProductMini config={getCustomProductConfig("pro1", 0, "left")} mountDelay={120} />
+                </div>
+                {/* Display Pedestal Box */}
+                <div 
+                  style={{
+                    position: "absolute",
+                    bottom: "15px", 
+                    left: "50%",
+                    transform: "translateX(-50%)", 
+                    width: "45px", 
+                    height: "18px", 
+                    background: "#D6B697", 
+                    border: "1px solid rgba(212, 175, 55, 0.4)", 
+                    boxShadow: "0 6px 12px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,0.4)",
+                    borderRadius: "2px",
+                    zIndex: 10
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Center shelf PNG */}
+            <img
+              src="/shelf.png?v=4"
+              alt=""
+              aria-hidden
+              className="absolute pointer-events-none"
+              style={{
+                top: "calc(32% + 5px)",
+                left: "50%",
+                width: "clamp(85px, calc(40vw - 25px), 500px)",
+                height: "clamp(45px, calc(34vh - 145px), 330px)",
+                objectFit: "fill",
+                transform: "translateX(-50%) scaleX(1.35) scaleY(0.9)",
+                zIndex: 10,
+              }}
+            />
+            {/* Center shelf 3D products overlay container */}
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                top: "calc(32% + 5px)",
+                left: "50%",
+                width: "clamp(85px, calc(40vw - 25px), 500px)",
+                height: "clamp(45px, calc(34vh - 145px), 330px)",
+                transform: "translateX(-50%) scaleX(1.35) scaleY(0.9)",
+                zIndex: 15,
+              }}
+            >
+              <div className="pointer-events-auto" style={{ position: "absolute", top: "75%", left: "50%", transform: "translate(-50%, -93%)" }}>
+                <div style={{ position: "relative", zIndex: 20 }}>
+                  <LineShelfProductMini config={getCustomProductConfig("pro6", 1, "left")} mountDelay={240} />
+                </div>
+                {/* Display Pedestal Box */}
+                <div 
+                  style={{
+                    position: "absolute",
+                    bottom: "15px", 
+                    left: "50%",
+                    transform: "translateX(-50%)", 
+                    width: "45px", 
+                    height: "18px", 
+                    background: "#D6B697", 
+                    border: "1px solid rgba(212, 175, 55, 0.4)", 
+                    boxShadow: "0 6px 12px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,0.4)",
+                    borderRadius: "2px",
+                    zIndex: 10
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Right shelf PNG */}
+            <img
+              src="/shelf.png?v=4"
+              alt=""
+              aria-hidden
+              className="absolute pointer-events-none"
+              style={{
+                top: "calc(32% + 5px)", 
+                right: "7%", 
+                width: "clamp(85px, calc(40vw - 25px), 500px)", 
+                height: "clamp(45px, calc(34vh - 145px), 330px)", 
+                objectFit: "fill",
+                transform: "scaleX(-1.35) scaleY(0.9)",
+                zIndex: 10,
+              }}
+            />
+            {/* Right shelf 3D products overlay container */}
+            <div
+              className="absolute pointer-events-none"
+              style={{
+                top: "calc(32% + 5px)",
+                right: "7%",
+                width: "clamp(85px, calc(40vw - 25px), 500px)",
+                height: "clamp(45px, calc(34vh - 145px), 330px)",
+                transform: "scaleX(1.35) scaleY(0.9)",
+                zIndex: 15,
+              }}
+            >
+              <div className="pointer-events-auto" style={{ position: "absolute", top: "75%", left: "50%", transform: "translate(-50%, -93%)" }}>
+                <div style={{ position: "relative", zIndex: 20 }}>
+                  <LineShelfProductMini config={getCustomProductConfig("pro3", 2, "right")} mountDelay={360} />
+                </div>
+                {/* Display Pedestal Box */}
+                <div 
+                  style={{
+                    position: "absolute",
+                    bottom: "15px", 
+                    left: "50%",
+                    transform: "translateX(-50%)", 
+                    width: "45px", 
+                    height: "18px", 
+                    background: "#D6B697", 
+                    border: "1px solid rgba(212, 175, 55, 0.4)", 
+                    boxShadow: "0 6px 12px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,0.4)",
+                    borderRadius: "2px",
+                    zIndex: 10
+                  }}
+                />
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* NEW DESKTOP LAYOUT (Only on Desktop) */}
+        {!isMobile && (
+          <div
+          className="absolute flex items-end justify-center pointer-events-none"
+          style={{
+            top: "calc(32% + 5px)",
+            left: 0,
+            right: 0,
+            gap: "140px",
+            zIndex: 15,
+          }}
+        >
+          {/* SHELF */}
+          <div className="relative flex flex-col items-center justify-end" style={{ width: "clamp(120px, 20vw, 300px)", height: "clamp(80px, calc(38vh - 100px), 380px)" }}>
+            <img src="/shelf.png?v=4" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+            <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
+              <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
+                <LineShelfProductMini config={getCustomProductConfig("pro3", 0, "left")} mountDelay={120} />
+              </div>
+            </div>
+          </div>
+
+          {/* SHELF */}
+          <div className="relative flex flex-col items-center justify-end" style={{ width: "clamp(120px, 20vw, 300px)", height: "clamp(80px, calc(38vh - 100px), 380px)" }}>
+            <img src="/shelf.png?v=4" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+            <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
+              <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
+                <LineShelfProductMini config={getCustomProductConfig("pro4", 1, "left")} mountDelay={240} />
+              </div>
+            </div>
+          </div>
+
+          {/* SHELF */}
+          <div className="relative flex flex-col items-center justify-end" style={{ width: "clamp(120px, 20vw, 300px)", height: "clamp(80px, calc(38vh - 100px), 380px)" }}>
+            <img src="/shelf.png?v=4" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+            <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
+              <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
+                <LineShelfProductMini config={getCustomProductConfig("pro5", 2, "right")} mountDelay={360} />
+              </div>
+            </div>
+          </div>
+        </div>
+        )}
+
+        {/* 3D Display Table — inside parallax so it moves with the background */}
+        <div style={{
+          position: "absolute",
+          inset: 0,
+          transform: `translateY(${getFocusTableTranslateY(focusProgress)}px) scale(${getFocusTableOuterScale(focusProgress)})`,
+          transformOrigin: "50% bottom",
+          pointerEvents: "none",
+          zIndex: 60,
+          willChange: "transform"
+        }}>
+          <Table3D opacity={1} isMobile={isMobile} />
+
+        </div>
+
+      </BoutiqueParallaxBg>
+
+      {/* Global Canvas for all line shelf and table products overlay */}
+      <div
+        className="fixed inset-0 pointer-events-none w-screen h-screen"
+        style={{ zIndex: 60 }}
+      >
+        <Canvas
+          eventSource={roomRef as any}
+          className="w-full h-full"
+          dpr={[1, 1.5]}
+          gl={{ antialias: false, alpha: true, stencil: false, depth: true, powerPreference: "high-performance" }}
+          onCreated={({ gl }) => {
+            gl.setClearColor(0x000000, 0);
+            applyJewelryRendererSettings(gl, 1.15);
+          }}
+        >
+          <View.Port />
+        </Canvas>
+      </div>
+    </div>
+  );
+}
