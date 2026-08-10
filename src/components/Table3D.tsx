@@ -39,8 +39,10 @@ function SingleShowcaseProduct({
   const groupRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
   
-  const clonedScene = useMemo(() => {
-    if (!rawScene) return null;
+  const [clonedScene, setClonedScene] = useState<THREE.Group | null>(null);
+
+  useEffect(() => {
+    if (!rawScene) return;
     const cloned = rawScene.clone(true);
     
     const lightsToRemove: THREE.Object3D[] = [];
@@ -97,7 +99,7 @@ function SingleShowcaseProduct({
 
     optimizeModelForGpu(cloned, textureMax);
     optimizeModelForGpuAsync(cloned, textureMax);
-    return cloned;
+    setClonedScene(cloned);
   }, [rawScene, config.targetMaxDim, config.colorHex, textureMax]);
 
   useFrame(() => {
@@ -175,11 +177,13 @@ function ShowcaseProductsGroup({ textureMax, tablePosition }: { textureMax: numb
 }
 
 function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: boolean }) {
-  const { scene } = useGLTF(getModelUrl("Kiosk_Centre.glb"), false, false, extendGltfLoader);
+  const { scene } = useGLTF(getModelUrl("Kiosk_Centre_opt.glb"), false, false, extendGltfLoader);
   const groupRef = useRef<THREE.Group>(null);
 
-  const clonedScene = useMemo(() => {
-    if (!scene) return null;
+  const [clonedScene, setClonedScene] = useState<THREE.Group | null>(null);
+
+  useEffect(() => {
+    if (!scene) return;
     const cloned = scene.clone(true);
     const lightsToRemove: THREE.Object3D[] = [];
     cloned.traverse((child) => {
@@ -190,28 +194,21 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
     lightsToRemove.forEach((light) => {
       light.parent?.remove(light);
     });
-    optimizeModelForGpu(cloned, textureMax);
-    optimizeModelForGpuAsync(cloned, textureMax);
-    return cloned;
-  }, [scene, textureMax]);
 
-  useEffect(() => {
-    if (!clonedScene) return;
-
-    clonedScene.scale.setScalar(1);
-    clonedScene.position.set(0, 0, 0);
-    clonedScene.rotation.set(0, Math.PI, 0);
+    cloned.scale.setScalar(1);
+    cloned.position.set(0, 0, 0);
+    cloned.rotation.set(0, Math.PI, 0);
 
     const box = new THREE.Box3();
     let hasMesh = false;
-    clonedScene.traverse((child) => {
+    cloned.traverse((child) => {
       if ((child as THREE.Mesh).isMesh) {
         box.expandByObject(child);
         hasMesh = true;
       }
     });
     if (!hasMesh) {
-      box.setFromObject(clonedScene);
+      box.setFromObject(cloned);
     }
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
@@ -220,16 +217,16 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
     const maxDim = Math.max(size.x, size.y, size.z);
     if (maxDim > 0) {
       targetScale = 1.60 / maxDim; 
-      clonedScene.scale.setScalar(targetScale);
+      cloned.scale.setScalar(targetScale);
     }
 
-    clonedScene.position.x = -center.x * targetScale;
-    clonedScene.position.y = -box.min.y * targetScale;
-    clonedScene.position.z = -0.5;
+    cloned.position.x = -center.x * targetScale;
+    cloned.position.y = -box.min.y * targetScale;
+    cloned.position.z = -0.5;
 
-    optimizeModelForGpu(clonedScene, textureMax);
+    optimizeModelForGpu(cloned, textureMax);
 
-    clonedScene.traverse((child) => {
+    cloned.traverse((child) => {
       const mesh = child as THREE.Mesh;
       if (mesh.isMesh) {
         mesh.frustumCulled = true;
@@ -275,7 +272,10 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
         }
       }
     });
-  }, [clonedScene, textureMax, isMobile]);
+
+    optimizeModelForGpuAsync(cloned, textureMax);
+    setClonedScene(cloned);
+  }, [scene, textureMax, isMobile]);
 
   if (!clonedScene) return null;
 

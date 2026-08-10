@@ -77,7 +77,10 @@ function ExperienceInner() {
       // Clamp scroll to prevent scrolling back up into the door zone once entered
       const openDist = getOpenDistance();
       if (entered && lenis.targetScroll < openDist) {
-        lenis.scrollTo(openDist, { immediate: true });
+        lenis.targetScroll = openDist;
+        lenis.animatedScroll = openDist;
+        lenis.actualScroll = openDist;
+        lenis.velocity = 0;
       }
       
       lenis.raf(time);

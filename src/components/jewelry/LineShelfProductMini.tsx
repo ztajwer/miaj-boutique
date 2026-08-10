@@ -72,7 +72,12 @@ const ShelfProductGlb = memo(function ShelfProductGlb({
   isSelected: boolean;
 }) {
   const { scene: productRoot } = useGLTF(config.url, false, false, extendGltfLoader);
-  const scene = useMemo(() => {
+  const [scene, setScene] = useState<THREE.Group | null>(null);
+  const groupRef = useRef<THREE.Group>(null);
+  const invalidate = useThree((state) => state.invalidate);
+
+  useEffect(() => {
+    if (!productRoot) return;
     const cloned = productRoot.clone(true);
     
     // Deep clone materials so instances do not share and mutate them in-place
@@ -97,22 +102,20 @@ const ShelfProductGlb = memo(function ShelfProductGlb({
     lightsToRemove.forEach((light) => {
       light.parent?.remove(light);
     });
-    return cloned;
-  }, [productRoot]);
-  const groupRef = useRef<THREE.Group>(null);
-  const invalidate = useThree((state) => state.invalidate);
 
-  useLayoutEffect(() => {
-    fitProductToUniformSize(scene, config.displaySize);
-    optimizeModelForGpu(scene, textureMax);
-    optimizeModelForGpuAsync(scene, textureMax);
-    prepareProductMaterials(scene, { castShadow: true, receiveShadow: true, customization, productId: config.productId });
-    scene.traverse((child) => {
+    fitProductToUniformSize(cloned, config.displaySize);
+    optimizeModelForGpu(cloned, textureMax);
+    optimizeModelForGpuAsync(cloned, textureMax);
+    prepareProductMaterials(cloned, { castShadow: true, receiveShadow: true, customization, productId: config.productId });
+    
+    cloned.traverse((child) => {
       const mesh = child as THREE.Mesh;
       if (mesh.isMesh) mesh.renderOrder = 12;
     });
+
+    setScene(cloned);
     invalidate();
-  }, [scene, config.displaySize, textureMax, customization, invalidate, config.productId]);
+  }, [productRoot, config.displaySize, textureMax, customization, invalidate, config.productId]);
 
   useFrame((state, delta) => {
     if (groupRef.current) {
@@ -137,7 +140,7 @@ const ShelfProductGlb = memo(function ShelfProductGlb({
     : 0;
   return (
     <group ref={groupRef} rotation={[pitch + tiltX, 0, tiltZ]}>
-      <primitive object={scene} />
+      {scene && <primitive object={scene} />}
     </group>
   );
 });
@@ -154,7 +157,12 @@ const ShelfProductFbx = memo(function ShelfProductFbx({
   isSelected: boolean;
 }) {
   const fbx = useFBX(config.url);
-  const scene = useMemo(() => {
+  const [scene, setScene] = useState<THREE.Group | null>(null);
+  const groupRef = useRef<THREE.Group>(null);
+  const invalidate = useThree((state) => state.invalidate);
+
+  useEffect(() => {
+    if (!fbx) return;
     const cloned = fbx.clone(true);
     
     // Deep clone materials so instances do not share and mutate them in-place
@@ -179,22 +187,20 @@ const ShelfProductFbx = memo(function ShelfProductFbx({
     lightsToRemove.forEach((light) => {
       light.parent?.remove(light);
     });
-    return cloned;
-  }, [fbx]);
-  const groupRef = useRef<THREE.Group>(null);
-  const invalidate = useThree((state) => state.invalidate);
 
-  useLayoutEffect(() => {
-    fitProductToUniformSize(scene, config.displaySize);
-    optimizeModelForGpu(scene, textureMax);
-    optimizeModelForGpuAsync(scene, textureMax);
-    prepareProductMaterials(scene, { castShadow: true, receiveShadow: true, customization, productId: config.productId });
-    scene.traverse((child) => {
+    fitProductToUniformSize(cloned, config.displaySize);
+    optimizeModelForGpu(cloned, textureMax);
+    optimizeModelForGpuAsync(cloned, textureMax);
+    prepareProductMaterials(cloned, { castShadow: true, receiveShadow: true, customization, productId: config.productId });
+    
+    cloned.traverse((child) => {
       const mesh = child as THREE.Mesh;
       if (mesh.isMesh) mesh.renderOrder = 12;
     });
+
+    setScene(cloned);
     invalidate();
-  }, [scene, config.displaySize, textureMax, customization, invalidate, config.productId]);
+  }, [fbx, config.displaySize, textureMax, customization, invalidate, config.productId]);
 
   useFrame((state, delta) => {
     if (groupRef.current) {
@@ -219,7 +225,7 @@ const ShelfProductFbx = memo(function ShelfProductFbx({
     : 0;
   return (
     <group ref={groupRef} rotation={[pitch + tiltX, 0, tiltZ]}>
-      <primitive object={scene} />
+      {scene && <primitive object={scene} />}
     </group>
   );
 });

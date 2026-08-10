@@ -42,19 +42,22 @@ function triggerGltfPreload(url: string) {
   }).catch(() => undefined);
 }
 
-function preloadAllShopGltfParallel() {
-  // PERFORMANCE FIX: 
-  // Load models sequentially with a delay to prevent completely freezing the browser's main thread
-  // while still preloading them during the loading screen as requested.
-  const urls = collectShopGlbUrls();
+function preloadCoreShowroomModels() {
+  const coreUrls = [
+    getModelUrl("door_col.glb"),
+    getModelUrl("Kiosk_Centre_opt.glb")
+  ];
+  if (SHOP_SHELVES_ENABLED) {
+    coreUrls.push(getModelUrl("shelf.glb"));
+  }
   
   let delay = 0;
-  for (const url of urls) {
+  for (const url of coreUrls) {
     setTimeout(() => {
       triggerGltfPreload(url);
     }, delay);
-    // Add 800ms delay between each model parse to give the main thread breathing room
-    delay += 800; 
+    // Add 500ms delay between each model parse to give the main thread breathing room
+    delay += 500; 
   }
 }
 
@@ -106,7 +109,7 @@ export function scheduleModelPreloads(delayMs = 0) {
 
   const run = () => {
     scheduleIdle(() => {
-      void preloadAllShopGltfParallel();
+      void preloadCoreShowroomModels();
     });
   };
 
