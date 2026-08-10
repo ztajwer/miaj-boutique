@@ -57,6 +57,11 @@ export function getProductFilenameFromUrl(url: string): string {
   return parts[parts.length - 1] ?? path;
 }
 
-export function extendGltfLoader(loader: { setCrossOrigin: (mode: string) => void }) {
+import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
+
+export function extendGltfLoader(loader: { setCrossOrigin: (mode: string) => void; setMeshoptDecoder?: (decoder: any) => void }) {
   loader.setCrossOrigin("anonymous");
+  if (loader.setMeshoptDecoder) {
+    loader.setMeshoptDecoder(MeshoptDecoder);
+  }
 }
