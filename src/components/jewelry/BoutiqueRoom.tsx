@@ -39,6 +39,7 @@ const PRODUCT_SHELF_SCALES: Record<ProductId, number> = {
   pro3: 0.30, 
   pro4: 0.30, 
   pro5: 0.30, 
+  protest: 0.38,
 };
 
 // Custom resolver to build correct metadata config for any product in any slot
