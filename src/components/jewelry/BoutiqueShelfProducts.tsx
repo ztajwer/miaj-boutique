@@ -2,7 +2,8 @@
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { ContactShadows, Environment, PerspectiveCamera, useGLTF } from "@react-three/drei";
+import { ContactShadows, PerspectiveCamera, useGLTF } from "@react-three/drei";
+import SafeEnvironment from "../SafeEnvironment";
 import * as THREE from "three";
 import {
   BOUTIQUE_SHELF_CAMERA,
@@ -266,7 +267,9 @@ function ShelfScene({ isMobile }: { isMobile: boolean }) {
       <directionalLight position={[0, 2.8, 5.5]} intensity={0.1} color={SHELF_LIGHT_COLORS.accent} />
       <pointLight position={[0, 5.6, 3.8]} intensity={0.28} color={SHELF_LIGHT_COLORS.glow} distance={12} decay={2} />
       <pointLight position={[0, 4.2, 0.6]} intensity={0.12} color={SHELF_LIGHT_COLORS.warm} distance={10} decay={2} />
-      <Environment preset="apartment" environmentIntensity={0.32} />
+      <Suspense fallback={null}>
+        <SafeEnvironment intensity={0.32} />
+      </Suspense>
       {shelfModels.map((shelf) => (
         <Suspense key={shelf.side} fallback={null}>
           <PhysicalShelfModel layout={shelf} />
