@@ -121,168 +121,50 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
         focusProgress={focusProgress}
       >
 
-        {/* OLD MOBILE LAYOUT (Only on Mobile) */}
+        {/* MOBILE LAYOUT */}
         {isMobile && (
-          <>
-            {/* Left shelf PNG */}
-            <Image
-              src="/shelf.png"
-              alt=""
-              aria-hidden
-              fill
-              sizes="(max-width: 768px) 50vw, 300px"
-              className="absolute pointer-events-none"
-              style={{
-                top: "calc(32% + 5px)",
-                left: "7%", 
-                width: "clamp(85px, calc(40vw - 25px), 500px)",
-                height: "clamp(45px, calc(34vh - 145px), 330px)",
-                objectFit: "fill",
-                transform: "scaleX(1.35) scaleY(0.9)",
-                zIndex: 10,
-              }}
-            />
-            {/* Left shelf 3D products overlay container */}
-            <div
-              className="absolute pointer-events-none"
-              style={{
-                top: "calc(32% + 5px)",
-                left: "7%",
-                width: "clamp(85px, calc(40vw - 25px), 500px)",
-                height: "clamp(45px, calc(34vh - 145px), 330px)",
-                transform: "scaleX(1.35) scaleY(0.9)",
-                zIndex: 15,
-              }}
-            >
-              <div className="pointer-events-auto" style={{ position: "absolute", top: "75%", left: "50%", transform: "translate(-50%, -93%)" }}>
-                <div style={{ position: "relative", zIndex: 20 }}>
-                  {entered && <LineShelfProductMini config={getCustomProductConfig("protest" as any, 0, "left")} mountDelay={0} />}
+          <div
+            className="absolute flex flex-col items-center pointer-events-none"
+            style={{
+              top: "12%",
+              left: 0,
+              right: 0,
+              zIndex: 15,
+              gap: "4vh",
+            }}
+          >
+            {/* Top Shelf (Center) */}
+            <div className="relative flex flex-col items-center justify-end" style={{ width: "150px", height: "130px" }}>
+              <Image src="/shelf.png" alt="" aria-hidden fill className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+              <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[75%] pb-[15%]">
+                <div style={{ width: "80%", height: "100%", zIndex: 20 }}>
+                  {entered && <LineShelfProductMini config={getCustomProductConfig("protest" as any, 1, "left")} mountDelay={1500} />}
                 </div>
-                {/* Display Pedestal Box */}
-                <div 
-                  style={{
-                    position: "absolute",
-                    bottom: "15px", 
-                    left: "50%",
-                    transform: "translateX(-50%)", 
-                    width: "45px", 
-                    height: "18px", 
-                    background: "#D6B697", 
-                    border: "1px solid rgba(212, 175, 55, 0.4)", 
-                    boxShadow: "0 6px 12px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,0.4)",
-                    borderRadius: "2px",
-                    zIndex: 10
-                  }}
-                />
               </div>
             </div>
 
-            {/* Center shelf PNG */}
-            <Image
-              src="/shelf.png"
-              alt=""
-              aria-hidden
-              fill
-              sizes="(max-width: 768px) 50vw, 300px"
-              className="absolute pointer-events-none"
-              style={{
-                top: "calc(51% + 5px)",
-                left: "50%",
-                width: "clamp(85px, calc(40vw - 25px), 500px)",
-                height: "clamp(45px, calc(34vh - 145px), 330px)",
-                objectFit: "fill",
-                transform: "translateX(-50%) scaleX(1.35) scaleY(0.9)",
-                zIndex: 10,
-              }}
-            />
-            {/* Center shelf 3D products overlay container */}
-            <div
-              className="absolute pointer-events-none"
-              style={{
-                top: "calc(32% + 5px)",
-                left: "50%",
-                width: "clamp(85px, calc(40vw - 25px), 500px)",
-                height: "clamp(45px, calc(34vh - 145px), 330px)",
-                transform: "translateX(-50%) scaleX(1.35) scaleY(0.9)",
-                zIndex: 15,
-              }}
-            >
-              <div className="pointer-events-auto" style={{ position: "absolute", top: "75%", left: "50%", transform: "translate(-50%, -93%)" }}>
-                <div style={{ position: "relative", zIndex: 20 }}>
-                  {entered && <LineShelfProductMini config={getCustomProductConfig("protest" as any, 1, "left")} mountDelay={0} />}
+            {/* Bottom Row (Left & Right) */}
+            <div className="flex w-full justify-between px-6">
+              {/* Left Shelf */}
+              <div className="relative flex flex-col items-center justify-end" style={{ width: "130px", height: "115px" }}>
+                <Image src="/shelf.png" alt="" aria-hidden fill className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+                <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[75%] pb-[15%]">
+                  <div style={{ width: "80%", height: "100%", zIndex: 20 }}>
+                    {entered && <LineShelfProductMini config={getCustomProductConfig("protest" as any, 0, "left")} mountDelay={3000} />}
+                  </div>
                 </div>
-                {/* Display Pedestal Box */}
-                <div 
-                  style={{
-                    position: "absolute",
-                    bottom: "15px", 
-                    left: "50%",
-                    transform: "translateX(-50%)", 
-                    width: "45px", 
-                    height: "18px", 
-                    background: "#D6B697", 
-                    border: "1px solid rgba(212, 175, 55, 0.4)", 
-                    boxShadow: "0 6px 12px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,0.4)",
-                    borderRadius: "2px",
-                    zIndex: 10
-                  }}
-                />
+              </div>
+              {/* Right Shelf */}
+              <div className="relative flex flex-col items-center justify-end" style={{ width: "130px", height: "115px" }}>
+                <Image src="/shelf.png" alt="" aria-hidden fill className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+                <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[75%] pb-[15%]">
+                  <div style={{ width: "80%", height: "100%", zIndex: 20 }}>
+                    {entered && <LineShelfProductMini config={getCustomProductConfig("protest" as any, 2, "right")} mountDelay={4500} />}
+                  </div>
+                </div>
               </div>
             </div>
-
-            {/* Right shelf PNG */}
-            <Image
-              src="/shelf.png"
-              alt=""
-              aria-hidden
-              fill
-              sizes="(max-width: 768px) 50vw, 300px"
-              className="absolute pointer-events-none"
-              style={{
-                top: "calc(32% + 5px)", 
-                right: "7%", 
-                width: "clamp(85px, calc(40vw - 25px), 500px)", 
-                height: "clamp(45px, calc(34vh - 145px), 330px)", 
-                objectFit: "fill",
-                transform: "scaleX(-1.35) scaleY(0.9)",
-                zIndex: 10,
-              }}
-            />
-            {/* Right shelf 3D products overlay container */}
-            <div
-              className="absolute pointer-events-none"
-              style={{
-                top: "calc(32% + 5px)",
-                right: "7%",
-                width: "clamp(85px, calc(40vw - 25px), 500px)",
-                height: "clamp(45px, calc(34vh - 145px), 330px)",
-                transform: "scaleX(1.35) scaleY(0.9)",
-                zIndex: 15,
-              }}
-            >
-              <div className="pointer-events-auto" style={{ position: "absolute", top: "75%", left: "50%", transform: "translate(-50%, -93%)" }}>
-                <div style={{ position: "relative", zIndex: 20 }}>
-                  {entered && <LineShelfProductMini config={getCustomProductConfig("protest" as any, 2, "right")} mountDelay={0} />}
-                </div>
-                {/* Display Pedestal Box */}
-                <div 
-                  style={{
-                    position: "absolute",
-                    bottom: "15px", 
-                    left: "50%",
-                    transform: "translateX(-50%)", 
-                    width: "45px", 
-                    height: "18px", 
-                    background: "#D6B697", 
-                    border: "1px solid rgba(212, 175, 55, 0.4)", 
-                    boxShadow: "0 6px 12px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,0.4)",
-                    borderRadius: "2px",
-                    zIndex: 10
-                  }}
-                />
-              </div>
-            </div>
-          </>
+          </div>
         )}
 
         {/* NEW DESKTOP LAYOUT (Only on Desktop) */}
