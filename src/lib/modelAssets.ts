@@ -35,15 +35,10 @@ function resolveGlbBase(): string {
 }
 
 export function getModelUrl(filename: string): string {
-  // If the file is an optimized model, it is deployed directly to Vercel's edge network
-  // and completely bypasses GitHub LFS. Always serve it natively.
-  if (filename.endsWith("_opt.glb")) {
-    return `/${filename}`;
-  }
-
+  // Always serve files natively from Vercel to prevent LFS CDN 404s
+  // and dramatically speed up load times via Vercel Edge Cache.
   const name = filename.replace(/^\//, "");
-  const base = resolveGlbBase();
-  return base ? `${base}/${name}` : `/${name}`;
+  return `/${name}`;
 }
 
 export function getProductModelUrls(): readonly string[] {
