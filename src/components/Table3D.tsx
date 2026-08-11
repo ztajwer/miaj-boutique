@@ -196,8 +196,8 @@ function DelayedShowcaseProduct({
 }
 
 function ShowcaseProductsGroup({ textureMax, tablePosition }: { textureMax: number; tablePosition: [number, number, number] }) {
-  // Lowered offset so products sit directly on the white pad, safely UNDER the glass (which is at 0.52)
-  const yOffset = 0.45; 
+  // Restored exactly to the perfect offset plus a 5px lift (from 0.56 to 0.58)
+  const yOffset = 0.58; 
   return (
     <group position={tablePosition}>
       {/* Exact hexagon bay coordinates */}
