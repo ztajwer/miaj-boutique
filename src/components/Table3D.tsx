@@ -277,7 +277,7 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
             if (mat.roughnessMap) mat.roughnessMap.anisotropy = 1;
             if (mat.metalnessMap) mat.metalnessMap.anisotropy = 1;
 
-            const isGlass = mat.name && mat.name.toLowerCase().includes('glass');
+            const isGlass = (mat.name && mat.name.toLowerCase().includes('glass')) || (mat.transmission !== undefined && mat.transmission > 0) || (mat.opacity !== undefined && mat.opacity < 1) || mat.transparent;
             const isMetal = mat.metalness !== undefined && mat.metalness > 0.5;
             const isGold = mat.name && mat.name.toLowerCase().includes('gold');
 
