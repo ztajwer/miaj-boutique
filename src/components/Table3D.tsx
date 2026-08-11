@@ -174,7 +174,7 @@ function ShowcaseProductsGroup({ textureMax, tablePosition }: { textureMax: numb
 }
 
 function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: boolean }) {
-  const { scene } = useGLTF(getModelUrl("Kiosk_Centre_opt.glb"), false, false, extendGltfLoader);
+  const { scene } = useGLTF(getModelUrl("Kiosk_Centre.glb"), false, false, extendGltfLoader);
   const groupRef = useRef<THREE.Group>(null);
 
   const clonedScene = useMemo(() => {
@@ -218,8 +218,6 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
     cloned.position.x = -center.x * targetScale;
     cloned.position.y = -box.min.y * targetScale;
     cloned.position.z = -0.5;
-
-    optimizeModelForGpu(cloned, textureMax);
 
     cloned.traverse((child) => {
       const mesh = child as THREE.Mesh;
