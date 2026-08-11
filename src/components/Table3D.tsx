@@ -86,21 +86,16 @@ function SingleShowcaseProduct({
     const maxDim = Math.max(size.x, size.y, size.z);
     
     let targetScale = 1;
-    if (config.productId === "protest") {
-      targetScale = 3.5; // Custom hardcoded scale
+    if (maxDim > 0) {
+      // Use config.targetMaxDim, or default to a reasonable size if missing
+      targetScale = (config.targetMaxDim || 0.12) / maxDim;
       cloned.scale.setScalar(targetScale);
-      cloned.position.x = 0;
-      cloned.position.y = 0.05; // Slightly elevated
-      cloned.position.z = 0;
-    } else {
-      if (maxDim > 0) {
-        targetScale = config.targetMaxDim / maxDim;
-        cloned.scale.setScalar(targetScale);
-      }
-      cloned.position.x = -center.x * targetScale;
-      cloned.position.y = -box.min.y * targetScale;
-      cloned.position.z = -center.z * targetScale;
     }
+    
+    // Perfectly center X and Z, and place the BOTTOM (box.min.y) exactly on the table (position[1])
+    cloned.position.x = -center.x * targetScale + position[0];
+    cloned.position.y = -box.min.y * targetScale + position[1];
+    cloned.position.z = -center.z * targetScale + position[2];
 
     optimizeModelForGpu(cloned, textureMax);
     return cloned;

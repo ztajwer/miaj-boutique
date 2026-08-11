@@ -518,12 +518,6 @@ function tuneJewelryMaterial(
 }
 
 export function fitProductToUniformSize(cloned: THREE.Object3D, targetDisplaySize: number = 1.0) {
-  // Bypass auto-scaling for custom placeholder models that might have broken bounding boxes
-  if (cloned.name.includes("protest") || (cloned.userData && cloned.userData.productId === "protest")) {
-     cloned.scale.setScalar(targetDisplaySize * 2); // Hardcoded fallback scale
-     return;
-  }
-
   // Strip any embedded lights from the model hierarchy to prevent light count mismatch crashes in WebGLRenderer
   const lightsToRemove: THREE.Object3D[] = [];
   cloned.traverse((child) => {
@@ -535,45 +529,55 @@ export function fitProductToUniformSize(cloned: THREE.Object3D, targetDisplaySiz
     light.parent?.remove(light);
   });
 
-  root.scale.set(1, 1, 1);
-  root.position.set(0, 0, 0);
-  root.updateMatrixWorld(true);
+  cloned.scale.set(1, 1, 1);
+  cloned.position.set(0, 0, 0);
+  cloned.updateMatrixWorld(true);
 
   // Compute bounding box based only on meshes to ignore helper locators, cameras, grids, etc.
   const box = new THREE.Box3();
   let hasMesh = false;
-  root.traverse((child) => {
+  cloned.traverse((child) => {
     if ((child as THREE.Mesh).isMesh) {
       box.expandByObject(child);
       hasMesh = true;
     }
   });
   if (!hasMesh) {
-    box.setFromObject(root);
+    box.setFromObject(cloned);
   }
 
   const size = box.getSize(new THREE.Vector3());
   const visualSpan = Math.max(size.x, size.y, size.z);
-  if (visualSpan > 0) {
-    root.scale.setScalar(targetSpan / visualSpan);
+  
+  // Custom fallback for protest.glb since it has completely broken bounding boxes (huge offset)
+  if (cloned.name.includes("protest") || (cloned.userData && cloned.userData.productId === "protest")) {
+     cloned.scale.setScalar(targetDisplaySize * 2);
+     // Protest is exported with huge offset Y=10. Center it roughly based on its meshes.
+     const center = box.getCenter(new THREE.Vector3());
+     cloned.position.set(-center.x * targetDisplaySize * 2, -center.y * targetDisplaySize * 2, -center.z * targetDisplaySize * 2);
+     return;
   }
 
-  root.updateMatrixWorld(true);
+  if (visualSpan > 0) {
+    cloned.scale.setScalar(targetDisplaySize / visualSpan);
+  }
+
+  cloned.updateMatrixWorld(true);
   
   const fitted = new THREE.Box3();
   let hasMeshFitted = false;
-  root.traverse((child) => {
+  cloned.traverse((child) => {
     if ((child as THREE.Mesh).isMesh) {
       fitted.expandByObject(child);
       hasMeshFitted = true;
     }
   });
   if (!hasMeshFitted) {
-    fitted.setFromObject(root);
+    fitted.setFromObject(cloned);
   }
 
   const center = fitted.getCenter(new THREE.Vector3());
-  root.position.set(-center.x, -fitted.min.y, -center.z);
+  cloned.position.set(-center.x, -fitted.min.y, -center.z);
 }
 
 export interface PrepareProductMaterialsOptions {
