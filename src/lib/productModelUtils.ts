@@ -549,15 +549,6 @@ export function fitProductToUniformSize(cloned: THREE.Object3D, targetDisplaySiz
   const size = box.getSize(new THREE.Vector3());
   const visualSpan = Math.max(size.x, size.y, size.z);
   
-  // Custom fallback for protest.glb since it has completely broken bounding boxes (huge offset)
-  if (cloned.name.includes("protest") || (cloned.userData && cloned.userData.productId === "protest")) {
-     cloned.scale.setScalar(targetDisplaySize * 2);
-     // Protest is exported with huge offset Y=10. Center it roughly based on its meshes.
-     const center = box.getCenter(new THREE.Vector3());
-     cloned.position.set(-center.x * targetDisplaySize * 2, -center.y * targetDisplaySize * 2, -center.z * targetDisplaySize * 2);
-     return;
-  }
-
   if (visualSpan > 0) {
     cloned.scale.setScalar(targetDisplaySize / visualSpan);
   }
