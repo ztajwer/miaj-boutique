@@ -18,9 +18,9 @@ interface ShowcaseProductConfig {
 }
 
 const SHOWCASE_PRODUCTS: ShowcaseProductConfig[] = [
-  { productId: "pro1", modelFile: "pro1.glb", targetMaxDim: 0.12, mountDelay: 0 },
-  { productId: "pro1", modelFile: "pro1.glb", targetMaxDim: 0.12, mountDelay: 0 },
-  { productId: "pro1", modelFile: "pro1.glb", targetMaxDim: 0.12, mountDelay: 0 },
+  { productId: "pro1", modelFile: "pro1.glb", targetMaxDim: 0.12, mountDelay: 0 }, // Left (Gold)
+  { productId: "pro3", modelFile: "pro3.glb", targetMaxDim: 0.12, colorHex: 0xF2F2F2, mountDelay: 0 }, // Center (Shiny Silver)
+  { productId: "pro4", modelFile: "pro4.glb", targetMaxDim: 0.12, mountDelay: 0 }, // Right (Gold)
 ];
 
 function SingleShowcaseProduct({
@@ -34,7 +34,7 @@ function SingleShowcaseProduct({
   position: [number, number, number];
   rotation?: [number, number, number];
 }) {
-  const { scene: rawScene } = useGLTF(getModelUrl(config.modelFile), true, true, extendGltfLoader);
+  const { scene: rawScene } = useGLTF(getModelUrl(config.modelFile), false, false, extendGltfLoader);
   const router = useRouter();
   const groupRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
@@ -161,8 +161,8 @@ function DelayedShowcaseProduct({
 }
 
 function ShowcaseProductsGroup({ textureMax, tablePosition }: { textureMax: number; tablePosition: [number, number, number] }) {
-  // Lowered offset so products sit directly on the white pad, safely UNDER the glass (which is at 0.52)
-  const yOffset = 0.45; 
+  // Restored exactly to the perfect offset plus a 5px lift (from 0.56 to 0.58)
+  const yOffset = 0.58; 
   return (
     <group position={tablePosition}>
       {/* Exact hexagon bay coordinates */}
@@ -174,7 +174,7 @@ function ShowcaseProductsGroup({ textureMax, tablePosition }: { textureMax: numb
 }
 
 function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: boolean }) {
-  const { scene } = useGLTF(getModelUrl("Kiosk_Centre_test.glb"), true, true, extendGltfLoader);
+  const { scene } = useGLTF(getModelUrl("Kiosk_Centre.glb"), true, true, extendGltfLoader);
   const groupRef = useRef<THREE.Group>(null);
 
   const clonedScene = useMemo(() => {
@@ -245,20 +245,14 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
             if (mat.color && typeof mat.color.getHex === 'function') {
               const isMetal = mat.metalness !== undefined && mat.metalness > 0.5;
               const isGold = mat.name && mat.name.toLowerCase().includes('gold');
-              const isTopPad = mat.name === 'White Plastic';
 
-              if (isTopPad) {
-                // Lighten the table's top area (display pad)
-                mat.color.setHex(0xfffaf0); // Very light floral white / cream
-                mat.roughness = 0.4;
-                mat.metalness = 0.1;
-              } else if (isMetal || isGold || mat.color.getHex() > 0xaaaaaa) {
-                // Tint metal to match the exact bright vibrant gold in the reference image
-                mat.color.setHex(0xd4af37); 
+              if (isMetal || isGold || mat.color.getHex() > 0xaaaaaa) {
+                // Tint metal to the soft rose-gold/champagne color you liked, while keeping the textures intact!
+                mat.color.setHex(0xccab89);
                 if (mat.metalness !== undefined) {
                   mat.metalness = Math.max(0.65, mat.metalness);
                 }
-                mat.envMapIntensity = 1.35; 
+                mat.envMapIntensity = 1.25; 
               }
             }
             return mat as THREE.Material;
@@ -288,8 +282,8 @@ function TableGlassTop({ tablePosition }: { tablePosition: [number, number, numb
       <meshPhysicalMaterial 
         color="#ffffff" 
         transparent 
-        opacity={0.12} 
-        transmission={0.96} 
+        opacity={0.08} 
+        transmission={0.9} 
         roughness={0} 
         thickness={0.02} 
         side={THREE.DoubleSide} 
@@ -336,7 +330,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
         <Suspense fallback={null}>
           <group scale={mobileLayout ? 0.92 : 1.30} position={mobileLayout ? [0, 0, 0] : [0, -0.30, 0]}>
             <TableModel textureMax={textureMax} isMobile={mobileLayout} />
-            <ShowcaseProductsGroup textureMax={textureMax} tablePosition={[0, 0, -0.5]} />
+            {/* <ShowcaseProductsGroup textureMax={textureMax} tablePosition={[0, 0, -0.5]} /> */}
             <TableGlassTop tablePosition={[0, 0, -0.5]} />
           </group>
 

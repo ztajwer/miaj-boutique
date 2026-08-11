@@ -58,21 +58,10 @@ export function getProductFilenameFromUrl(url: string): string {
 }
 
 import { MeshoptDecoder } from "three/examples/jsm/libs/meshopt_decoder.module.js";
-import { DRACOLoader } from "three/examples/jsm/loaders/DRACOLoader.js";
 
-let dracoLoaderInstance: any = null;
-
-export function extendGltfLoader(loader: { setCrossOrigin: (mode: string) => void; setMeshoptDecoder?: (decoder: any) => void; setDRACOLoader?: (draco: any) => void }) {
+export function extendGltfLoader(loader: { setCrossOrigin: (mode: string) => void; setMeshoptDecoder?: (decoder: any) => void }) {
   loader.setCrossOrigin("anonymous");
   if (loader.setMeshoptDecoder) {
     loader.setMeshoptDecoder(MeshoptDecoder);
-  }
-  
-  if (loader.setDRACOLoader) {
-    if (!dracoLoaderInstance) {
-      dracoLoaderInstance = new DRACOLoader();
-      dracoLoaderInstance.setDecoderPath("https://www.gstatic.com/draco/versioned/decoders/1.5.7/");
-    }
-    loader.setDRACOLoader(dracoLoaderInstance);
   }
 }
