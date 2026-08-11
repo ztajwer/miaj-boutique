@@ -8,6 +8,7 @@ import {
   scheduleModelPreloads,
 } from "@/lib/modelPreload";
 import { getDeviceProfile } from "@/lib/deviceProfile";
+import { useProgress } from "@react-three/drei";
 
 interface LoaderProps {
   onComplete: () => void;
@@ -44,19 +45,25 @@ export default function Loader({ onComplete }: LoaderProps) {
     }, FADE_DURATION_MS);
   }, [onComplete]);
 
+  const { progress: modelProgress, active, item, loaded, total } = useProgress();
+
   useEffect(() => {
     const startedAt = performance.now();
     const duration = loaderDurationMs.current;
-    const progressWindow = Math.max(400, duration - FADE_DURATION_MS);
     let raf = 0;
 
     const tick = (now: number) => {
       const elapsed = now - startedAt;
-      const t = Math.min(1, elapsed / progressWindow);
+      // Calculate a fake progress for the minimum duration
+      const t = Math.min(1, elapsed / duration);
       const eased = t * t * (3 - 2 * t);
-      setDisplayProgress(Math.max(1, eased * 100));
+      
+      // Combine fake duration progress with actual model loading progress
+      const combinedProgress = Math.max(eased * 100, modelProgress);
+      setDisplayProgress(Math.min(100, combinedProgress));
 
-      if (elapsed >= duration) {
+      // ONLY finish if minimum duration has passed AND all 3D models are finished loading
+      if (elapsed >= duration && !active && modelProgress === 100) {
         finish();
         return;
       }
@@ -65,7 +72,7 @@ export default function Loader({ onComplete }: LoaderProps) {
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [finish]);
+  }, [finish, active, modelProgress]);
 
   if (!visible) return null;
 
