@@ -96,7 +96,6 @@ function SingleShowcaseProduct({
     cloned.position.z = -center.z * targetScale;
 
     optimizeModelForGpu(cloned, textureMax);
-    optimizeModelForGpuAsync(cloned, textureMax);
     return cloned;
   }, [rawScene, config.targetMaxDim, config.colorHex, textureMax]);
 
@@ -178,9 +177,6 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
   const { scene } = useGLTF(getModelUrl("Kiosk_Centre_opt.glb"), false, false, extendGltfLoader);
   const groupRef = useRef<THREE.Group>(null);
 
-  const { gl } = useThree();
-  const maxAnisotropy = gl.capabilities.getMaxAnisotropy();
-
   const clonedScene = useMemo(() => {
     if (!scene) return null;
     const cloned = scene.clone(true);
@@ -240,13 +236,6 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
           mesh.material = mat;
           
           mat.envMapIntensity = 1.35; 
-          
-          // PERFECT CLEAR TEXTURES
-          if (mat.map) mat.map.anisotropy = maxAnisotropy;
-          if (mat.normalMap) mat.normalMap.anisotropy = maxAnisotropy;
-          if (mat.roughnessMap) mat.roughnessMap.anisotropy = maxAnisotropy;
-          if (mat.metalnessMap) mat.metalnessMap.anisotropy = maxAnisotropy;
-          
           const isGlass = mat.transparent || mat.opacity < 1 || (mat.name && mat.name.toLowerCase().includes('glass'));
           const isMetal = mat.metalness && mat.metalness > 0.5;
           const isGold = mat.name && mat.name.toLowerCase().includes('gold');
@@ -278,9 +267,8 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
       }
     });
 
-    optimizeModelForGpuAsync(cloned, textureMax);
     return cloned;
-  }, [scene, textureMax, isMobile, maxAnisotropy]);
+  }, [scene, textureMax, isMobile]);
 
   if (!clonedScene) return null;
 
