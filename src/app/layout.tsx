@@ -113,6 +113,7 @@ export default function RootLayout({
         <link rel="preload" href="/logo_outline.png" as="image" />
         <link rel="preload" href="/logo.png" as="image" />
         <link rel="preload" href="/Kiosk_Centre.glb" as="fetch" crossOrigin="anonymous" />
+        <link rel="preload" href="/door_col.glb" as="fetch" crossOrigin="anonymous" />
       </head>
       <body className="font-sans antialiased" suppressHydrationWarning>
         <CustomizationProvider>
