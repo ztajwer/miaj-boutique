@@ -162,7 +162,7 @@ function ShelfInteriorLights({ root }: { root: THREE.Object3D }) {
 }
 
 function PhysicalShelfModel({ layout }: { layout: ShelfModelLayoutItem }) {
-  const { scene } = useGLTF(SHELF_MODEL_URL, false, false, extendGltfLoader);
+  const { scene } = useGLTF(SHELF_MODEL_URL, true, true, extendGltfLoader);
   const { camera, invalidate } = useThree();
   const groupRef = useRef<THREE.Group>(null);
   const alignedRef = useRef(false);

@@ -8,25 +8,24 @@ export const LINE_SHELF_PRODUCT_SIZE_PX = 56;
 /** 3D model scale inside product canvas */
 export const LINE_SHELF_VIEW_PRODUCT_SIZE = 0.486;
 
-/** Row 0 = top line, 1 = middle, 2 = bottom — one product per line, 3 per column */
 export const LINE_SHELF_MERCH_ROWS = [
   {
     row: 0,
     tier: "upper" as const,
-    left: "pro2.glb",
-    right: "pro3.glb",
+    left: "pro1.glb",
+    right: "pro1.glb",
   },
   {
     row: 1,
     tier: "middle" as const,
     left: "pro1.glb",
-    right: "pro4.glb",
+    right: "pro1.glb",
   },
   {
     row: 2,
     tier: "lower" as const,
-    left: "pro2.glb",
-    right: "pro5.glb",
+    left: "pro1.glb",
+    right: "pro1.glb",
   },
 ] as const;
 

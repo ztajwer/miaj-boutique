@@ -38,14 +38,14 @@ function triggerGltfPreload(url: string) {
   if (gltfTriggered.has(url) || typeof window === "undefined") return;
   gltfTriggered.add(url);
   import("@react-three/drei").then(({ useGLTF }) => {
-    useGLTF.preload(url, false, false, extendGltfLoader);
+    useGLTF.preload(url, true, true, extendGltfLoader);
   }).catch(() => undefined);
 }
 
 function preloadCoreShowroomModels() {
   const coreUrls = [
     getModelUrl("door_col.glb"),
-    getModelUrl("Kiosk_Centre.glb")
+    getModelUrl("Kiosk_Centre_test.glb")
   ];
   if (SHOP_SHELVES_ENABLED) {
     coreUrls.push(getModelUrl("shelf.glb"));
