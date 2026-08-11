@@ -18,9 +18,9 @@ interface ShowcaseProductConfig {
 }
 
 const SHOWCASE_PRODUCTS: ShowcaseProductConfig[] = [
-  { productId: "pro1", modelFile: "pro1.glb", targetMaxDim: 0.12, mountDelay: 0 }, // Left (Gold)
-  { productId: "pro3", modelFile: "pro3.glb", targetMaxDim: 0.12, colorHex: 0xF2F2F2, mountDelay: 0 }, // Center (Shiny Silver)
-  { productId: "pro4", modelFile: "pro4.glb", targetMaxDim: 0.12, mountDelay: 0 }, // Right (Gold)
+  { productId: "pro1", modelFile: "pro1.glb", targetMaxDim: 0.12, mountDelay: 200 }, // Left (Gold)
+  { productId: "pro3", modelFile: "pro3.glb", targetMaxDim: 0.12, colorHex: 0xF2F2F2, mountDelay: 400 }, // Center (Shiny Silver)
+  { productId: "pro4", modelFile: "pro4.glb", targetMaxDim: 0.12, mountDelay: 600 }, // Right (Gold)
 ];
 
 function SingleShowcaseProduct({

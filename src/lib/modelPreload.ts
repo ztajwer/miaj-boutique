@@ -43,10 +43,21 @@ function triggerGltfPreload(url: string) {
 }
 
 function preloadCoreShowroomModels() {
-  const coreUrls = collectShopGlbUrls();
+  const coreUrls = [
+    getModelUrl("door_col.glb"),
+    getModelUrl("Kiosk_Centre_opt.glb")
+  ];
+  if (SHOP_SHELVES_ENABLED) {
+    coreUrls.push(getModelUrl("shelf.glb"));
+  }
   
+  let delay = 0;
   for (const url of coreUrls) {
-    triggerGltfPreload(url);
+    setTimeout(() => {
+      triggerGltfPreload(url);
+    }, delay);
+    // Add 300ms delay between each heavy model parse to prevent OOM
+    delay += 300; 
   }
 }
 
