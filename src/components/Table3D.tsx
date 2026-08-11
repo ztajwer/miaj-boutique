@@ -56,14 +56,14 @@ function SingleShowcaseProduct({
         
         if (config.colorHex) {
           mat.color.setHex(config.colorHex);
-          mat.roughness = 0.08; // Realistic shiny silver
+          mat.roughness = 0.15; // Smooth realistic silver
         } else {
           mat.color.setHex(0xD4AF37); // Rich vibrant Gold
-          mat.roughness = 0.12; // Realistic shiny gold
+          mat.roughness = 0.18; // Smooth realistic gold
         }
         
         mat.metalness = 1.0;
-        mat.envMapIntensity = 3.5; // Realistic high reflection
+        mat.envMapIntensity = 2.0; // Balanced reflection
 
         mesh.material = mat;
         mesh.castShadow = true;
@@ -251,7 +251,7 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
               clearcoat: 1.0,
               ior: 1.45,
               thickness: 0.02,
-              envMapIntensity: 1.5, // Less blowout reflection
+              envMapIntensity: 1.0, // Less blowout reflection
               side: THREE.DoubleSide,
               depthWrite: false,
             });
@@ -259,9 +259,11 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
             mesh.renderOrder = 2;
           } else if (isMetal || isGold || mat.color.getHex() > 0xaaaaaa) {
             mat.color.setHex(0xccab89);
-            mat.metalness = Math.max(0.7, mat.metalness || 0);
-            mat.roughness = Math.min(0.2, mat.roughness || 1);
-            mat.envMapIntensity = 2.5;
+            mat.metalness = Math.max(0.6, mat.metalness || 0);
+            mat.roughness = Math.max(0.35, mat.roughness || 0.35); // Softer roughness to eliminate specular noise
+            mat.envMapIntensity = 1.2; // Reduce overly bright reflections
+            mat.normalMap = null; // Strip normal map to make the surface perfectly smooth
+            mat.roughnessMap = null;
           }
         }
       }
@@ -337,19 +339,19 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
             <ShowcaseProductsGroup textureMax={textureMax} tablePosition={[0, 0, -0.5]} />
             <TableGlassTop tablePosition={[0, 0, -0.5]} />
           </group>
-        </Suspense>
 
-        {/* Render smooth contact shadow plane to ground it on the floor */}
-        <ContactShadows
-          position={[0, 0, 0]}
-          opacity={0.80}
-          scale={15.0}
-          blur={2.2}
-          far={4.0}
-          resolution={1024}
-          color="#3D2817" // Warm dark brown shadow to blend naturally with the cream floor
-          frames={1} // Only render contact shadows once to avoid rendering loop lag
-        />
+          {/* Render smooth contact shadow plane to ground it on the floor. Inside Suspense so it bakes AFTER models load. */}
+          <ContactShadows
+            position={[0, 0, 0]}
+            opacity={0.80}
+            scale={15.0}
+            blur={2.2}
+            far={4.0}
+            resolution={1024}
+            color="#3D2817"
+            frames={1}
+          />
+        </Suspense>
       </View>
     </div>
   );
