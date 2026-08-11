@@ -18,9 +18,9 @@ interface ShowcaseProductConfig {
 }
 
 const SHOWCASE_PRODUCTS: ShowcaseProductConfig[] = [
-  { productId: "pro1", modelFile: "pro1.glb", targetMaxDim: 0.12, mountDelay: 0 }, // Left (Gold)
-  { productId: "pro3", modelFile: "pro3.glb", targetMaxDim: 0.12, colorHex: 0xF2F2F2, mountDelay: 0 }, // Center (Shiny Silver)
-  { productId: "pro4", modelFile: "pro4.glb", targetMaxDim: 0.12, mountDelay: 0 }, // Right (Gold)
+  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.12, colorHex: 0xB76E79, mountDelay: 0 }, // Left (Rose Gold)
+  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.12, colorHex: 0xF2F2F2, mountDelay: 0 }, // Center (Shiny Silver)
+  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.12, colorHex: 0xFFD700, mountDelay: 0 }, // Right (Gold)
 ];
 
 function SingleShowcaseProduct({
@@ -34,7 +34,7 @@ function SingleShowcaseProduct({
   position: [number, number, number];
   rotation?: [number, number, number];
 }) {
-  const { scene: rawScene } = useGLTF(getModelUrl(config.modelFile), false, false, extendGltfLoader);
+  const { scene: rawScene } = useGLTF(getModelUrl(config.modelFile), true, true, extendGltfLoader);
   const router = useRouter();
   const groupRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);

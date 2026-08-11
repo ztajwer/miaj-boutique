@@ -6,9 +6,5 @@ export const SHOP_GLB_FILES = [
   "door_col.glb",
   "Kiosk_Centre.glb",
   "shelf.glb",
-  "pro1.glb",
-  "pro2.glb",
-  "pro3.glb",
-  "pro4.glb",
-  "pro5.glb",
+  "protest.glb",
 ] as const;

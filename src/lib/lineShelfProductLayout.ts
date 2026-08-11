@@ -13,20 +13,20 @@ export const LINE_SHELF_MERCH_ROWS = [
   {
     row: 0,
     tier: "upper" as const,
-    left: "pro2.glb",
-    right: "pro3.glb",
+    left: "protest.glb",
+    right: "protest.glb",
   },
   {
     row: 1,
     tier: "middle" as const,
-    left: "pro1.glb",
-    right: "pro4.glb",
+    left: "protest.glb",
+    right: "protest.glb",
   },
   {
     row: 2,
     tier: "lower" as const,
-    left: "pro2.glb",
-    right: "pro5.glb",
+    left: "protest.glb",
+    right: "protest.glb",
   },
 ] as const;
 
@@ -56,6 +56,7 @@ export interface LineShelfProductConfig {
   productSizePx: number;
   displaySize: number;
   isTable?: boolean;
+  colorHex?: number;
 }
 
 export function getLineShelfProductModelUrls(): string[] {
@@ -85,5 +86,6 @@ export function getLineShelfProductConfig(
     productId: modelFile.replace(".glb", "") as ProductId,
     productSizePx: LINE_SHELF_PRODUCT_SIZE_PX,
     displaySize: LINE_SHELF_VIEW_PRODUCT_SIZE,
+    colorHex: side === "left" ? (rowIndex === 0 ? 0xB76E79 : rowIndex === 1 ? 0xFFD700 : 0xF2F2F2) : (rowIndex === 0 ? 0xF2F2F2 : rowIndex === 1 ? 0xB76E79 : 0xFFD700),
   };
 }

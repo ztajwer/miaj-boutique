@@ -1,6 +1,6 @@
 import { getProductFilenameFromUrl } from "@/lib/modelAssets";
 
-export const PRODUCT_IDS = ["pro1", "pro2", "pro3", "pro4", "pro5"] as const;
+export const PRODUCT_IDS = ["pro1", "pro2", "pro3", "pro4", "pro5", "protest"] as const;
 export type ProductId = (typeof PRODUCT_IDS)[number];
 
 export interface Product {
@@ -13,6 +13,8 @@ export interface Product {
   features: readonly string[];
   modelFile: string;
   price: string;
+  stoneInfo?: string;
+  metalInfo?: string;
 }
 
 export const PRODUCTS: Record<ProductId, Product> = {
@@ -75,6 +77,17 @@ export const PRODUCTS: Record<ProductId, Product> = {
     price: "PKR 38,900",
     description:
       "Starlight earrings offer a constellation of micro-facets that catch candlelight and daylight with equal grace — refined enough for daily wear, radiant enough for celebration.",
+  },
+  protest: {
+    id: "protest",
+    title: "Protest Model",
+    category: "Special",
+    tagline: "Custom table model",
+    materials: "ROSE GOLD",
+    features: ["Custom made"],
+    modelFile: "protest.glb",
+    price: "PKR 50,000",
+    description: "A gorgeous luxury placeholder.",
   },
 };
 

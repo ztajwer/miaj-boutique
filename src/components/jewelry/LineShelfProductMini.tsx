@@ -105,6 +105,18 @@ const ShelfProductGlb = memo(function ShelfProductGlb({
     optimizeModelForGpuAsync(cloned, textureMax);
     prepareProductMaterials(cloned, { castShadow: true, receiveShadow: true, customization, productId: config.productId });
     
+    if (config.colorHex) {
+      cloned.traverse((child) => {
+        const mesh = child as THREE.Mesh;
+        if (mesh.isMesh && mesh.material) {
+          const mat = mesh.material as THREE.MeshStandardMaterial;
+          if (mat.color) {
+            mat.color.setHex(config.colorHex!);
+          }
+        }
+      });
+    }
+
     cloned.traverse((child) => {
       const mesh = child as THREE.Mesh;
       if (mesh.isMesh) mesh.renderOrder = 12;
