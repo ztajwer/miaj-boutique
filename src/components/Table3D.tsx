@@ -52,20 +52,25 @@ function SingleShowcaseProduct({
     cloned.traverse((child) => {
       const mesh = child as THREE.Mesh;
       if (mesh.isMesh && mesh.material) {
-        const mat = (mesh.material as THREE.MeshStandardMaterial).clone();
+        // Safely handle both array of materials and single materials
+        let materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
         
-        if (config.colorHex) {
-          mat.color.setHex(config.colorHex);
-          mat.roughness = 0.15; // Smooth realistic silver
-        } else {
-          mat.color.setHex(0xD4AF37); // Rich vibrant Gold
-          mat.roughness = 0.18; // Smooth realistic gold
-        }
-        
-        mat.metalness = 1.0;
-        mat.envMapIntensity = 2.0; // Balanced reflection
+        const newMaterials = materials.map((m) => {
+          const mat = (m as THREE.MeshStandardMaterial).clone();
+          if (config.colorHex) {
+            mat.color.setHex(config.colorHex);
+            mat.roughness = 0.15; // Smooth realistic silver
+          } else {
+            mat.color.setHex(0xD4AF37); // Rich vibrant Gold
+            mat.roughness = 0.18; // Smooth realistic gold
+          }
+          
+          mat.metalness = 1.0;
+          mat.envMapIntensity = 2.0; // Balanced reflection
+          return mat;
+        });
 
-        mesh.material = mat;
+        mesh.material = Array.isArray(mesh.material) ? newMaterials : newMaterials[0];
         mesh.castShadow = true;
         mesh.receiveShadow = true;
       }

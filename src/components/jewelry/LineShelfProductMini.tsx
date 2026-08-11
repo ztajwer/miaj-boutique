@@ -109,10 +109,13 @@ const ShelfProductGlb = memo(function ShelfProductGlb({
       cloned.traverse((child) => {
         const mesh = child as THREE.Mesh;
         if (mesh.isMesh && mesh.material) {
-          const mat = mesh.material as THREE.MeshStandardMaterial;
-          if (mat.color) {
-            mat.color.setHex(config.colorHex!);
-          }
+          const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
+          materials.forEach((m) => {
+            const mat = m as THREE.MeshStandardMaterial;
+            if (mat.color) {
+              mat.color.setHex(config.colorHex!);
+            }
+          });
         }
       });
     }
