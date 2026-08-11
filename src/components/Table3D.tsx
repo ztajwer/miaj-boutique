@@ -1,8 +1,8 @@
 "use client";
 
-import { Suspense, useEffect, useMemo, useRef, useState } from "react";
+import { Suspense, useMemo, useRef, useState } from "react";
 import { useGLTF, Html, Environment, ContactShadows, View, PerspectiveCamera } from "@react-three/drei";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import { getModelUrl, extendGltfLoader } from "@/lib/modelAssets";
 import { optimizeModelForGpu, optimizeModelForGpuAsync } from "@/lib/gpuModelOptimize";
@@ -39,10 +39,8 @@ function SingleShowcaseProduct({
   const groupRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
   
-  const [clonedScene, setClonedScene] = useState<THREE.Group | null>(null);
-
-  useEffect(() => {
-    if (!rawScene) return;
+  const clonedScene = useMemo(() => {
+    if (!rawScene) return null;
     const cloned = rawScene.clone(true);
     
     const lightsToRemove: THREE.Object3D[] = [];
@@ -99,7 +97,7 @@ function SingleShowcaseProduct({
 
     optimizeModelForGpu(cloned, textureMax);
     optimizeModelForGpuAsync(cloned, textureMax);
-    setClonedScene(cloned);
+    return cloned;
   }, [rawScene, config.targetMaxDim, config.colorHex, textureMax]);
 
   useFrame(() => {
@@ -180,10 +178,11 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
   const { scene } = useGLTF(getModelUrl("Kiosk_Centre_opt.glb"), false, false, extendGltfLoader);
   const groupRef = useRef<THREE.Group>(null);
 
-  const [clonedScene, setClonedScene] = useState<THREE.Group | null>(null);
+  const { gl } = useThree();
+  const maxAnisotropy = gl.capabilities.getMaxAnisotropy();
 
-  useEffect(() => {
-    if (!scene) return;
+  const clonedScene = useMemo(() => {
+    if (!scene) return null;
     const cloned = scene.clone(true);
     const lightsToRemove: THREE.Object3D[] = [];
     cloned.traverse((child) => {
@@ -242,6 +241,12 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
           
           mat.envMapIntensity = 1.35; 
           
+          // PERFECT CLEAR TEXTURES
+          if (mat.map) mat.map.anisotropy = maxAnisotropy;
+          if (mat.normalMap) mat.normalMap.anisotropy = maxAnisotropy;
+          if (mat.roughnessMap) mat.roughnessMap.anisotropy = maxAnisotropy;
+          if (mat.metalnessMap) mat.metalnessMap.anisotropy = maxAnisotropy;
+          
           const isGlass = mat.transparent || mat.opacity < 1 || (mat.name && mat.name.toLowerCase().includes('glass'));
           const isMetal = mat.metalness && mat.metalness > 0.5;
           const isGold = mat.name && mat.name.toLowerCase().includes('gold');
@@ -274,8 +279,8 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
     });
 
     optimizeModelForGpuAsync(cloned, textureMax);
-    setClonedScene(cloned);
-  }, [scene, textureMax, isMobile]);
+    return cloned;
+  }, [scene, textureMax, isMobile, maxAnisotropy]);
 
   if (!clonedScene) return null;
 
@@ -338,15 +343,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
         <spotLight position={[0, 5, 0]} intensity={2.0} color="#FFF5E6" angle={0.8} penumbra={0.8} />
         <pointLight position={[0, 1.5, 2.5]} intensity={0.8} color="#F8F1E9" distance={8} />
 
-        <Suspense
-          fallback={
-            <Html center>
-              <div className="text-[#D4AF37] font-serif text-[10px] uppercase tracking-[0.2em] whitespace-nowrap animate-pulse select-none">
-                Loading 3D Table...
-              </div>
-            </Html>
-          }
-        >
+        <Suspense fallback={null}>
           <group scale={mobileLayout ? 0.92 : 1.30} position={mobileLayout ? [0, 0, 0] : [0, -0.30, 0]}>
             <TableModel textureMax={textureMax} isMobile={mobileLayout} />
             <ShowcaseProductsGroup textureMax={textureMax} tablePosition={[0, 0, -0.5]} />

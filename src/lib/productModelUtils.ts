@@ -617,6 +617,13 @@ export function prepareProductMaterials(
             mat.userData.originalAttenuationColor = mat.attenuationColor?.clone();
           }
         }
+        
+        // PERFECT CLEAR TEXTURES globally
+        if (mat.map) mat.map.anisotropy = 16;
+        if (mat.normalMap) mat.normalMap.anisotropy = 16;
+        if (mat.roughnessMap) mat.roughnessMap.anisotropy = 16;
+        if (mat.metalnessMap) mat.metalnessMap.anisotropy = 16;
+
         const kind = mat.userData.originalKind as JewelryMaterialKind;
         tuned.push(tuneJewelryMaterial(mesh, mat, kind, customization));
       } else {

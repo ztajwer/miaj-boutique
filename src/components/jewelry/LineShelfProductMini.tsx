@@ -72,12 +72,9 @@ const ShelfProductGlb = memo(function ShelfProductGlb({
   isSelected: boolean;
 }) {
   const { scene: productRoot } = useGLTF(config.url, false, false, extendGltfLoader);
-  const [scene, setScene] = useState<THREE.Group | null>(null);
   const groupRef = useRef<THREE.Group>(null);
-  const invalidate = useThree((state) => state.invalidate);
-
-  useEffect(() => {
-    if (!productRoot) return;
+  const scene = useMemo(() => {
+    if (!productRoot) return null;
     const cloned = productRoot.clone(true);
     
     // Deep clone materials so instances do not share and mutate them in-place
@@ -113,9 +110,8 @@ const ShelfProductGlb = memo(function ShelfProductGlb({
       if (mesh.isMesh) mesh.renderOrder = 12;
     });
 
-    setScene(cloned);
-    invalidate();
-  }, [productRoot, config.displaySize, textureMax, customization, invalidate, config.productId]);
+    return cloned;
+  }, [productRoot, config.displaySize, textureMax, customization, config.productId]);
 
   useFrame((state, delta) => {
     if (groupRef.current) {
@@ -157,12 +153,9 @@ const ShelfProductFbx = memo(function ShelfProductFbx({
   isSelected: boolean;
 }) {
   const fbx = useFBX(config.url);
-  const [scene, setScene] = useState<THREE.Group | null>(null);
   const groupRef = useRef<THREE.Group>(null);
-  const invalidate = useThree((state) => state.invalidate);
-
-  useEffect(() => {
-    if (!fbx) return;
+  const scene = useMemo(() => {
+    if (!fbx) return null;
     const cloned = fbx.clone(true);
     
     // Deep clone materials so instances do not share and mutate them in-place
@@ -198,9 +191,8 @@ const ShelfProductFbx = memo(function ShelfProductFbx({
       if (mesh.isMesh) mesh.renderOrder = 12;
     });
 
-    setScene(cloned);
-    invalidate();
-  }, [fbx, config.displaySize, textureMax, customization, invalidate, config.productId]);
+    return cloned;
+  }, [fbx, config.displaySize, textureMax, customization, config.productId]);
 
   useFrame((state, delta) => {
     if (groupRef.current) {
