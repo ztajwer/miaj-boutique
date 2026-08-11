@@ -127,7 +127,7 @@ function SingleShowcaseProduct({
     
     // Perfectly center X and Z, and place the BOTTOM (box.min.y) at Y=0 (since the outer <group> applies `position[1]`)
     cloned.position.x = -center.x * targetScale;
-    cloned.position.y = -box.min.y * targetScale;
+    cloned.position.y = (-box.min.y * targetScale) + 0.002;
     cloned.position.z = -center.z * targetScale;
 
     optimizeModelForGpu(cloned, textureMax);
@@ -251,7 +251,7 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
     }
 
     cloned.position.x = -center.x * targetScale;
-    cloned.position.y = -box.min.y * targetScale;
+    cloned.position.y = (-box.min.y * targetScale) + 0.002;
     cloned.position.z = -0.5;
 
     cloned.traverse((child) => {

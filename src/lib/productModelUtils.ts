@@ -580,7 +580,7 @@ export function fitProductToUniformSize(cloned: THREE.Object3D, targetDisplaySiz
   }
 
   const center = fitted.getCenter(new THREE.Vector3());
-  cloned.position.set(-center.x, -fitted.min.y, -center.z);
+  cloned.position.set(-center.x, -fitted.min.y + 0.002, -center.z);
 }
 
 export interface PrepareProductMaterialsOptions {
