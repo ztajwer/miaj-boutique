@@ -2,9 +2,10 @@
 
 import { Suspense, memo, useEffect, useLayoutEffect, useMemo, useRef, useCallback, useState, Component, type ReactNode } from "react";
 import { useRouter } from "next/navigation";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { ContactShadows, Environment, OrbitControls, PerspectiveCamera, useGLTF, useFBX, View } from "@react-three/drei";
+import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
+import { ContactShadows, OrbitControls, PerspectiveCamera, useGLTF, useFBX, View } from "@react-three/drei";
 import * as THREE from "three";
+import { RGBELoader } from "three-stdlib";
 import { extendGltfLoader, getModelUrl } from "@/lib/modelAssets";
 import { fitProductToUniformSize, prepareProductMaterials, applyJewelryRendererSettings } from "@/lib/productModelUtils";
 import { useCustomization } from "@/context/CustomizationContext";
@@ -256,6 +257,23 @@ const ShelfProduct = memo(function ShelfProduct({
   return <ShelfProductGlb config={config} textureMax={textureMax} customization={customization} isSelected={isSelected} />;
 });
 
+function CustomSafeEnvironment({ intensity }: { intensity: number }) {
+  const texture = useLoader(RGBELoader, "/st_fagans_interior_1k.hdr");
+  const { scene } = useThree();
+
+  useEffect(() => {
+    if (!texture) return;
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    scene.environment = texture;
+    scene.environmentIntensity = intensity;
+    return () => {
+      scene.environment = null;
+    };
+  }, [texture, scene, intensity]);
+
+  return null;
+}
+
 function ShelfControls({ target }: { target: [number, number, number] }) {
   return (
     <OrbitControls
@@ -458,7 +476,9 @@ export default function LineShelfProductMini({ config, mountDelay = 0 }: LineShe
             far={10}
             onUpdate={(c) => c.lookAt(...cam.lookAt)}
           />
-          <Environment preset="lobby" environmentIntensity={1.05} />
+          <Suspense fallback={null}>
+            <CustomSafeEnvironment intensity={1.05} />
+          </Suspense>
           <ContactShadows
             position={[0, 0, 0]}
             opacity={0.42}

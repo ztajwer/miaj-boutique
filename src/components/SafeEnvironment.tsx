@@ -1,31 +1,24 @@
 "use client";
 
-import { Component, type ReactNode } from "react";
-import { Environment, type EnvironmentProps } from "@react-three/drei";
+import { useLoader, useThree } from "@react-three/fiber";
+import { RGBELoader } from "three-stdlib";
+import * as THREE from "three";
+import { useEffect } from "react";
 
-class EnvironmentErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean }> {
-  state = { hasError: false };
+export default function SafeEnvironment({ intensity = 1, file = "/st_fagans_interior_1k.hdr" }: { intensity?: number, file?: string }) {
+  const texture = useLoader(RGBELoader, file);
+  const { scene } = useThree();
 
-  static getDerivedStateFromError() {
-    return { hasError: true };
-  }
+  useEffect(() => {
+    if (!texture) return;
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    scene.environment = texture;
+    scene.environmentIntensity = intensity;
+    
+    return () => {
+      scene.environment = null;
+    };
+  }, [texture, scene, intensity]);
 
-  componentDidCatch(error: Error) {
-    console.warn("[SafeEnvironment] HDRI Environment map failed to load:", error.message);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return <Environment preset="city" environmentIntensity={0.6} background={false} />;
-    }
-    return this.props.children;
-  }
-}
-
-export default function SafeEnvironment(props: EnvironmentProps) {
-  return (
-    <EnvironmentErrorBoundary>
-      <Environment {...props} />
-    </EnvironmentErrorBoundary>
-  );
+  return null;
 }

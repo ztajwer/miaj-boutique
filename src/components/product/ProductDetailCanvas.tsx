@@ -2,7 +2,8 @@
 
 import { Suspense, useLayoutEffect, useMemo, Component, type ReactNode } from "react";
 import { Canvas, useThree } from "@react-three/fiber";
-import { ContactShadows, Environment, Html, OrbitControls, useGLTF, useFBX } from "@react-three/drei";
+import { ContactShadows, Html, OrbitControls, useGLTF, useFBX } from "@react-three/drei";
+import SafeEnvironment from "../SafeEnvironment";
 import * as THREE from "three";
 import { extendGltfLoader, getModelUrl } from "@/lib/modelAssets";
 import { optimizeModelForGpu } from "@/lib/gpuModelOptimize";
@@ -221,7 +222,9 @@ function DetailScene({
     <>
       <ResponsiveCamera />
       <DetailLights />
-      <Environment preset="lobby" environmentIntensity={1.05} />
+      <Suspense fallback={null}>
+        <SafeEnvironment intensity={1.05} />
+      </Suspense>
       <OrbitControls
         makeDefault
         target={[0, targetY, 0]}

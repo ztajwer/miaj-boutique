@@ -10,7 +10,8 @@ import LoadingBridge from "./LoadingBridge";
 import { DEFAULT_FRAME } from "@/lib/doorFraming";
 import { EffectComposer, DepthOfField, Vignette } from "@react-three/postprocessing";
 
-import { Environment } from "@react-three/drei";
+import { ContactShadows, View, PerspectiveCamera } from "@react-three/drei";
+import SafeEnvironment from "./SafeEnvironment";
 
 function DoorSceneContent({
   progressRef,
@@ -23,7 +24,9 @@ function DoorSceneContent({
 
   return (
     <>
-      <Environment files="/lebombo_1k.hdr" />
+      <Suspense fallback={null}>
+        <SafeEnvironment file="/lebombo_1k.hdr" />
+      </Suspense>
       <CinematicCamera progressRef={progressRef} frameRef={frameRef} />
       <SceneLighting brightness={brightness} />
       <GlassDoors progressRef={progressRef} frameRef={frameRef} />
