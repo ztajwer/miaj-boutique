@@ -45,7 +45,7 @@ function triggerGltfPreload(url: string) {
 function preloadCoreShowroomModels() {
   const coreUrls = [
     getModelUrl("door_col.glb"),
-    getModelUrl("Kiosk_Centre_fast.glb")
+    getModelUrl("Kiosk_Centre.glb")
   ];
   if (SHOP_SHELVES_ENABLED) {
     coreUrls.push(getModelUrl("shelf.glb"));
