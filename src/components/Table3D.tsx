@@ -34,7 +34,7 @@ function SingleShowcaseProduct({
   position: [number, number, number];
   rotation?: [number, number, number];
 }) {
-  const { scene: rawScene } = useGLTF(getModelUrl(config.modelFile), false, false, extendGltfLoader);
+  const { scene: rawScene } = useGLTF(getModelUrl(config.modelFile), true, true, extendGltfLoader);
   const router = useRouter();
   const groupRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
@@ -174,7 +174,7 @@ function ShowcaseProductsGroup({ textureMax, tablePosition }: { textureMax: numb
 }
 
 function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: boolean }) {
-  const { scene } = useGLTF(getModelUrl("Kiosk_Centre_opt.glb"), false, false, extendGltfLoader);
+  const { scene } = useGLTF(getModelUrl("Kiosk_Centre_opt.glb"), true, true, extendGltfLoader);
   const groupRef = useRef<THREE.Group>(null);
 
   const clonedScene = useMemo(() => {
@@ -235,36 +235,11 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
           const mat = (mesh.material as THREE.MeshStandardMaterial).clone();
           mesh.material = mat;
           
-          mat.envMapIntensity = 1.35; 
-          const isGlass = mat.transparent || mat.opacity < 1 || (mat.name && mat.name.toLowerCase().includes('glass'));
-          const isMetal = mat.metalness && mat.metalness > 0.5;
-          const isGold = mat.name && mat.name.toLowerCase().includes('gold');
-
-          if (isGlass) {
-            const glassMat = new THREE.MeshPhysicalMaterial({
-              color: 0xffffff,
-              transparent: true,
-              transmission: 0.8,
-              opacity: 0.15, // Make the native glass highly see-through
-              roughness: 0.05,
-              metalness: 0.1,
-              clearcoat: 1.0,
-              ior: 1.45,
-              thickness: 0.02,
-              envMapIntensity: 1.0, // Less blowout reflection
-              side: THREE.DoubleSide,
-              depthWrite: false,
-            });
-            mesh.material = glassMat;
-            mesh.renderOrder = 2;
-          } else if (isMetal || isGold || mat.color.getHex() > 0xaaaaaa) {
-            mat.color.setHex(0xccab89);
-            mat.metalness = Math.max(0.6, mat.metalness || 0);
-            mat.roughness = Math.max(0.35, mat.roughness || 0.35); // Softer roughness to eliminate specular noise
-            mat.envMapIntensity = 1.2; // Reduce overly bright reflections
-            mat.normalMap = null; // Strip normal map to make the surface perfectly smooth
-            mat.roughnessMap = null;
-          }
+          // Disable anisotropy on textures to prevent specular aliasing / noise (flickering on camera movement)
+          if (mat.map) mat.map.anisotropy = 1;
+          if (mat.normalMap) mat.normalMap.anisotropy = 1;
+          if (mat.roughnessMap) mat.roughnessMap.anisotropy = 1;
+          if (mat.metalnessMap) mat.metalnessMap.anisotropy = 1;
         }
       }
     });

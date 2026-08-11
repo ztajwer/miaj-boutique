@@ -71,7 +71,7 @@ const ShelfProductGlb = memo(function ShelfProductGlb({
   customization?: CustomizationSettings;
   isSelected: boolean;
 }) {
-  const { scene: productRoot } = useGLTF(config.url, false, false, extendGltfLoader);
+  const { scene: productRoot } = useGLTF(config.url, true, true, extendGltfLoader);
   const groupRef = useRef<THREE.Group>(null);
   const scene = useMemo(() => {
     if (!productRoot) return null;
