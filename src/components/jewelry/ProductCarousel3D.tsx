@@ -8,12 +8,13 @@ import type { LineShelfProductConfig } from "@/lib/lineShelfProductLayout";
 
 const CAROUSEL_PRODUCT_IDS: ProductId[] = ["pro2", "pro3", "pro4"];
 
-const CAROUSEL_SCALES: Record<ProductId, number> = {
+const CAROUSEL_SCALES: Record<string, number> = {
   pro1: 0.33, // Heritage Ring (made smaller)
   pro2: 0.58, // Luna Bracelet (made larger)
   pro3: 0.50, // Royal Bangles
-  pro4: 0.54, // Cascade Necklace
-  pro5: 0.38, // Starlight Earrings (Sovereign Pendant)
+  pro4: 0.50, // Cascade Necklace
+  pro5: 0.50, // Starlight Earrings
+  protest: 0.50, // Custom table model
 };
 
 function getCarouselProductConfig(productId: ProductId, index: number): LineShelfProductConfig {
