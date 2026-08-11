@@ -9,6 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
+  return (
     <main className="w-full min-h-screen bg-maj-cream">
       <HomeClient />
     </main>
