@@ -1,7 +1,7 @@
 import puppeteer from 'puppeteer';
 
 async function main() {
-  const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'], userDataDir: './tmp_puppeteer_dir' });
+  const browser = await puppeteer.launch({ args: ['--no-sandbox', '--disable-setuid-sandbox'], userDataDir: './tmp_puppeteer_20416' });
   const page = await browser.newPage();
   
   page.on('console', msg => console.log('PAGE LOG:', msg.type(), msg.text()));
