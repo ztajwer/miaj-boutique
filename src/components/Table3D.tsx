@@ -300,12 +300,12 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
               return glassMat;
             } else if (isMetal || isGold || (mat.color && typeof mat.color.getHex === 'function' && mat.color.getHex() > 0xaaaaaa)) {
               if (mat.color && typeof mat.color.setHex === 'function') {
-                mat.color.setHex(0xD4AF37); // Rich vibrant Gold
+                mat.color.setHex(0xccab89);
               }
-              mat.metalness = 1.0;
-              mat.roughness = 0.15; // Smooth highly reflective surface
-              mat.envMapIntensity = 3.5; // High reflection for shiny gold look
-              mat.normalMap = null; // Strip normal map to make the surface perfectly smooth
+              mat.metalness = Math.max(0.7, mat.metalness || 0);
+              mat.roughness = Math.min(0.2, mat.roughness || 1);
+              mat.envMapIntensity = 2.5;
+              mat.normalMap = null; 
               mat.roughnessMap = null;
             }
 
