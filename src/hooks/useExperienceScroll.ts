@@ -150,8 +150,12 @@ export function useExperienceScroll(ready: boolean, skipIntro = false) {
 
       const current = smoothedFocusRef.current;
       const next = current + (eased - current) * 0.11;
-      smoothedFocusRef.current = Math.abs(eased - next) < 0.0004 ? eased : next;
-      setFocusProgress(smoothedFocusRef.current);
+      const newSmoothed = Math.abs(eased - next) < 0.0004 ? eased : next;
+      
+      if (Math.abs(newSmoothed - current) > 0.0001) {
+        smoothedFocusRef.current = newSmoothed;
+        setFocusProgress(newSmoothed);
+      }
 
 
 

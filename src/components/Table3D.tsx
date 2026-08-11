@@ -240,6 +240,16 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
           if (mat.normalMap) mat.normalMap.anisotropy = 1;
           if (mat.roughnessMap) mat.roughnessMap.anisotropy = 1;
           if (mat.metalnessMap) mat.metalnessMap.anisotropy = 1;
+
+          const isMetal = mat.metalness && mat.metalness > 0.5;
+          const isGold = mat.name && mat.name.toLowerCase().includes('gold');
+
+          if (isMetal || isGold || mat.color.getHex() > 0xaaaaaa) {
+            // Tint metal to the soft rose-gold/champagne color you liked, while keeping the textures intact!
+            mat.color.setHex(0xccab89);
+            mat.metalness = Math.max(0.65, mat.metalness || 0);
+            mat.envMapIntensity = 1.25; 
+          }
         }
       }
     });
