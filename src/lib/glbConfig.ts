@@ -4,7 +4,7 @@ export const GLB_CDN_BASE =
 
 export const SHOP_GLB_FILES = [
   "door_col.glb",
-  "Kiosk_Centre.glb",
+  "Kiosk_Centre_opt.glb",
   "shelf.glb",
   "pro1.glb",
   "pro2.glb",
