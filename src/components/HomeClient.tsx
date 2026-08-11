@@ -56,7 +56,7 @@ class HomeErrorBoundary extends Component<{ children: ReactNode }, { failed: boo
 export default function HomeClient() {
   return (
     <HomeErrorBoundary>
-      <div className="fixed inset-0 h-[100dvh] w-screen bg-maj-cream">
+      <div className="w-full min-h-screen bg-maj-cream">
         <Experience />
       </div>
     </HomeErrorBoundary>

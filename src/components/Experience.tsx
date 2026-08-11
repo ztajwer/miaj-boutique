@@ -54,21 +54,15 @@ function ExperienceInner() {
   // 1. Initialize Lenis
   useEffect(() => {
     if (!ready) return;
-    const el = scrollRef.current;
-    if (!el) return;
 
     // Use Lenis for 100% buttery smooth scrolling on the main page and footer
     const Lenis = require("lenis").default || require("lenis");
     const lenis = new Lenis({
-      wrapper: el,
-      content: el.firstElementChild as HTMLElement,
       eventsTarget: window,
       lerp: 0.05,
       wheelMultiplier: 0.8,
       smoothWheel: true,
-      smoothTouch: true,
-      touchMultiplier: 2.0,
-      syncTouch: false,
+      smoothTouch: false, // Critical: Disable to allow native iOS address bar collapse without blinking!
     });
     lenisRef.current = lenis;
 
@@ -90,7 +84,7 @@ function ExperienceInner() {
       lenis.destroy();
       lenisRef.current = null;
     };
-  }, [ready, entered, getOpenDistance, scrollRef]);
+  }, [ready, entered, getOpenDistance]);
 
   // 2. Auto-Open Doors (Fires once when ready)
   useEffect(() => {
@@ -158,7 +152,11 @@ function ExperienceInner() {
       {!showCursorGlitter ? null : <CursorGlitterTrail />}
       {!skipIntro && <Loader onComplete={handleLoadComplete} />}
 
-      {ready && <ShopExperience visible={true} entered={entered} focusProgress={finalFocusProgress} />}
+      {ready && (
+        <div className="shop-experience boutique-hero-stage fixed inset-0 z-0 overflow-hidden pointer-events-none">
+          <ShopExperience visible={true} entered={entered} focusProgress={finalFocusProgress} />
+        </div>
+      )}
 
       {/* Glass doors — shown while user hasn't yet scrolled in */}
       {onDoorScreen && (
@@ -171,12 +169,14 @@ function ExperienceInner() {
 
       {ready && (
         <div
-          ref={scrollRef}
-          className={`experience-scroll-layer shop-scroll-layer fixed inset-0 z-[45] overflow-x-hidden overflow-y-auto overscroll-none ${entered ? "shop-scroll-layer--passthrough" : ""}`}
-          style={{ WebkitOverflowScrolling: "touch" }}
+          className={`experience-scroll-layer shop-scroll-layer absolute inset-x-0 top-0 z-[45] pointer-events-none`}
         >
-          <div aria-hidden style={{ height: scrollHeight || "200vh", minHeight: scrollHeight || "200vh" }} />
-          {entered && <Footer />}
+          <div aria-hidden style={{ height: scrollHeight || "200vh" }} />
+          {entered && (
+            <div className="pointer-events-auto">
+              <Footer />
+            </div>
+          )}
         </div>
       )}
 

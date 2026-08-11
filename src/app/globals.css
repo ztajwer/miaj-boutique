@@ -19,7 +19,6 @@
 html,
 body {
   height: 100%;
-  overflow: hidden;
   background: var(--maj-cream);
   color: var(--maj-brown);
 }
@@ -631,19 +630,10 @@ html.detail-page-scroll body {
 }
 
 .shop-scroll-layer {
-  position: fixed;
-  inset: 0;
+  position: absolute;
+  inset-x: 0;
+  top: 0;
   z-index: 45;
-  overflow-y: auto;
-  overflow-x: hidden;
-  overscroll-behavior: none;
-  -webkit-overflow-scrolling: touch;
-  touch-action: pan-y;
-  pointer-events: auto;
-  scrollbar-width: none;
-}
-
-.shop-scroll-layer--passthrough {
   pointer-events: none;
 }
 

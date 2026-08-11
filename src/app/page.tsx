@@ -9,8 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default function Home() {
-  return (
-    <main className="fixed inset-0 h-[100dvh] w-screen overflow-hidden bg-maj-cream">
+    <main className="w-full min-h-screen bg-maj-cream">
       <HomeClient />
     </main>
   );

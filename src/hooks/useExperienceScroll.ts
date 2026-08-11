@@ -50,10 +50,10 @@ export function useExperienceScroll(ready: boolean, skipIntro = false) {
     const shopRange = getShopRange();
     setScrollHeight(getUnifiedExperienceScrollHeight(openDist, shopRange));
     
-    if (skipIntro && scrollRef.current && !enteredAtScrollRef.current) {
+    if (skipIntro && !enteredAtScrollRef.current) {
       enteredAtScrollRef.current = openDist;
       const targetScroll = openDist + shopRange;
-      scrollRef.current.scrollTop = targetScroll;
+      window.scrollTo(0, targetScroll);
       scrollTopRef.current = targetScroll;
       focusArmedRef.current = true;
     }
@@ -73,22 +73,17 @@ export function useExperienceScroll(ready: boolean, skipIntro = false) {
     smoothedFocusRef.current = 0;
     setFocusProgress(0);
 
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = openDist;
-    }
+    window.scrollTo(0, openDist);
   }, [ready, getOpenDistance]);
 
 
   useEffect(() => {
     if (!ready || prefersReducedMotion()) return;
 
-    const el = scrollRef.current;
-    if (!el) return;
-
     const update = () => {
       const openDist = getOpenDistance();
       const shopRange = getShopRange();
-      let st = el.scrollTop;
+      let st = window.scrollY || document.documentElement.scrollTop;
 
       const doorFullyOpen = st >= openDist;
       if (doorFullyOpen && !shopLatchedRef.current) {
@@ -99,9 +94,8 @@ export function useExperienceScroll(ready: boolean, skipIntro = false) {
 
       // Once in the boutique, never scroll back into the door zone (prevents door UI / progress rewind).
       if (shopLatchedRef.current && st < openDist) {
-        el.scrollTop = openDist;
+        window.scrollTo(0, openDist);
         st = openDist;
-
       }
 
       const dp = shopLatchedRef.current ? 1 : Math.min(1, Math.max(0, st / openDist));
@@ -123,11 +117,11 @@ export function useExperienceScroll(ready: boolean, skipIntro = false) {
     };
 
     update();
-    el.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("scroll", update, { passive: true });
     window.addEventListener("resize", update);
     window.addEventListener("orientationchange", update);
     return () => {
-      el.removeEventListener("scroll", update);
+      window.removeEventListener("scroll", update);
       window.removeEventListener("resize", update);
       window.removeEventListener("orientationchange", update);
     };
@@ -172,9 +166,7 @@ export function useExperienceScroll(ready: boolean, skipIntro = false) {
 
   const forceEnter = useCallback(() => {
     const openDist = getOpenDistance();
-    if (scrollRef.current) {
-      scrollRef.current.scrollTop = openDist;
-    }
+    window.scrollTo(0, openDist);
     progressRef.current = 1;
     setDoorProgress(1);
     shopLatchedRef.current = true;
