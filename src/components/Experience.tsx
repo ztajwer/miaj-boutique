@@ -62,7 +62,9 @@ function ExperienceInner() {
       lerp: 0.05,
       wheelMultiplier: 0.8,
       smoothWheel: true,
-      smoothTouch: false, // Critical: Disable to allow native iOS address bar collapse without blinking!
+      smoothTouch: true,
+      touchMultiplier: 2.0,
+      syncTouch: false,
     });
     lenisRef.current = lenis;
 

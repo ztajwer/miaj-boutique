@@ -19,6 +19,7 @@
 html,
 body {
   height: 100%;
+  overscroll-behavior: none;
   background: var(--maj-cream);
   color: var(--maj-brown);
 }
