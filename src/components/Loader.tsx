@@ -25,8 +25,8 @@ export default function Loader({ onComplete }: LoaderProps) {
   const finishedRef = useRef(false);
   const loaderDurationMs = useRef(
     typeof window !== "undefined" && getDeviceProfile().lowEnd
-      ? LOADER_DURATION_MS_LOW
-      : LOADER_DURATION_MS_DEFAULT,
+      ? MAX_DURATION_MS
+      : MAX_DURATION_MS,
   );
 
   useEffect(() => {
