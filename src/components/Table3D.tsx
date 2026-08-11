@@ -277,6 +277,38 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
             if (mat.roughnessMap) mat.roughnessMap.anisotropy = 1;
             if (mat.metalnessMap) mat.metalnessMap.anisotropy = 1;
 
+            const isGlass = mat.name && mat.name.toLowerCase().includes('glass');
+            const isMetal = mat.metalness !== undefined && mat.metalness > 0.5;
+            const isGold = mat.name && mat.name.toLowerCase().includes('gold');
+
+            if (isGlass) {
+              const glassMat = new THREE.MeshPhysicalMaterial({
+                color: '#ffffff',
+                metalness: 0.1,
+                roughness: 0.05,
+                transmission: 0.9,
+                transparent: true,
+                opacity: 1,
+                clearcoat: 1.0,
+                ior: 1.45,
+                thickness: 0.02,
+                envMapIntensity: 1.0,
+                side: THREE.DoubleSide,
+                depthWrite: false,
+              });
+              mesh.renderOrder = 2;
+              return glassMat;
+            } else if (isMetal || isGold || (mat.color && typeof mat.color.getHex === 'function' && mat.color.getHex() > 0xaaaaaa)) {
+              if (mat.color && typeof mat.color.setHex === 'function') {
+                mat.color.setHex(0xccab89);
+              }
+              mat.metalness = Math.max(0.6, mat.metalness || 0);
+              mat.roughness = Math.max(0.35, mat.roughness || 0.35); // Softer roughness to eliminate specular noise
+              mat.envMapIntensity = 1.2; // Reduce overly bright reflections
+              mat.normalMap = null; // Strip normal map to make the surface perfectly smooth
+              mat.roughnessMap = null;
+            }
+
             return mat as THREE.Material;
           });
 
