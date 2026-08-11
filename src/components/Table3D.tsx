@@ -245,10 +245,16 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
             if (mat.color && typeof mat.color.getHex === 'function') {
               const isMetal = mat.metalness !== undefined && mat.metalness > 0.5;
               const isGold = mat.name && mat.name.toLowerCase().includes('gold');
+              const isTopPad = mat.name === 'White Plastic';
 
-              if (isMetal || isGold || mat.color.getHex() > 0xaaaaaa) {
-                // Tint metal to the soft rose-gold/champagne color you liked, while keeping the textures intact!
-                mat.color.setHex(0xccab89);
+              if (isTopPad) {
+                // Lighten the table's top area (display pad)
+                mat.color.setHex(0xfffaf0); // Very light floral white / cream
+                mat.roughness = 0.4;
+                mat.metalness = 0.1;
+              } else if (isMetal || isGold || mat.color.getHex() > 0xaaaaaa) {
+                // Tint metal to the soft rose-gold/champagne color
+                mat.color.setHex(0xdfc2a6); // Lighter champagne than 0xccab89
                 if (mat.metalness !== undefined) {
                   mat.metalness = Math.max(0.65, mat.metalness);
                 }
