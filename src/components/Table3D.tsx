@@ -86,14 +86,21 @@ function SingleShowcaseProduct({
     const maxDim = Math.max(size.x, size.y, size.z);
     
     let targetScale = 1;
-    if (maxDim > 0) {
-      targetScale = config.targetMaxDim / maxDim;
+    if (config.productId === "protest") {
+      targetScale = 3.5; // Custom hardcoded scale
       cloned.scale.setScalar(targetScale);
+      cloned.position.x = 0;
+      cloned.position.y = 0.05; // Slightly elevated
+      cloned.position.z = 0;
+    } else {
+      if (maxDim > 0) {
+        targetScale = config.targetMaxDim / maxDim;
+        cloned.scale.setScalar(targetScale);
+      }
+      cloned.position.x = -center.x * targetScale;
+      cloned.position.y = -box.min.y * targetScale;
+      cloned.position.z = -center.z * targetScale;
     }
-
-    cloned.position.x = -center.x * targetScale;
-    cloned.position.y = -box.min.y * targetScale;
-    cloned.position.z = -center.z * targetScale;
 
     optimizeModelForGpu(cloned, textureMax);
     return cloned;

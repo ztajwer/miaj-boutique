@@ -517,10 +517,16 @@ function tuneJewelryMaterial(
   return tuned;
 }
 
-export function fitProductToUniformSize(root: THREE.Object3D, targetSpan: number) {
+export function fitProductToUniformSize(cloned: THREE.Object3D, targetDisplaySize: number = 1.0) {
+  // Bypass auto-scaling for custom placeholder models that might have broken bounding boxes
+  if (cloned.name.includes("protest") || (cloned.userData && cloned.userData.productId === "protest")) {
+     cloned.scale.setScalar(targetDisplaySize * 2); // Hardcoded fallback scale
+     return;
+  }
+
   // Strip any embedded lights from the model hierarchy to prevent light count mismatch crashes in WebGLRenderer
   const lightsToRemove: THREE.Object3D[] = [];
-  root.traverse((child) => {
+  cloned.traverse((child) => {
     if ((child as any).isLight) {
       lightsToRemove.push(child);
     }
