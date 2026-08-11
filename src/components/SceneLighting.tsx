@@ -2,7 +2,7 @@
 
 import { Suspense } from "react";
 import { useThree } from "@react-three/fiber";
-import { ContactShadows, Environment } from "@react-three/drei";
+import { ContactShadows } from "@react-three/drei";
 import { PANEL_H } from "./GlassDoors";
 
 import { useLoader } from "@react-three/fiber";
