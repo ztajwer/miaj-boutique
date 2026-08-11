@@ -321,7 +321,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
         <Suspense fallback={null}>
           <group scale={mobileLayout ? 0.92 : 1.30} position={mobileLayout ? [0, 0, 0] : [0, -0.30, 0]}>
             <TableModel textureMax={textureMax} isMobile={mobileLayout} />
-            <ShowcaseProductsGroup textureMax={textureMax} tablePosition={[0, 0, -0.5]} />
+            {/* <ShowcaseProductsGroup textureMax={textureMax} tablePosition={[0, 0, -0.5]} /> */}
             <TableGlassTop tablePosition={[0, 0, -0.5]} />
           </group>
 
