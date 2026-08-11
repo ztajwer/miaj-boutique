@@ -546,7 +546,8 @@ export function fitProductToUniformSize(cloned: THREE.Object3D, targetDisplaySiz
     box.setFromObject(cloned);
   }
 
-  if (box.isEmpty()) {
+  const isBoxInvalid = box.isEmpty() || isNaN(box.min.x) || isNaN(box.max.x) || !isFinite(box.min.x) || !isFinite(box.max.x);
+  if (isBoxInvalid) {
     box.min.set(-1, -1, -1);
     box.max.set(1, 1, 1);
   }
@@ -572,7 +573,8 @@ export function fitProductToUniformSize(cloned: THREE.Object3D, targetDisplaySiz
     fitted.setFromObject(cloned);
   }
 
-  if (fitted.isEmpty()) {
+  const isFittedInvalid = fitted.isEmpty() || isNaN(fitted.min.x) || isNaN(fitted.max.x) || !isFinite(fitted.min.x) || !isFinite(fitted.max.x);
+  if (isFittedInvalid) {
     fitted.min.set(-1, -1, -1);
     fitted.max.set(1, 1, 1);
   }

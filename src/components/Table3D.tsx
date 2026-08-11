@@ -76,6 +76,10 @@ function SingleShowcaseProduct({
       }
     });
 
+    cloned.scale.set(1, 1, 1);
+    cloned.position.set(0, 0, 0);
+    cloned.updateMatrixWorld(true);
+
     const box = new THREE.Box3();
     let hasMesh = false;
     cloned.traverse((child) => {
@@ -86,7 +90,8 @@ function SingleShowcaseProduct({
     });
     if (!hasMesh) box.setFromObject(cloned);
 
-    if (box.isEmpty()) {
+    const isInvalidBox = box.isEmpty() || isNaN(box.min.x) || isNaN(box.max.x) || !isFinite(box.min.x) || !isFinite(box.max.x);
+    if (isInvalidBox) {
       box.min.set(-0.05, -0.05, -0.05);
       box.max.set(0.05, 0.05, 0.05);
     }
@@ -102,10 +107,10 @@ function SingleShowcaseProduct({
       cloned.scale.setScalar(targetScale);
     }
     
-    // Perfectly center X and Z, and place the BOTTOM (box.min.y) exactly on the table (position[1])
-    cloned.position.x = -center.x * targetScale + position[0];
-    cloned.position.y = -box.min.y * targetScale + position[1];
-    cloned.position.z = -center.z * targetScale + position[2];
+    // Perfectly center X and Z, and place the BOTTOM (box.min.y) at Y=0 (since the outer <group> applies `position[1]`)
+    cloned.position.x = -center.x * targetScale;
+    cloned.position.y = -box.min.y * targetScale;
+    cloned.position.z = -center.z * targetScale;
 
     optimizeModelForGpu(cloned, textureMax);
     return cloned;
