@@ -14,6 +14,9 @@ import {
   LINE_SHELF_PRODUCT_SIZE_PX,
   type LineShelfProductConfig,
 } from "@/lib/lineShelfProductLayout";
+import { getDeviceProfile } from "@/lib/deviceProfile";
+import { Suspense, memo } from "react";
+import Image from "next/image";
 import { Canvas } from "@react-three/fiber";
 import { View } from "@react-three/drei";
 import { EffectComposer, DepthOfField, Vignette } from "@react-three/postprocessing";
@@ -121,10 +124,12 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
         {isMobile && (
           <>
             {/* Left shelf PNG */}
-            <img
-              src="/shelf.png?v=5"
+            <Image
+              src="/shelf.png"
               alt=""
               aria-hidden
+              fill
+              sizes="(max-width: 768px) 50vw, 300px"
               className="absolute pointer-events-none"
               style={{
                 top: "calc(32% + 5px)",
@@ -172,13 +177,15 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
             </div>
 
             {/* Center shelf PNG */}
-            <img
-              src="/shelf.png?v=5"
+            <Image
+              src="/shelf.png"
               alt=""
               aria-hidden
+              fill
+              sizes="(max-width: 768px) 50vw, 300px"
               className="absolute pointer-events-none"
               style={{
-                top: "calc(32% + 5px)",
+                top: "calc(51% + 5px)",
                 left: "50%",
                 width: "clamp(85px, calc(40vw - 25px), 500px)",
                 height: "clamp(45px, calc(34vh - 145px), 330px)",
@@ -223,10 +230,12 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
             </div>
 
             {/* Right shelf PNG */}
-            <img
-              src="/shelf.png?v=5"
+            <Image
+              src="/shelf.png"
               alt=""
               aria-hidden
+              fill
+              sizes="(max-width: 768px) 50vw, 300px"
               className="absolute pointer-events-none"
               style={{
                 top: "calc(32% + 5px)", 
@@ -289,7 +298,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
         >
           {/* SHELF */}
           <div className="relative flex flex-col items-center justify-end" style={{ width: "clamp(120px, 20vw, 300px)", height: "clamp(80px, calc(38vh - 100px), 380px)" }}>
-            <img src="/shelf.png?v=5" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+            <Image src="/shelf.png" alt="" aria-hidden fill sizes="(max-width: 1024px) 30vw, 300px" className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
                 {/* {entered && <LineShelfProductMini config={getCustomProductConfig("pro3", 0, "left")} mountDelay={0} />} */}
@@ -299,7 +308,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
 
           {/* SHELF */}
           <div className="relative flex flex-col items-center justify-end" style={{ width: "clamp(120px, 20vw, 300px)", height: "clamp(80px, calc(38vh - 100px), 380px)" }}>
-            <img src="/shelf.png?v=5" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+            <Image src="/shelf.png" alt="" aria-hidden fill sizes="(max-width: 1024px) 30vw, 300px" className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
                 {/* {entered && <LineShelfProductMini config={getCustomProductConfig("pro4", 1, "left")} mountDelay={0} />} */}
@@ -309,7 +318,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
 
           {/* SHELF */}
           <div className="relative flex flex-col items-center justify-end" style={{ width: "clamp(120px, 20vw, 300px)", height: "clamp(80px, calc(38vh - 100px), 380px)" }}>
-            <img src="/shelf.png?v=5" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+            <Image src="/shelf.png" alt="" aria-hidden fill sizes="(max-width: 1024px) 30vw, 300px" className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
                 {/* {entered && <LineShelfProductMini config={getCustomProductConfig("pro5", 2, "right")} mountDelay={0} />} */}
