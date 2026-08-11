@@ -14,8 +14,8 @@ interface LoaderProps {
   onComplete: () => void;
 }
 
-const LOADER_DURATION_MS_DEFAULT = 12000;
-const LOADER_DURATION_MS_LOW = 12000;
+const MIN_DURATION_MS = 3000;
+const MAX_DURATION_MS = 10000;
 const FADE_DURATION_MS = 300;
 
 export default function Loader({ onComplete }: LoaderProps) {
@@ -49,19 +49,21 @@ export default function Loader({ onComplete }: LoaderProps) {
 
   useEffect(() => {
     const startedAt = performance.now();
-    const duration = loaderDurationMs.current;
     let raf = 0;
 
     const tick = (now: number) => {
       const elapsed = now - startedAt;
-      const t = Math.min(1, elapsed / duration);
+      // Progress visually scales over the 10-second maximum
+      const t = Math.min(1, elapsed / MAX_DURATION_MS);
       const eased = t * t * (3 - 2 * t);
       
       const combinedProgress = Math.max(eased * 100, modelProgress);
       setDisplayProgress(Math.min(100, combinedProgress));
 
-      // Wait until the minimum 12 seconds have passed AND the 3D models are perfectly 100% loaded
-      if (elapsed >= duration && !active && modelProgress === 100) {
+      const isLoaded = !active && modelProgress === 100;
+      
+      // Force open doors if 10 seconds have passed, OR if fully loaded and at least 3 seconds passed
+      if (elapsed >= MAX_DURATION_MS || (isLoaded && elapsed >= MIN_DURATION_MS)) {
         finish();
         return;
       }
