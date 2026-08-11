@@ -174,7 +174,7 @@ function ShowcaseProductsGroup({ textureMax, tablePosition }: { textureMax: numb
 }
 
 function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: boolean }) {
-  const { scene } = useGLTF(getModelUrl("Kiosk_Centre_opt.glb"), false, false, extendGltfLoader);
+  const { scene } = useGLTF(getModelUrl("Kiosk_Centre.glb"), false, false, extendGltfLoader);
   const groupRef = useRef<THREE.Group>(null);
 
   const clonedScene = useMemo(() => {
@@ -232,24 +232,35 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
           mesh.receiveShadow = true;
         }
         if (mesh.material) {
-          const mat = (mesh.material as THREE.MeshStandardMaterial).clone();
-          mesh.material = mat;
+          const isArray = Array.isArray(mesh.material);
+          const materials = isArray ? (mesh.material as THREE.Material[]) : [mesh.material as THREE.Material];
           
-          // Disable anisotropy on textures to prevent specular aliasing / noise (flickering on camera movement)
-          if (mat.map) mat.map.anisotropy = 1;
-          if (mat.normalMap) mat.normalMap.anisotropy = 1;
-          if (mat.roughnessMap) mat.roughnessMap.anisotropy = 1;
-          if (mat.metalnessMap) mat.metalnessMap.anisotropy = 1;
+          const clonedMaterials = materials.map((m) => {
+            const mat = m.clone() as any; // Cast to any to safely check properties
+            
+            // Disable anisotropy on textures to prevent specular aliasing / noise (flickering on camera movement)
+            if (mat.map) mat.map.anisotropy = 1;
+            if (mat.normalMap) mat.normalMap.anisotropy = 1;
+            if (mat.roughnessMap) mat.roughnessMap.anisotropy = 1;
+            if (mat.metalnessMap) mat.metalnessMap.anisotropy = 1;
 
-          const isMetal = mat.metalness && mat.metalness > 0.5;
-          const isGold = mat.name && mat.name.toLowerCase().includes('gold');
+            if (mat.color && typeof mat.color.getHex === 'function') {
+              const isMetal = mat.metalness !== undefined && mat.metalness > 0.5;
+              const isGold = mat.name && mat.name.toLowerCase().includes('gold');
 
-          if (isMetal || isGold || mat.color.getHex() > 0xaaaaaa) {
-            // Tint metal to the soft rose-gold/champagne color you liked, while keeping the textures intact!
-            mat.color.setHex(0xccab89);
-            mat.metalness = Math.max(0.65, mat.metalness || 0);
-            mat.envMapIntensity = 1.25; 
-          }
+              if (isMetal || isGold || mat.color.getHex() > 0xaaaaaa) {
+                // Tint metal to the soft rose-gold/champagne color you liked, while keeping the textures intact!
+                mat.color.setHex(0xccab89);
+                if (mat.metalness !== undefined) {
+                  mat.metalness = Math.max(0.65, mat.metalness);
+                }
+                mat.envMapIntensity = 1.25; 
+              }
+            }
+            return mat as THREE.Material;
+          });
+
+          mesh.material = isArray ? clonedMaterials : clonedMaterials[0];
         }
       }
     });
