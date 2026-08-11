@@ -86,6 +86,11 @@ function SingleShowcaseProduct({
     });
     if (!hasMesh) box.setFromObject(cloned);
 
+    if (box.isEmpty()) {
+      box.min.set(-0.05, -0.05, -0.05);
+      box.max.set(0.05, 0.05, 0.05);
+    }
+
     const size = box.getSize(new THREE.Vector3());
     const center = box.getCenter(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z);

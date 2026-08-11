@@ -546,6 +546,11 @@ export function fitProductToUniformSize(cloned: THREE.Object3D, targetDisplaySiz
     box.setFromObject(cloned);
   }
 
+  if (box.isEmpty()) {
+    box.min.set(-1, -1, -1);
+    box.max.set(1, 1, 1);
+  }
+
   const size = box.getSize(new THREE.Vector3());
   const visualSpan = Math.max(size.x, size.y, size.z);
   
@@ -565,6 +570,11 @@ export function fitProductToUniformSize(cloned: THREE.Object3D, targetDisplaySiz
   });
   if (!hasMeshFitted) {
     fitted.setFromObject(cloned);
+  }
+
+  if (fitted.isEmpty()) {
+    fitted.min.set(-1, -1, -1);
+    fitted.max.set(1, 1, 1);
   }
 
   const center = fitted.getCenter(new THREE.Vector3());
