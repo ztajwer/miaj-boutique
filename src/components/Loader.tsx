@@ -8,13 +8,14 @@ import {
   scheduleModelPreloads,
 } from "@/lib/modelPreload";
 import { getDeviceProfile } from "@/lib/deviceProfile";
+import { useProgress } from "@react-three/drei";
 
 interface LoaderProps {
   onComplete: () => void;
 }
 
-const LOADER_DURATION_MS_DEFAULT = 7000;
-const LOADER_DURATION_MS_LOW = 7000;
+const LOADER_DURATION_MS_DEFAULT = 12000;
+const LOADER_DURATION_MS_LOW = 12000;
 const FADE_DURATION_MS = 300;
 
 export default function Loader({ onComplete }: LoaderProps) {
@@ -44,19 +45,23 @@ export default function Loader({ onComplete }: LoaderProps) {
     }, FADE_DURATION_MS);
   }, [onComplete]);
 
+  const { progress: modelProgress, active } = useProgress();
+
   useEffect(() => {
     const startedAt = performance.now();
     const duration = loaderDurationMs.current;
-    const progressWindow = Math.max(400, duration - FADE_DURATION_MS);
     let raf = 0;
 
     const tick = (now: number) => {
       const elapsed = now - startedAt;
-      const t = Math.min(1, elapsed / progressWindow);
+      const t = Math.min(1, elapsed / duration);
       const eased = t * t * (3 - 2 * t);
-      setDisplayProgress(Math.max(1, eased * 100));
+      
+      const combinedProgress = Math.max(eased * 100, modelProgress);
+      setDisplayProgress(Math.min(100, combinedProgress));
 
-      if (elapsed >= duration) {
+      // Wait until the minimum 12 seconds have passed AND the 3D models are perfectly 100% loaded
+      if (elapsed >= duration && !active && modelProgress === 100) {
         finish();
         return;
       }
@@ -65,7 +70,7 @@ export default function Loader({ onComplete }: LoaderProps) {
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [finish]);
+  }, [finish, active, modelProgress]);
 
   if (!visible) return null;
 
