@@ -5,14 +5,26 @@ import { useThree } from "@react-three/fiber";
 import { ContactShadows, Environment } from "@react-three/drei";
 import { PANEL_H } from "./GlassDoors";
 
+import { useLoader } from "@react-three/fiber";
+import { RGBELoader } from "three-stdlib";
+import * as THREE from "three";
+import { useEffect } from "react";
+
 function EnvironmentMap({ intensity }: { intensity: number }) {
-  return (
-    <Environment
-      files="/st_fagans_interior_1k.hdr"
-      environmentIntensity={0.52 + intensity * 0.38}
-      background={false}
-    />
-  );
+  const texture = useLoader(RGBELoader, "/st_fagans_interior_1k.hdr");
+  const { scene } = useThree();
+
+  useEffect(() => {
+    if (!texture) return;
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    scene.environment = texture;
+    scene.environmentIntensity = 0.52 + intensity * 0.38;
+    return () => {
+      scene.environment = null;
+    };
+  }, [texture, scene, intensity]);
+
+  return null;
 }
 
 interface SceneLightingProps {

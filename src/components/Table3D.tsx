@@ -1,9 +1,10 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { useGLTF, Html, Environment, ContactShadows, View, PerspectiveCamera } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
+import { useGLTF, Html, ContactShadows, View, PerspectiveCamera } from "@react-three/drei";
+import { useFrame, useThree, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
+import { RGBELoader } from "three-stdlib";
 import { getModelUrl, extendGltfLoader } from "@/lib/modelAssets";
 import { optimizeModelForGpu, optimizeModelForGpuAsync } from "@/lib/gpuModelOptimize";
 import { getDeviceProfile } from "@/lib/deviceProfile";
@@ -15,6 +16,23 @@ interface ShowcaseProductConfig {
   targetMaxDim: number;
   colorHex?: number;
   mountDelay?: number;
+}
+
+function SafeEnvironment({ intensity }: { intensity: number }) {
+  const texture = useLoader(RGBELoader, "/st_fagans_interior_1k.hdr");
+  const { scene } = useThree();
+
+  useEffect(() => {
+    if (!texture) return;
+    texture.mapping = THREE.EquirectangularReflectionMapping;
+    scene.environment = texture;
+    scene.environmentIntensity = intensity;
+    return () => {
+      scene.environment = null;
+    };
+  }, [texture, scene, intensity]);
+
+  return null;
 }
 
 const SHOWCASE_PRODUCTS: ShowcaseProductConfig[] = [
@@ -259,19 +277,6 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
             if (mat.roughnessMap) mat.roughnessMap.anisotropy = 1;
             if (mat.metalnessMap) mat.metalnessMap.anisotropy = 1;
 
-            if (mat.color && typeof mat.color.getHex === 'function') {
-              const isMetal = mat.metalness !== undefined && mat.metalness > 0.5;
-              const isGold = mat.name && mat.name.toLowerCase().includes('gold');
-
-              if (isMetal || isGold || mat.color.getHex() > 0xaaaaaa) {
-                // Tint metal to the soft rose-gold/champagne color you liked, while keeping the textures intact!
-                mat.color.setHex(0xccab89);
-                if (mat.metalness !== undefined) {
-                  mat.metalness = Math.max(0.65, mat.metalness);
-                }
-                mat.envMapIntensity = 1.25; 
-              }
-            }
             return mat as THREE.Material;
           });
 
@@ -339,7 +344,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
           fov={17.5} 
           onUpdate={(c) => c.lookAt(0, 0.24, 0)}
         />
-        <Environment files="/st_fagans_interior_1k.hdr" environmentIntensity={1.4} background={false} />
+        <SafeEnvironment intensity={1.4} />
         <ambientLight intensity={0.9} color="#F8F1E9" />
         <spotLight position={[0, 5, 0]} intensity={2.0} color="#FFF5E6" angle={0.8} penumbra={0.8} />
         <pointLight position={[0, 1.5, 2.5]} intensity={0.8} color="#F8F1E9" distance={8} />
