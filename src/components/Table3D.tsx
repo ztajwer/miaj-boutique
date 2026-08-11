@@ -339,7 +339,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
           fov={17.5} 
           onUpdate={(c) => c.lookAt(0, 0.24, 0)}
         />
-        <Environment preset="apartment" environmentIntensity={1.4} />
+        <Environment files="/st_fagans_interior_1k.hdr" environmentIntensity={1.4} background={false} />
         <ambientLight intensity={0.9} color="#F8F1E9" />
         <spotLight position={[0, 5, 0]} intensity={2.0} color="#FFF5E6" angle={0.8} penumbra={0.8} />
         <pointLight position={[0, 1.5, 2.5]} intensity={0.8} color="#F8F1E9" distance={8} />
@@ -347,7 +347,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
         <Suspense fallback={null}>
           <group scale={mobileLayout ? 0.92 : 1.30} position={mobileLayout ? [0, 0, 0] : [0, -0.30, 0]}>
             <TableModel textureMax={textureMax} isMobile={mobileLayout} />
-            {/* <ShowcaseProductsGroup textureMax={textureMax} tablePosition={[0, 0, -0.5]} /> */}
+            <ShowcaseProductsGroup textureMax={textureMax} tablePosition={[0, 0, -0.5]} />
             <TableGlassTop tablePosition={[0, 0, -0.5]} />
           </group>
 
