@@ -1,7 +1,5 @@
 "use client";
 
-import Image from "next/image";
-
 import { useEffect, useRef, useState } from "react";
 import { startShopModelLoads } from "@/lib/modelPreload";
 import { createBoutiqueParallaxMotion } from "@/lib/boutiqueParallaxMotion";
@@ -123,11 +121,10 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
         {isMobile && (
           <>
             {/* Left shelf PNG */}
-            <Image
-              src="/shelf.png"
+            <img
+              src="/shelf.png?v=5"
               alt=""
               aria-hidden
-              fill
               className="absolute pointer-events-none"
               style={{
                 top: "calc(32% + 5px)",
@@ -175,11 +172,10 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
             </div>
 
             {/* Center shelf PNG */}
-            <Image
-              src="/shelf.png"
+            <img
+              src="/shelf.png?v=5"
               alt=""
               aria-hidden
-              fill
               className="absolute pointer-events-none"
               style={{
                 top: "calc(32% + 5px)",
@@ -227,11 +223,10 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
             </div>
 
             {/* Right shelf PNG */}
-            <Image
-              src="/shelf.png"
+            <img
+              src="/shelf.png?v=5"
               alt=""
               aria-hidden
-              fill
               className="absolute pointer-events-none"
               style={{
                 top: "calc(32% + 5px)", 
@@ -294,7 +289,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
         >
           {/* SHELF */}
           <div className="relative flex flex-col items-center justify-end" style={{ width: "clamp(120px, 20vw, 300px)", height: "clamp(80px, calc(38vh - 100px), 380px)" }}>
-            <Image src="/shelf.png" alt="" aria-hidden fill sizes="(max-width: 768px) 100vw, 33vw" className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+            <img src="/shelf.png?v=5" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
                 {entered && <LineShelfProductMini config={getCustomProductConfig("pro3", 0, "left")} mountDelay={1200} />}
@@ -304,7 +299,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
 
           {/* SHELF */}
           <div className="relative flex flex-col items-center justify-end" style={{ width: "clamp(120px, 20vw, 300px)", height: "clamp(80px, calc(38vh - 100px), 380px)" }}>
-            <Image src="/shelf.png" alt="" aria-hidden fill sizes="(max-width: 768px) 100vw, 33vw" className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+            <img src="/shelf.png?v=5" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
                 {entered && <LineShelfProductMini config={getCustomProductConfig("pro4", 1, "left")} mountDelay={100} />}
@@ -314,7 +309,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
 
           {/* SHELF */}
           <div className="relative flex flex-col items-center justify-end" style={{ width: "clamp(120px, 20vw, 300px)", height: "clamp(80px, calc(38vh - 100px), 380px)" }}>
-            <Image src="/shelf.png" alt="" aria-hidden fill sizes="(max-width: 768px) 100vw, 33vw" className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+            <img src="/shelf.png?v=5" alt="" aria-hidden className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
                 {entered && <LineShelfProductMini config={getCustomProductConfig("pro5", 2, "right")} mountDelay={2400} />}

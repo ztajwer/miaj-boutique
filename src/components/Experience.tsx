@@ -152,14 +152,11 @@ function ExperienceInner() {
       {!showCursorGlitter ? null : <CursorGlitterTrail />}
       {!skipIntro && <Loader onComplete={handleLoadComplete} />}
 
-      {/* Unconditionally mount ShopExperience so WebGL shaders compile in the background during the Loader phase */}
-      <div 
-        className={`shop-experience boutique-hero-stage fixed inset-0 z-0 overflow-hidden pointer-events-none transition-opacity duration-1000 ${
-          !ready ? 'opacity-0' : 'opacity-100'
-        }`}
-      >
-        <ShopExperience visible={true} entered={entered} focusProgress={finalFocusProgress} />
-      </div>
+      {ready && (
+        <div className="shop-experience boutique-hero-stage fixed inset-0 z-0 overflow-hidden pointer-events-none">
+          <ShopExperience visible={true} entered={entered} focusProgress={finalFocusProgress} />
+        </div>
+      )}
 
       {/* Glass doors — shown while user hasn't yet scrolled in */}
       {onDoorScreen && (

@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useMemo, useRef, useState, useEffect } from "react";
+import { Suspense, useMemo, useRef, useState } from "react";
 import { useGLTF, Html, Environment, ContactShadows, View, PerspectiveCamera } from "@react-three/drei";
 import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
@@ -34,7 +34,7 @@ function SingleShowcaseProduct({
   position: [number, number, number];
   rotation?: [number, number, number];
 }) {
-  const { scene: rawScene } = useGLTF(getModelUrl(config.modelFile), true, true, extendGltfLoader);
+  const { scene: rawScene } = useGLTF(getModelUrl(config.modelFile), false, false, extendGltfLoader);
   const router = useRouter();
   const groupRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);

@@ -19,12 +19,7 @@ function getAudio(): HTMLAudioElement | null {
 }
 
 export function preloadBoutiqueAudio() {
-  if (typeof window !== "undefined") {
-    const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 50));
-    idle(() => {
-      getAudio()?.load();
-    });
-  }
+  getAudio()?.load();
 }
 
 function doorVolume(progress: number) {

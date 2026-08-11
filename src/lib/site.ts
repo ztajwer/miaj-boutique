@@ -18,6 +18,6 @@ export const siteConfig = {
   boutiquePhoneDisplay: "0527766552",
   boutiquePhoneWhatsApp: "971527766552",
   get url() {
-    return process.env.NEXT_PUBLIC_SITE_URL ?? "https://miajboutique.ae";
+    return process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
   },
 } as const;

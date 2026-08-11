@@ -76,7 +76,6 @@ export default function Loader({ onComplete }: LoaderProps) {
       className={`loader-screen fixed inset-0 z-50 transition-opacity duration-[350ms] ease-out ${
         fadeOut ? "pointer-events-none opacity-0" : "opacity-100"
       }`}
-      style={{ willChange: "opacity" }}
     >
       <Image
         src="/background.png"
