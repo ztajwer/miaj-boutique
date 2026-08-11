@@ -8,7 +8,7 @@ import { PANEL_H } from "./GlassDoors";
 function EnvironmentMap({ intensity }: { intensity: number }) {
   return (
     <Environment
-      preset="apartment"
+      files="/st_fagans_interior_1k.hdr"
       environmentIntensity={0.52 + intensity * 0.38}
       background={false}
     />
