@@ -15,7 +15,7 @@ interface LoaderProps {
 }
 
 const MIN_DURATION_MS = 1500; // Fast minimum wait
-const MAX_DURATION_MS = 10000; // Hard max of 10 seconds as requested
+const MAX_DURATION_MS = 5000; // 5s max loader + 5s doors = 10s total sequence
 const FADE_DURATION_MS = 300;
 
 export default function Loader({ onComplete }: LoaderProps) {
