@@ -118,6 +118,7 @@ function SingleShowcaseProduct({
     const center = box.getCenter(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z);
     
+    let targetScale = 1;
     if (maxDim > 0) {
       // Use config.targetMaxDim, or default to a reasonable size if missing
       targetScale = (config.targetMaxDim || 0.25) / maxDim;
