@@ -127,10 +127,10 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
           <div
             className="absolute flex items-end justify-center pointer-events-none"
             style={{
-              top: "22%", // Aligned with the background niches
+              top: "26%", // Adjusted for better alignment on mobile bg
               left: 0,
               right: 0,
-              gap: "2%", // Tight spacing for mobile
+              gap: "3%", // Slightly more spacing for mobile
               zIndex: 15,
             }}
           >
