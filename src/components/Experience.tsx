@@ -39,6 +39,7 @@ function ExperienceInner() {
   } = useExperienceScroll(ready, skipIntro);
 
   const handleLoadComplete = useCallback(() => {
+    hasWatchedIntro = true;
     setReady(true);
   }, []);
 
