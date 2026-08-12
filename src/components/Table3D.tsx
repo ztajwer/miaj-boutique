@@ -36,9 +36,9 @@ function SafeEnvironment({ intensity }: { intensity: number }) {
 }
 
 const SHOWCASE_PRODUCTS: ShowcaseProductConfig[] = [
-  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.25, colorHex: 0xB76E79, mountDelay: 0 }, // Left (Rose Gold)
-  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.25, colorHex: 0xF2F2F2, mountDelay: 0 }, // Center (Shiny Silver)
-  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.25, colorHex: 0xFFD700, mountDelay: 0 }, // Right (Gold)
+  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xB76E79, mountDelay: 0 }, // Left (Rose Gold)
+  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xF2F2F2, mountDelay: 0 }, // Center (Shiny Silver)
+  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xFFD700, mountDelay: 0 }, // Right (Gold)
 ];
 
 function SingleShowcaseProduct({
@@ -121,7 +121,7 @@ function SingleShowcaseProduct({
     let targetScale = 1;
     if (maxDim > 0) {
       // Use config.targetMaxDim, or default to a reasonable size if missing
-      targetScale = (config.targetMaxDim || 0.25) / maxDim;
+      targetScale = (config.targetMaxDim || 0.15) / maxDim;
       cloned.scale.setScalar(targetScale);
     }
     
@@ -307,7 +307,7 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
               return glassMat;
             } else if (isMetal || isGold || (mat.color && typeof mat.color.getHex === 'function' && mat.color.getHex() > 0xaaaaaa)) {
               if (mat.color && typeof mat.color.setHex === 'function') {
-                mat.color.setHex(0x9a8060); // Darker, less washed out table color
+                mat.color.setHex(0xE4C7A7); // Lighter gold/beige to match background
               }
               mat.metalness = Math.max(0.7, mat.metalness || 0);
               mat.roughness = Math.max(0.25, mat.roughness || 0.25); // Slightly rougher to avoid extreme glare
