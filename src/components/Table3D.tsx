@@ -262,6 +262,14 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
     cloned.position.y = (-box.min.y * targetScale) + 0.002;
     cloned.position.z = -0.5;
 
+    console.log("TableModel Debug:", {
+      box: box.clone(),
+      size: size.clone(),
+      center: center.clone(),
+      maxDim,
+      targetScale
+    });
+
     cloned.traverse((child) => {
       const mesh = child as THREE.Mesh;
       if (mesh.isMesh) {
@@ -284,38 +292,6 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
             if (mat.roughnessMap) mat.roughnessMap.anisotropy = 1;
             if (mat.metalnessMap) mat.metalnessMap.anisotropy = 1;
 
-            const isGlass = (mat.name && mat.name.toLowerCase().includes('glass')) || (mat.transmission !== undefined && mat.transmission > 0) || (mat.opacity !== undefined && mat.opacity < 1) || mat.transparent;
-            const isMetal = mat.metalness !== undefined && mat.metalness > 0.5;
-            const isGold = mat.name && mat.name.toLowerCase().includes('gold');
-
-            if (isGlass) {
-              const glassMat = new THREE.MeshPhysicalMaterial({
-                color: '#ffffff',
-                metalness: 0.2,
-                roughness: 0.1,
-                transmission: 0, // Optimized: no heavy screen-space refraction
-                transparent: true,
-                opacity: 0.25,
-                clearcoat: 1.0,
-                ior: 1.45,
-                thickness: 0.02,
-                envMapIntensity: 1.0,
-                side: THREE.DoubleSide,
-                depthWrite: false,
-              });
-              mesh.renderOrder = 2;
-              return glassMat;
-            } else if (isMetal || isGold || (mat.color && typeof mat.color.getHex === 'function' && mat.color.getHex() > 0xaaaaaa)) {
-              if (mat.color && typeof mat.color.setHex === 'function') {
-                mat.color.setHex(0xE4C7A7); // Lighter gold/beige to match background
-              }
-              mat.metalness = Math.max(0.7, mat.metalness || 0);
-              mat.roughness = Math.max(0.25, mat.roughness || 0.25); // Slightly rougher to avoid extreme glare
-              mat.envMapIntensity = 1.0; // Optimized & less glaring
-              mat.normalMap = null; 
-              mat.roughnessMap = null;
-            }
-
             return mat as THREE.Material;
           });
 
@@ -324,14 +300,20 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
       }
     });
 
-    return cloned;
+    return { cloned, debugInfo: { maxDim, targetScale, size: [size.x, size.y, size.z], center: [center.x, center.y, center.z] } };
   }, [scene, textureMax, isMobile]);
 
   if (!clonedScene) return null;
 
   return (
     <group ref={groupRef}>
-      <primitive object={clonedScene} />
+      <Html position={[0, 1, 0]}>
+        <div style={{ background: 'rgba(0,0,0,0.8)', padding: '10px', color: 'white', width: '300px', fontSize: '12px' }}>
+          <h4>Table Debug Info</h4>
+          <pre>{JSON.stringify(clonedScene.debugInfo, null, 2)}</pre>
+        </div>
+      </Html>
+      <primitive object={clonedScene.cloned} />
     </group>
   );
 }
