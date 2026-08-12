@@ -130,35 +130,35 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
               top: "26%", // Adjusted for better alignment on mobile bg
               left: 0,
               right: 0,
-              gap: "3%", // Slightly more spacing for mobile
+              gap: "5%", // Slightly more spacing for mobile
               zIndex: 15,
             }}
           >
             {/* Left Shelf */}
-            <div className="relative flex flex-col items-center justify-end" style={{ width: "32vw", height: "15vh", maxWidth: "150px" }}>
+            <div className="relative flex flex-col items-center justify-end" style={{ width: "27vw", height: "13vh", maxWidth: "110px" }}>
               <Image src="/shelf.png" alt="" aria-hidden fill className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
-              <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[55%] pb-[4%]">
-                <div style={{ width: "70%", height: "90%", zIndex: 20, "--product-size": "100%" } as any}>
+              <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[12%]">
+                <div style={{ width: "65%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
                   {entered && <LineShelfProductMini config={getCustomProductConfig("protest" as any, 0, "left")} mountDelay={1500} />}
                 </div>
               </div>
             </div>
 
             {/* Center Shelf */}
-            <div className="relative flex flex-col items-center justify-end" style={{ width: "36vw", height: "17vh", maxWidth: "170px" }}>
+            <div className="relative flex flex-col items-center justify-end" style={{ width: "30vw", height: "14vh", maxWidth: "125px" }}>
               <Image src="/shelf.png" alt="" aria-hidden fill className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
-              <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[55%] pb-[4%]">
-                <div style={{ width: "70%", height: "90%", zIndex: 20, "--product-size": "100%" } as any}>
+              <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[12%]">
+                <div style={{ width: "65%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
                   {entered && <LineShelfProductMini config={getCustomProductConfig("protest" as any, 1, "left")} mountDelay={3000} />}
                 </div>
               </div>
             </div>
 
             {/* Right Shelf */}
-            <div className="relative flex flex-col items-center justify-end" style={{ width: "32vw", height: "15vh", maxWidth: "150px" }}>
+            <div className="relative flex flex-col items-center justify-end" style={{ width: "27vw", height: "13vh", maxWidth: "110px" }}>
               <Image src="/shelf.png" alt="" aria-hidden fill className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
-              <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[55%] pb-[4%]">
-                <div style={{ width: "70%", height: "90%", zIndex: 20, "--product-size": "100%" } as any}>
+              <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[12%]">
+                <div style={{ width: "65%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
                   {entered && <LineShelfProductMini config={getCustomProductConfig("protest" as any, 2, "right")} mountDelay={4500} />}
                 </div>
               </div>
