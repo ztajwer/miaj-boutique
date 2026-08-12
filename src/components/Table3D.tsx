@@ -89,8 +89,9 @@ function SingleShowcaseProduct({
         });
 
         mesh.material = Array.isArray(mesh.material) ? newMaterials : newMaterials[0];
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
+        // Optimized: disabled real-time shadows on complex meshes to prevent lag, using ContactShadows instead
+        mesh.castShadow = false;
+        mesh.receiveShadow = false;
       }
     });
 
@@ -267,10 +268,9 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
         mesh.frustumCulled = true;
         mesh.raycast = () => null;
         
-        if (!isMobile) {
-          mesh.castShadow = true;
-          mesh.receiveShadow = true;
-        }
+        // Optimized: disable heavy real-time shadows on the table
+        mesh.castShadow = false;
+        mesh.receiveShadow = false;
         if (mesh.material) {
           const isArray = Array.isArray(mesh.material);
           const materials = isArray ? (mesh.material as THREE.Material[]) : [mesh.material as THREE.Material];
