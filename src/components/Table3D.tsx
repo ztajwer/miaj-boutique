@@ -285,7 +285,13 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
             if (mat.roughnessMap) mat.roughnessMap.anisotropy = 1;
             if (mat.metalnessMap) mat.metalnessMap.anisotropy = 1;
 
-            const isGlass = (mat.name && mat.name.toLowerCase().includes('glass')) || (mat.transmission !== undefined && mat.transmission > 0) || (mat.opacity !== undefined && mat.opacity < 1) || mat.transparent;
+            const isGlass = (mat.name && mat.name.toLowerCase().includes('glass')) || 
+                            (mesh.name && mesh.name.toLowerCase().includes('glass')) ||
+                            (mesh.name && mesh.name.toLowerCase().includes('top')) ||
+                            (mat.name && mat.name.toLowerCase().includes('top')) ||
+                            (mat.transmission !== undefined && mat.transmission > 0) || 
+                            (mat.opacity !== undefined && mat.opacity < 1) || 
+                            mat.transparent;
             const isMetal = mat.metalness !== undefined && mat.metalness > 0.5;
             const isGold = mat.name && mat.name.toLowerCase().includes('gold');
 
@@ -325,20 +331,14 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
       }
     });
 
-    return { cloned, debugInfo: { maxDim, targetScale, size: [size.x, size.y, size.z], center: [center.x, center.y, center.z] } };
+    return cloned;
   }, [scene, textureMax, isMobile]);
 
   if (!clonedScene) return null;
 
   return (
     <group ref={groupRef}>
-      <Html position={[0, 1, 0]}>
-        <div style={{ background: 'rgba(0,0,0,0.8)', padding: '10px', color: 'white', width: '300px', fontSize: '12px' }}>
-          <h4>Table Debug Info</h4>
-          <pre>{JSON.stringify(clonedScene.debugInfo, null, 2)}</pre>
-        </div>
-      </Html>
-      <primitive object={clonedScene.cloned} />
+      <primitive object={clonedScene} />
     </group>
   );
 }
