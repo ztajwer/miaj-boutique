@@ -1,7 +1,6 @@
 "use client";
 
-import { Suspense, useCallback, useEffect, useState, useRef } from "react";
-import { useSearchParams } from "next/navigation";
+import { useCallback, useEffect, useState, useRef } from "react";
 import { LoadingProvider } from "@/context/LoadingContext";
 import Loader from "./Loader";
 import CursorGlitterTrail from "./CursorGlitterTrail";
@@ -15,9 +14,17 @@ import Footer from "./Footer";
 import { getShopFocusScrollRange } from "@/lib/shopScrollFocus";
 
 function ExperienceInner() {
-  const searchParams = useSearchParams();
-  const [skipIntro] = useState(() => searchParams.get("skipIntro") === "true");
+  const [skipIntro] = useState(() => {
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("hasWatchedIntro") === "true";
+    }
+    return false;
+  });
   const [ready, setReady] = useState(skipIntro);
+
+  useEffect(() => {
+    // Relying on sessionStorage to correctly persist across page navigations
+  }, []);
 
   const [showCursorGlitter, setShowCursorGlitter] = useState(false);
   const {
@@ -33,6 +40,7 @@ function ExperienceInner() {
   } = useExperienceScroll(ready, skipIntro);
 
   const handleLoadComplete = useCallback(() => {
+    sessionStorage.setItem("hasWatchedIntro", "true");
     setReady(true);
   }, []);
 
@@ -139,9 +147,8 @@ function ExperienceInner() {
     }
   }, [entered, skipIntro, getOpenDistance]);
 
-  const maxFocusProgressRef = useRef(0);
-  maxFocusProgressRef.current = Math.max(maxFocusProgressRef.current, focusProgress, autoFocus);
-  const finalFocusProgress = maxFocusProgressRef.current;
+  // Combine the strict scroll-engine focus with our guaranteed auto-focus override
+  const finalFocusProgress = Math.max(focusProgress, autoFocus);
 
   return (
     <div className="relative h-full w-full bg-maj-cream">
@@ -170,7 +177,14 @@ function ExperienceInner() {
         >
           <div aria-hidden style={{ height: scrollHeight || "200vh" }} />
           {entered && (
-            <div className="pointer-events-auto mt-[80vh]">
+            <div 
+              className="pointer-events-auto transition-all duration-700"
+              style={{ 
+                opacity: focusProgress > 0.9 ? 1 : 0,
+                transform: `translateY(${focusProgress > 0.9 ? 0 : 20}px)`,
+                pointerEvents: focusProgress > 0.9 ? 'auto' : 'none' 
+              }}
+            >
               <Footer />
             </div>
           )}
@@ -184,9 +198,7 @@ function ExperienceInner() {
 export default function Experience() {
   return (
     <LoadingProvider>
-      <Suspense fallback={null}>
-        <ExperienceInner />
-      </Suspense>
+      <ExperienceInner />
     </LoadingProvider>
   );
 }
