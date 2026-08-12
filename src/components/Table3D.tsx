@@ -217,20 +217,13 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
     if (!scene) return null;
     const cloned = scene.clone(true);
     const lightsToRemove: THREE.Object3D[] = [];
-    const backupsToRemove: THREE.Object3D[] = [];
     cloned.traverse((child) => {
       if ((child as any).isLight) {
         lightsToRemove.push(child);
       }
-      if (child.name.includes("HIGHPOLY_BACKUP")) {
-        backupsToRemove.push(child);
-      }
     });
     lightsToRemove.forEach((light) => {
       light.parent?.remove(light);
-    });
-    backupsToRemove.forEach((backup) => {
-      backup.parent?.remove(backup);
     });
 
     cloned.scale.setScalar(1);
@@ -291,6 +284,38 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
             if (mat.normalMap) mat.normalMap.anisotropy = 1;
             if (mat.roughnessMap) mat.roughnessMap.anisotropy = 1;
             if (mat.metalnessMap) mat.metalnessMap.anisotropy = 1;
+
+            const isGlass = (mat.name && mat.name.toLowerCase().includes('glass')) || (mat.transmission !== undefined && mat.transmission > 0) || (mat.opacity !== undefined && mat.opacity < 1) || mat.transparent;
+            const isMetal = mat.metalness !== undefined && mat.metalness > 0.5;
+            const isGold = mat.name && mat.name.toLowerCase().includes('gold');
+
+            if (isGlass) {
+              const glassMat = new THREE.MeshPhysicalMaterial({
+                color: '#ffffff',
+                metalness: 0.2,
+                roughness: 0.1,
+                transmission: 0, // Optimized: no heavy screen-space refraction
+                transparent: true,
+                opacity: 0.25,
+                clearcoat: 1.0,
+                ior: 1.45,
+                thickness: 0.02,
+                envMapIntensity: 1.0,
+                side: THREE.DoubleSide,
+                depthWrite: false,
+              });
+              mesh.renderOrder = 2;
+              return glassMat;
+            } else if (isMetal || isGold || (mat.color && typeof mat.color.getHex === 'function' && mat.color.getHex() > 0xaaaaaa)) {
+              if (mat.color && typeof mat.color.setHex === 'function') {
+                mat.color.setHex(0xE4C7A7); // Lighter gold/beige to match background
+              }
+              mat.metalness = Math.max(0.7, mat.metalness || 0);
+              mat.roughness = Math.max(0.25, mat.roughness || 0.25); // Slightly rougher to avoid extreme glare
+              mat.envMapIntensity = 1.0; // Optimized & less glaring
+              mat.normalMap = null; 
+              mat.roughnessMap = null;
+            }
 
             return mat as THREE.Material;
           });
