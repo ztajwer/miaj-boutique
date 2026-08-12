@@ -353,7 +353,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
 
   return (
     <div
-      className={`table-3d-wrapper absolute left-[50%] -translate-x-1/2 z-[60] w-[100vw] h-[400px] md:h-[600px] ${mobileLayout ? 'bottom-[20px]' : 'bottom-[-260px]'}`}
+      className={`table-3d-wrapper absolute left-[50%] -translate-x-1/2 z-[60] w-[100vw] h-[500px] md:h-[600px] ${mobileLayout ? 'bottom-[10px]' : 'bottom-[-260px]'}`}
       style={{
         opacity,
         pointerEvents: "auto",
@@ -374,7 +374,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
 
         <Suspense fallback={null}>
           <SafeEnvironment intensity={1.4} />
-          <group scale={mobileLayout ? 0.92 : 1.30} position={mobileLayout ? [0, 0, 0] : [0, -0.30, 0]}>
+          <group scale={mobileLayout ? 1.08 : 1.30} position={mobileLayout ? [0, -0.1, 0] : [0, -0.30, 0]}>
             <TableModel textureMax={textureMax} isMobile={mobileLayout} />
             <ShowcaseProductsGroup textureMax={textureMax} tablePosition={[0, 0, -0.5]} />
           </group>
