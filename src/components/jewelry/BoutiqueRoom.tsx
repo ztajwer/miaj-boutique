@@ -127,15 +127,15 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
           <div
             className="absolute flex items-end justify-center pointer-events-none"
             style={{
-              top: "26%", // Adjusted for better alignment on mobile bg
+              top: "34%", // Lowered slightly
               left: 0,
               right: 0,
-              gap: "5%", // Slightly more spacing for mobile
+              gap: "4%", // Adjusted spacing
               zIndex: 15,
             }}
           >
             {/* Left Shelf */}
-            <div className="relative flex flex-col items-center justify-end" style={{ width: "27vw", height: "13vh", maxWidth: "110px" }}>
+            <div className="relative flex flex-col items-center justify-end" style={{ width: "31vw", height: "14vh", maxWidth: "150px" }}>
               <Image src="/shelf.png" alt="" aria-hidden fill className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
               <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[12%]">
                 <div style={{ width: "65%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
@@ -145,7 +145,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
             </div>
 
             {/* Center Shelf */}
-            <div className="relative flex flex-col items-center justify-end" style={{ width: "30vw", height: "14vh", maxWidth: "125px" }}>
+            <div className="relative flex flex-col items-center justify-end" style={{ width: "35vw", height: "16vh", maxWidth: "170px" }}>
               <Image src="/shelf.png" alt="" aria-hidden fill className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
               <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[12%]">
                 <div style={{ width: "65%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
@@ -155,7 +155,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
             </div>
 
             {/* Right Shelf */}
-            <div className="relative flex flex-col items-center justify-end" style={{ width: "27vw", height: "13vh", maxWidth: "110px" }}>
+            <div className="relative flex flex-col items-center justify-end" style={{ width: "31vw", height: "14vh", maxWidth: "150px" }}>
               <Image src="/shelf.png" alt="" aria-hidden fill className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
               <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[12%]">
                 <div style={{ width: "65%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
