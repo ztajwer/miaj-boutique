@@ -216,13 +216,20 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
     if (!scene) return null;
     const cloned = scene.clone(true);
     const lightsToRemove: THREE.Object3D[] = [];
+    const backupsToRemove: THREE.Object3D[] = [];
     cloned.traverse((child) => {
       if ((child as any).isLight) {
         lightsToRemove.push(child);
       }
+      if (child.name.includes("HIGHPOLY_BACKUP")) {
+        backupsToRemove.push(child);
+      }
     });
     lightsToRemove.forEach((light) => {
       light.parent?.remove(light);
+    });
+    backupsToRemove.forEach((backup) => {
+      backup.parent?.remove(backup);
     });
 
     cloned.scale.setScalar(1);
@@ -329,22 +336,7 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
   );
 }
 
-function TableGlassTop({ tablePosition }: { tablePosition: [number, number, number] }) {
-  return (
-    <mesh position={[tablePosition[0], 0.52, tablePosition[2]]}>
-      <cylinderGeometry args={[0.7, 0.7, 0.02, 64]} />
-      <meshPhysicalMaterial 
-        color="#ffffff" 
-        transparent 
-        opacity={0.15} 
-        transmission={0} 
-        roughness={0.1} 
-        thickness={0.02} 
-        side={THREE.DoubleSide} 
-      />
-    </mesh>
-  );
-}
+// TableGlassTop removed since Kiosk_Centre already has a glass node
 
 interface Table3DProps {
   opacity?: number;
@@ -385,7 +377,6 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
           <group scale={mobileLayout ? 0.92 : 1.30} position={mobileLayout ? [0, 0, 0] : [0, -0.30, 0]}>
             <TableModel textureMax={textureMax} isMobile={mobileLayout} />
             <ShowcaseProductsGroup textureMax={textureMax} tablePosition={[0, 0, -0.5]} />
-            <TableGlassTop tablePosition={[0, 0, -0.5]} />
           </group>
 
           {/* Render smooth contact shadow plane to ground it on the floor. Inside Suspense so it bakes AFTER models load. */}
