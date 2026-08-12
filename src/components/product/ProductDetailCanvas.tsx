@@ -192,11 +192,14 @@ function ResponsiveCamera() {
   useLayoutEffect(() => {
     if (!(camera instanceof THREE.PerspectiveCamera)) return;
     const mobile = size.width < 768;
-    camera.position.set(0, mobile ? 0.12 : 0.08, mobile ? 2.05 : 2.25);
-    camera.fov = mobile ? 32 : 28;
+    // Move camera further back and slightly higher to prevent cutting off the product
+    camera.position.set(0, mobile ? 0.15 : 0.10, mobile ? 2.6 : 2.8);
+    // Slightly wider FOV to ensure the whole product fits comfortably in the viewport
+    camera.fov = mobile ? 36 : 32;
     camera.near = 0.01;
     camera.far = 100;
-    camera.lookAt(0, mobile ? 0.06 : 0.04, 0);
+    // Look slightly higher to keep it perfectly centered
+    camera.lookAt(0, mobile ? 0.08 : 0.06, 0);
     camera.updateProjectionMatrix();
   }, [camera, size.width, size.height]);
 
@@ -214,7 +217,7 @@ function DetailScene({
 }) {
   const { size } = useThree();
   const mobile = size.width < 768;
-  const targetY = mobile ? 0.06 : 0.04;
+  const targetY = mobile ? 0.08 : 0.06;
   const minZoom = Math.max(0.22, displaySize * 0.38);
   const maxZoom = mobile ? 5.5 : 6.5;
 
