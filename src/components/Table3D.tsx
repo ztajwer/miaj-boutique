@@ -384,6 +384,18 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
           <group scale={mobileLayout ? 1.08 : 1.30} position={mobileLayout ? [0, -0.1, 0] : [0, -0.30, 0]}>
             <TableModel textureMax={textureMax} isMobile={mobileLayout} />
             <ShowcaseProductsGroup textureMax={textureMax} tablePosition={[0, 0, -0.5]} />
+            
+            {/* Scroll Indicator below the table */}
+            <Html position={[0, -0.05, 0]} center>
+              <div className="flex flex-col items-center animate-bounce pointer-events-none opacity-60 translate-y-12">
+                <span className="text-[#3E2723] text-[10px] font-sans tracking-[0.2em] uppercase mb-1 font-medium whitespace-nowrap">
+                  Footer
+                </span>
+                <svg className="w-3 h-3 text-[#D4AF37]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+                </svg>
+              </div>
+            </Html>
           </group>
 
           {/* Render smooth contact shadow plane to ground it on the floor. Inside Suspense so it bakes AFTER models load. */}

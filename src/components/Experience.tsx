@@ -14,17 +14,8 @@ import Footer from "./Footer";
 import { getShopFocusScrollRange } from "@/lib/shopScrollFocus";
 
 function ExperienceInner() {
-  const [skipIntro] = useState(() => {
-    if (typeof window !== "undefined") {
-      return sessionStorage.getItem("hasWatchedIntro") === "true";
-    }
-    return false;
-  });
-  const [ready, setReady] = useState(skipIntro);
-
-  useEffect(() => {
-    // Relying on sessionStorage to correctly persist across page navigations
-  }, []);
+  const [skipIntro] = useState(false);
+  const [ready, setReady] = useState(false);
 
   const [showCursorGlitter, setShowCursorGlitter] = useState(false);
   const {
@@ -40,7 +31,6 @@ function ExperienceInner() {
   } = useExperienceScroll(ready, skipIntro);
 
   const handleLoadComplete = useCallback(() => {
-    sessionStorage.setItem("hasWatchedIntro", "true");
     setReady(true);
   }, []);
 
@@ -147,8 +137,9 @@ function ExperienceInner() {
     }
   }, [entered, skipIntro, getOpenDistance]);
 
-  // Combine the strict scroll-engine focus with our guaranteed auto-focus override
-  const finalFocusProgress = Math.max(focusProgress, autoFocus);
+  const maxFocusProgressRef = useRef(0);
+  maxFocusProgressRef.current = Math.max(maxFocusProgressRef.current, focusProgress, autoFocus);
+  const finalFocusProgress = maxFocusProgressRef.current;
 
   return (
     <div className="relative h-full w-full bg-maj-cream">
@@ -177,7 +168,7 @@ function ExperienceInner() {
         >
           <div aria-hidden style={{ height: scrollHeight || "200vh" }} />
           {entered && (
-            <div className="pointer-events-auto">
+            <div className="pointer-events-auto mt-[80vh]">
               <Footer />
             </div>
           )}
