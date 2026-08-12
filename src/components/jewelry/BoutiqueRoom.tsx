@@ -130,7 +130,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
               top: "34%", // Lowered slightly
               left: 0,
               right: 0,
-              gap: "4%", // Adjusted spacing
+              gap: "2%", // Reduced spacing
               zIndex: 15,
             }}
           >
