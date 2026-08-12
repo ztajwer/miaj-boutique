@@ -40,8 +40,8 @@ function GlassMat() {
   return (
     <meshPhysicalMaterial
       color="#F8E5D0" 
-      transmission={0} // Optimized
-      opacity={0.25} // Simulates glass without heavy refraction
+      transmission={0.90} // Restored for luxury look
+      opacity={0.10} // Restored original shade
       transparent={true}
       roughness={0.08}
       metalness={0.2}
