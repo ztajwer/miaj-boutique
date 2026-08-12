@@ -13,16 +13,17 @@ import { useExperienceScroll } from "@/hooks/useExperienceScroll";
 import Footer from "./Footer";
 import { getShopFocusScrollRange } from "@/lib/shopScrollFocus";
 
-// Module-level variable persists during Next.js client-side navigation (e.g. back button)
-// but resets to false on a hard page refresh!
-let hasWatchedIntro = false;
-
 function ExperienceInner() {
-  const [skipIntro] = useState(hasWatchedIntro);
+  const [skipIntro] = useState(() => {
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("hasWatchedIntro") === "true";
+    }
+    return false;
+  });
   const [ready, setReady] = useState(skipIntro);
 
   useEffect(() => {
-    // Session storage is no longer used; we use module-level state for perfect back-button behavior
+    // Relying on sessionStorage to correctly persist across page navigations
   }, []);
 
   const [showCursorGlitter, setShowCursorGlitter] = useState(false);
@@ -39,7 +40,7 @@ function ExperienceInner() {
   } = useExperienceScroll(ready, skipIntro);
 
   const handleLoadComplete = useCallback(() => {
-    hasWatchedIntro = true;
+    sessionStorage.setItem("hasWatchedIntro", "true");
     setReady(true);
   }, []);
 

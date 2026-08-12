@@ -119,6 +119,7 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
   const others = getAllProducts().filter((item) => item.id !== product.id).slice(0, 3);
 
   useEffect(() => {
+    window.scrollTo(0, 0); // Force scroll to top when detail page opens
     import("@/lib/modelPreload").then((m) => m.prefetchProductGlb(product.modelFile));
     const sync = () => setViewportWidth(window.innerWidth);
     sync();
