@@ -14,8 +14,8 @@ interface LoaderProps {
   onComplete: () => void;
 }
 
-const MIN_DURATION_MS = 1500; // Drastically reduced artificial wait
-const MAX_DURATION_MS = 6000; // Reduced maximum timeout limit
+const MIN_DURATION_MS = 1500; // Fast minimum wait
+const MAX_DURATION_MS = 10000; // Hard max of 10 seconds as requested
 const FADE_DURATION_MS = 300;
 
 export default function Loader({ onComplete }: LoaderProps) {

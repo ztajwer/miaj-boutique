@@ -97,11 +97,11 @@ function ExperienceInner() {
         if (lenisRef.current) {
           const openDist = getOpenDistance();
           lenisRef.current.scrollTo(openDist, {
-            duration: 8.5, // very smooth and slow opening
+            duration: 5.0, // Exactly 5 seconds as requested
             easing: (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
           });
         }
-      }, 1000); // 1 sec delay before opening
+      }, 100); // Tiny delay to ensure smooth start
     }
   }, [ready, entered, skipIntro, getOpenDistance]);
 
