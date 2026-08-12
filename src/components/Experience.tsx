@@ -1,6 +1,7 @@
 "use client";
 
-import { useCallback, useEffect, useState, useRef } from "react";
+import { Suspense, useCallback, useEffect, useState, useRef } from "react";
+import { useSearchParams } from "next/navigation";
 import { LoadingProvider } from "@/context/LoadingContext";
 import Loader from "./Loader";
 import CursorGlitterTrail from "./CursorGlitterTrail";
@@ -14,8 +15,9 @@ import Footer from "./Footer";
 import { getShopFocusScrollRange } from "@/lib/shopScrollFocus";
 
 function ExperienceInner() {
-  const [skipIntro] = useState(false);
-  const [ready, setReady] = useState(false);
+  const searchParams = useSearchParams();
+  const [skipIntro] = useState(() => searchParams.get("skipIntro") === "true");
+  const [ready, setReady] = useState(skipIntro);
 
   const [showCursorGlitter, setShowCursorGlitter] = useState(false);
   const {
@@ -182,7 +184,9 @@ function ExperienceInner() {
 export default function Experience() {
   return (
     <LoadingProvider>
-      <ExperienceInner />
+      <Suspense fallback={null}>
+        <ExperienceInner />
+      </Suspense>
     </LoadingProvider>
   );
 }

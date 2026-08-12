@@ -147,7 +147,7 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
       </div>
 
       <Link
-        href="/"
+        href="/?skipIntro=true"
         className="product-detail-back fixed left-4 top-4 z-40 inline-flex items-center gap-2 font-sans text-[9px] uppercase tracking-[0.34em] text-maj-brown/75 transition hover:text-maj-gold sm:left-6 sm:top-6 sm:text-[10px]"
       >
         <span className="text-base leading-none">←</span>
