@@ -36,9 +36,9 @@ function SafeEnvironment({ intensity }: { intensity: number }) {
 }
 
 const SHOWCASE_PRODUCTS: ShowcaseProductConfig[] = [
-  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.12, colorHex: 0xB76E79, mountDelay: 0 }, // Left (Rose Gold)
-  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.12, colorHex: 0xF2F2F2, mountDelay: 0 }, // Center (Shiny Silver)
-  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.12, colorHex: 0xFFD700, mountDelay: 0 }, // Right (Gold)
+  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.25, colorHex: 0xB76E79, mountDelay: 0 }, // Left (Rose Gold)
+  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.25, colorHex: 0xF2F2F2, mountDelay: 0 }, // Center (Shiny Silver)
+  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.25, colorHex: 0xFFD700, mountDelay: 0 }, // Right (Gold)
 ];
 
 function SingleShowcaseProduct({
@@ -118,10 +118,9 @@ function SingleShowcaseProduct({
     const center = box.getCenter(new THREE.Vector3());
     const maxDim = Math.max(size.x, size.y, size.z);
     
-    let targetScale = 1;
     if (maxDim > 0) {
       // Use config.targetMaxDim, or default to a reasonable size if missing
-      targetScale = (config.targetMaxDim || 0.12) / maxDim;
+      targetScale = (config.targetMaxDim || 0.25) / maxDim;
       cloned.scale.setScalar(targetScale);
     }
     
@@ -284,11 +283,11 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
             if (isGlass) {
               const glassMat = new THREE.MeshPhysicalMaterial({
                 color: '#ffffff',
-                metalness: 0.1,
-                roughness: 0.05,
-                transmission: 0.9,
+                metalness: 0.2,
+                roughness: 0.1,
+                transmission: 0, // Optimized: no heavy screen-space refraction
                 transparent: true,
-                opacity: 1,
+                opacity: 0.25,
                 clearcoat: 1.0,
                 ior: 1.45,
                 thickness: 0.02,
@@ -300,11 +299,11 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
               return glassMat;
             } else if (isMetal || isGold || (mat.color && typeof mat.color.getHex === 'function' && mat.color.getHex() > 0xaaaaaa)) {
               if (mat.color && typeof mat.color.setHex === 'function') {
-                mat.color.setHex(0xccab89);
+                mat.color.setHex(0x9a8060); // Darker, less washed out table color
               }
               mat.metalness = Math.max(0.7, mat.metalness || 0);
-              mat.roughness = Math.min(0.2, mat.roughness || 1);
-              mat.envMapIntensity = 2.5;
+              mat.roughness = Math.max(0.25, mat.roughness || 0.25); // Slightly rougher to avoid extreme glare
+              mat.envMapIntensity = 1.0; // Optimized & less glaring
               mat.normalMap = null; 
               mat.roughnessMap = null;
             }
@@ -336,9 +335,9 @@ function TableGlassTop({ tablePosition }: { tablePosition: [number, number, numb
       <meshPhysicalMaterial 
         color="#ffffff" 
         transparent 
-        opacity={0.08} 
-        transmission={0.9} 
-        roughness={0} 
+        opacity={0.15} 
+        transmission={0} 
+        roughness={0.1} 
         thickness={0.02} 
         side={THREE.DoubleSide} 
       />
