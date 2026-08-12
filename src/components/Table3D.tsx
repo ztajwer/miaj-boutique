@@ -353,7 +353,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
 
   return (
     <div
-      className={`table-3d-wrapper absolute left-[50%] -translate-x-1/2 z-[60] w-[100vw] h-[400px] md:h-[600px] ${mobileLayout ? 'bottom-[75px]' : 'bottom-[-260px]'}`}
+      className={`table-3d-wrapper absolute left-[50%] -translate-x-1/2 z-[60] w-[100vw] h-[400px] md:h-[600px] ${mobileLayout ? 'bottom-[20px]' : 'bottom-[-260px]'}`}
       style={{
         opacity,
         pointerEvents: "auto",
