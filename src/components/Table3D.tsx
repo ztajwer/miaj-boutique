@@ -209,7 +209,7 @@ function ShowcaseProductsGroup({ textureMax, tablePosition }: { textureMax: numb
 }
 
 function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: boolean }) {
-  const { scene } = useGLTF(getModelUrl("Kiosk_Centre.glb"), true, true, extendGltfLoader);
+  const { scene } = useGLTF(getModelUrl("claudefixper.glb"), true, true, extendGltfLoader);
   const groupRef = useRef<THREE.Group>(null);
 
   const clonedScene = useMemo(() => {

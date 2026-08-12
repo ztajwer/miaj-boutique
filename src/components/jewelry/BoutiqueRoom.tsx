@@ -5,6 +5,7 @@ import { startShopModelLoads } from "@/lib/modelPreload";
 import { createBoutiqueParallaxMotion } from "@/lib/boutiqueParallaxMotion";
 import BoutiqueParallaxBg from "./BoutiqueParallaxBg";
 import Table3D from "../Table3D";
+
 import LineShelfProductMini from "./LineShelfProductMini";
 import { getFocusBgScale, getFocusTableTranslateY, getFocusTableOuterScale } from "@/lib/shopScrollFocus";
 import ProductCarousel3D from "./ProductCarousel3D";
@@ -220,7 +221,6 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
           willChange: "transform"
         }}>
           {entered && <Table3D opacity={1} isMobile={isMobile} />}
-
         </div>
 
       </BoutiqueParallaxBg>
