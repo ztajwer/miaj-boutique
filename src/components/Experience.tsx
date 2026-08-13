@@ -127,14 +127,6 @@ function ExperienceInner() {
           // Force the React state to update the visual zoom instantly (bypassing scroll engine locks)
           setAutoFocus(currentZoom);
 
-          // Silently drag the scroll engine along so it matches when the user takes over
-          if (lenisRef.current) {
-            const shopRange = getShopFocusScrollRange();
-            const openDist = getOpenDistance();
-            const targetScroll = openDist + shopRange * currentZoom;
-            lenisRef.current.scrollTo(targetScroll, { immediate: true });
-          }
-
           if (progress < 1) {
             frameId = requestAnimationFrame(animate);
           }
@@ -147,9 +139,6 @@ function ExperienceInner() {
     }
   }, [entered, skipIntro, getOpenDistance]);
 
-  // Combine the strict scroll-engine focus with our guaranteed auto-focus override
-  const finalFocusProgress = Math.max(focusProgress, autoFocus);
-
   return (
     <div className="relative h-full w-full bg-maj-cream">
       <ModelPreloader doorsReady={ready} />
@@ -158,7 +147,7 @@ function ExperienceInner() {
 
       {ready && (
         <div className="shop-experience boutique-hero-stage fixed inset-0 z-0 overflow-hidden pointer-events-none">
-          <ShopExperience visible={true} entered={entered} focusProgress={finalFocusProgress} />
+          <ShopExperience visible={true} entered={entered} focusProgress={autoFocus} />
         </div>
       )}
 
@@ -177,14 +166,7 @@ function ExperienceInner() {
         >
           <div aria-hidden style={{ height: scrollHeight || "200vh" }} />
           {entered && (
-            <div 
-              className="pointer-events-auto transition-all duration-700"
-              style={{ 
-                opacity: focusProgress > 0.9 ? 1 : 0,
-                transform: `translateY(${focusProgress > 0.9 ? 0 : 20}px)`,
-                pointerEvents: focusProgress > 0.9 ? 'auto' : 'none' 
-              }}
-            >
+            <div className="pointer-events-auto">
               <Footer />
             </div>
           )}
