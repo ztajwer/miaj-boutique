@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, type MutableRefObject } from "react";
-import { useFrame } from "@react-three/fiber";
+import { useFrame, useThree } from "@react-three/fiber";
 import * as THREE from "three";
 import type { DoorFrameState } from "@/lib/doorFraming";
 
@@ -60,10 +60,13 @@ function GlassMat() {
  * Focus: thick, bold, polished luxury bar handle.
  */
 function DoorHandle({ side }: { side: "left" | "right" }) {
+  const { size } = useThree();
+  const isMobile = size.width < 768;
+
   const x         = side === "left" ? GLASS_W / 2 - 0.12 : -GLASS_W / 2 + 0.12;
-  const height    = 2.4;     // Taller height as requested
-  const r         = 0.038;   // Slimmer width as requested
-  const backR     = 0.065;   // bracket radius scaled
+  const height    = isMobile ? 1.7 : 2.4;     // Taller height as requested -> smaller on mobile
+  const r         = isMobile ? 0.052 : 0.038;   // Slimmer width as requested -> wider on mobile
+  const backR     = isMobile ? 0.08 : 0.065;   // bracket radius scaled
   const mountLen  = 0.14;    // bracket depth
   const z         = PANEL_D * 0.5 + 0.08;
 

@@ -64,7 +64,7 @@ function ExperienceInner() {
       lerp: 0.05,
       wheelMultiplier: 0.8,
       smoothWheel: true,
-      smoothTouch: true,
+      smoothTouch: false,
       touchMultiplier: 2.0,
       syncTouch: false,
     });

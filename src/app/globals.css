@@ -702,7 +702,7 @@ html.detail-page-scroll body {
 @media (max-width: 767px) {
   .boutique-room {
     cursor: default;
-    touch-action: none;
+    touch-action: pan-y;
     background-color: #b7a38f;
     background-image:
       radial-gradient(ellipse 90% 55% at 50% 100%, rgba(158, 132, 110, 0.28) 0%, transparent 72%),
