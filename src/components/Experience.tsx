@@ -13,16 +13,18 @@ import { useExperienceScroll } from "@/hooks/useExperienceScroll";
 import Footer from "./Footer";
 import { getShopFocusScrollRange } from "@/lib/shopScrollFocus";
 
-// Module-level variable persists during Next.js client-side navigation (e.g. back button)
-// but resets to false on a hard page refresh!
-let hasWatchedIntro = false;
-
 function ExperienceInner() {
-  const [skipIntro] = useState(hasWatchedIntro);
+  const [skipIntro] = useState(() => {
+    if (typeof window !== "undefined") {
+      return sessionStorage.getItem("hasWatchedIntro") === "true";
+    }
+    return false;
+  });
   const [ready, setReady] = useState(skipIntro);
+  const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
-    // Session storage is no longer used; we use module-level state for perfect back-button behavior
+    // Relying on sessionStorage to correctly persist across page navigations
   }, []);
 
   const [showCursorGlitter, setShowCursorGlitter] = useState(false);
@@ -32,23 +34,23 @@ function ExperienceInner() {
     doorProgress,
     entered,
     focusProgress,
-    canvasOpacity,
     scrollHeight,
     getOpenDistance,
     forceEnter,
-  } = useExperienceScroll(ready, skipIntro);
+    canvasOpacity,
+  } = useExperienceScroll(ready, skipIntro, isMobile);
 
   const handleLoadComplete = useCallback(() => {
+    sessionStorage.setItem("hasWatchedIntro", "true");
     setReady(true);
   }, []);
 
-  const onDoorScreen = ready && !entered;
+  const onDoorScreen = ready && !entered && !isMobile;
   const lenisRef = useRef<any>(null);
-  const hasAutoOpenedRef = useRef(false);
-  const hasAutoZoomedRef = useRef(false);
 
   useEffect(() => {
     setShowCursorGlitter(!getDeviceProfile().lowEnd);
+    setIsMobile(getDeviceProfile().mobile);
   }, []);
 
   // 1. Initialize Lenis
@@ -70,12 +72,6 @@ function ExperienceInner() {
 
     let rafId: number;
     const raf = (time: number) => {
-      // Clamp scroll to prevent scrolling back up into the door zone once entered
-      const openDist = getOpenDistance();
-      if (entered && lenis.targetScroll < openDist) {
-        lenis.scrollTo(openDist, { immediate: true });
-      }
-      
       lenis.raf(time);
       rafId = requestAnimationFrame(raf);
     };
@@ -86,67 +82,9 @@ function ExperienceInner() {
       lenis.destroy();
       lenisRef.current = null;
     };
-  }, [ready, entered, getOpenDistance]);
+  }, [ready]);
 
-  // 2. Auto-Open Doors (Fires once when ready)
-  useEffect(() => {
-    if (ready && !entered && !skipIntro && !hasAutoOpenedRef.current) {
-      hasAutoOpenedRef.current = true;
-      setTimeout(() => {
-        if (lenisRef.current) {
-          const openDist = getOpenDistance();
-          lenisRef.current.scrollTo(openDist, {
-            duration: 8.5, // very smooth and slow opening
-            easing: (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2),
-          });
-        }
-      }, 1000); // 1 sec delay before opening
-    }
-  }, [ready, entered, skipIntro, getOpenDistance]);
-
-  const [autoFocus, setAutoFocus] = useState(0);
-
-  // 3. Auto-Zoom Table/Bg (Fires once after doors are fully open and `entered` becomes true)
-  useEffect(() => {
-    if (entered && !skipIntro && !hasAutoZoomedRef.current) {
-      hasAutoZoomedRef.current = true;
-      // Wait 800ms after entering
-      setTimeout(() => {
-        let start = performance.now();
-        let frameId: number;
-        const duration = 3200; // 3.2 seconds
-        const targetZoom = 0.45; // 45% zoom target
-        
-        const animate = (time: number) => {
-          const progress = Math.min((time - start) / duration, 1);
-          const eased = 1 - Math.pow(1 - progress, 3); // easeOutCubic
-          const currentZoom = targetZoom * eased;
-          
-          // Force the React state to update the visual zoom instantly (bypassing scroll engine locks)
-          setAutoFocus(currentZoom);
-
-          // Silently drag the scroll engine along so it matches when the user takes over
-          if (lenisRef.current) {
-            const shopRange = getShopFocusScrollRange();
-            const openDist = getOpenDistance();
-            const targetScroll = openDist + shopRange * currentZoom;
-            lenisRef.current.scrollTo(targetScroll, { immediate: true });
-          }
-
-          if (progress < 1) {
-            frameId = requestAnimationFrame(animate);
-          }
-        };
-        
-        frameId = requestAnimationFrame(animate);
-
-        return () => cancelAnimationFrame(frameId);
-      }, 800);
-    }
-  }, [entered, skipIntro, getOpenDistance]);
-
-  // Combine the strict scroll-engine focus with our guaranteed auto-focus override
-  const finalFocusProgress = Math.max(focusProgress, autoFocus);
+  const finalFocusProgress = focusProgress;
 
   return (
     <div className="relative h-full w-full bg-maj-cream">
@@ -171,11 +109,11 @@ function ExperienceInner() {
 
       {ready && (
         <div
-          className={`experience-scroll-layer shop-scroll-layer absolute inset-x-0 top-0 z-[45] pointer-events-none`}
+          className={`experience-scroll-layer shop-scroll-layer relative z-[45] pointer-events-none`}
         >
-          <div aria-hidden style={{ height: scrollHeight || "200vh" }} />
+          <div aria-hidden style={{ height: "100vh" }} />
           {entered && (
-            <div className="pointer-events-auto">
+            <div className="pointer-events-auto w-full bg-maj-cream">
               <Footer />
             </div>
           )}

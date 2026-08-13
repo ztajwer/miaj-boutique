@@ -2,181 +2,123 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { getDoorOpenDistance } from "@/lib/doorFraming";
-import {
-  easeLuxuryCinematic,
-  getShopFocusScrollRange,
-} from "@/lib/shopScrollFocus";
-import {
-  getShopFocusRawFromScroll,
-  getShopFocusStartPx,
-  getUnifiedExperienceScrollHeight,
-  SHOP_FOCUS_AFTER_ENTER_PX,
-  SHOP_FOCUS_IDLE_MS,
-} from "@/lib/experienceScroll";
+import { easeLuxuryCinematic } from "@/lib/shopScrollFocus";
 
 function prefersReducedMotion() {
   if (typeof window === "undefined") return false;
   return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 }
 
-/**
- * One scroll container for door + boutique: door uses scrollTop 0→openDist,
- * table zoom only after openDist + deadzone so door gesture never zooms the table.
- */
-export function useExperienceScroll(ready: boolean, skipIntro = false) {
+export function useExperienceScroll(ready: boolean, skipIntro = false, skipDoors = false) {
   const scrollRef = useRef<HTMLDivElement>(null);
-  const progressRef = useRef(skipIntro ? 1 : 0);
-  const targetFocusRef = useRef(0);
-  const smoothedFocusRef = useRef(0);
-  const [doorProgress, setDoorProgress] = useState(skipIntro ? 1 : 0);
-  const [entered, setEntered] = useState(skipIntro);
-  const [focusProgress, setFocusProgress] = useState(0);
+  const progressRef = useRef(skipIntro || skipDoors ? 1 : 0);
+  
+  const [doorProgress, setDoorProgress] = useState(skipIntro || skipDoors ? 1 : 0);
+  const [entered, setEntered] = useState(skipIntro || skipDoors);
+  const [focusProgress, setFocusProgress] = useState(skipIntro ? 1 : 0);
+  
+  // Height is simply viewport + small buffer to allow scrolling footer into view
   const [scrollHeight, setScrollHeight] = useState(0);
-  const enteredAtScrollRef = useRef<number | null>(null);
-  const shopLatchedRef = useRef(skipIntro);
-  const scrollTopRef = useRef(0);
-  const openDistRef = useRef(0);
-  const shopRangeRef = useRef(0);
-  const effectiveFocusStartRef = useRef(0);
-  const lastScrollTsRef = useRef(0);
-  const focusArmedRef = useRef(false);
 
   const getOpenDistance = useCallback(() => getDoorOpenDistance(), []);
-  const getShopRange = useCallback(() => getShopFocusScrollRange(), []);
+  
+  const hasStartedAnimRef = useRef(false);
 
   useEffect(() => {
     if (!ready) return;
-    const openDist = getOpenDistance();
-    const shopRange = getShopRange();
-    setScrollHeight(getUnifiedExperienceScrollHeight(openDist, shopRange));
     
-    if (skipIntro && !enteredAtScrollRef.current) {
-      enteredAtScrollRef.current = openDist;
-      const targetScroll = openDist + shopRange;
-      window.scrollTo(0, targetScroll);
-      scrollTopRef.current = targetScroll;
-      focusArmedRef.current = true;
+    // Set fixed scroll height to 100vh for 3D scene + space for footer to scroll up.
+    // The Experience component will place a 100vh spacer, so the footer appears naturally below.
+    setScrollHeight(window.innerHeight);
+
+    if (skipIntro || prefersReducedMotion()) {
+      progressRef.current = 1;
+      setDoorProgress(1);
+      setEntered(true);
+      setFocusProgress(1);
+      return;
     }
-  }, [ready, getOpenDistance, getShopRange, skipIntro]);
 
-  useEffect(() => {
-    if (!ready) return;
-    if (!prefersReducedMotion()) return;
-
-    progressRef.current = 1;
-    setDoorProgress(1);
-    shopLatchedRef.current = true;
-    const openDist = getOpenDistance();
-    enteredAtScrollRef.current = openDist;
-    setEntered(true);
-    targetFocusRef.current = 0;
-    smoothedFocusRef.current = 0;
-    setFocusProgress(0);
-
-    window.scrollTo(0, openDist);
-  }, [ready, getOpenDistance]);
-
-
-  useEffect(() => {
-    if (!ready || prefersReducedMotion()) return;
-
-    const update = () => {
-      const openDist = getOpenDistance();
-      const shopRange = getShopRange();
-      let st = window.scrollY || document.documentElement.scrollTop;
-
-      const doorFullyOpen = st >= openDist;
-      if (doorFullyOpen && !shopLatchedRef.current) {
-        enteredAtScrollRef.current = openDist;
-        shopLatchedRef.current = true;
-        setEntered(true);
+    if (skipDoors) {
+      progressRef.current = 1;
+      setDoorProgress(1);
+      setEntered(true);
+      // Wait a moment then zoom
+      if (!hasStartedAnimRef.current) {
+        hasStartedAnimRef.current = true;
+        setTimeout(() => {
+          let start = performance.now();
+          const duration = 2500;
+          let raf = 0;
+          const animate = (time: number) => {
+            const t = Math.min(1, (time - start) / duration);
+            const eased = easeLuxuryCinematic(t);
+            setFocusProgress(eased);
+            if (t < 1) {
+              raf = requestAnimationFrame(animate);
+            }
+          };
+          raf = requestAnimationFrame(animate);
+        }, 300);
       }
+      return;
+    }
 
-      // Once in the boutique, never scroll back into the door zone (prevents door UI / progress rewind).
-      if (shopLatchedRef.current && st < openDist) {
-        window.scrollTo(0, openDist);
-        st = openDist;
-      }
-
-      const dp = shopLatchedRef.current ? 1 : Math.min(1, Math.max(0, st / openDist));
-      progressRef.current = dp;
-      setDoorProgress(dp);
-
-      scrollTopRef.current = st;
-      openDistRef.current = openDist;
-      shopRangeRef.current = shopRange;
-      lastScrollTsRef.current = performance.now();
-
-      const enterAnchor = enteredAtScrollRef.current;
-      effectiveFocusStartRef.current =
-        enterAnchor != null
-          ? Math.max(getShopFocusStartPx(openDist), enterAnchor + shopRange * SHOP_FOCUS_AFTER_ENTER_PX)
-          : getShopFocusStartPx(openDist);
-
-
-    };
-
-    update();
-    window.addEventListener("scroll", update, { passive: true });
-    window.addEventListener("resize", update);
-    window.addEventListener("orientationchange", update);
-    return () => {
-      window.removeEventListener("scroll", update);
-      window.removeEventListener("resize", update);
-      window.removeEventListener("orientationchange", update);
-    };
-  }, [ready, getOpenDistance, getShopRange, scrollHeight]);
-
-  useEffect(() => {
-    if (!ready || prefersReducedMotion()) return;
-
-    let raf = 0;
-    const tick = () => {
-      const st = scrollTopRef.current;
-      const openDist = openDistRef.current;
-      const shopRange = shopRangeRef.current;
-      const scrollIdle = performance.now() - lastScrollTsRef.current >= SHOP_FOCUS_IDLE_MS;
-
-      if (shopLatchedRef.current && scrollIdle) {
-        focusArmedRef.current = true;
-      }
-
-      const focusRaw =
-        shopLatchedRef.current && focusArmedRef.current
-          ? getShopFocusRawFromScroll(st, openDist, shopRange, enteredAtScrollRef.current)
-          : 0;
-      const eased = easeLuxuryCinematic(focusRaw);
-      targetFocusRef.current = eased;
-
-      const current = smoothedFocusRef.current;
-      const next = current + (eased - current) * 0.11;
-      const newSmoothed = Math.abs(eased - next) < 0.0004 ? eased : next;
+    // Normal Desktop flow: Doors -> Zoom
+    if (!hasStartedAnimRef.current) {
+      hasStartedAnimRef.current = true;
+      let raf = 0;
+      let start = performance.now();
       
-      if (Math.abs(newSmoothed - current) > 0.0001) {
-        smoothedFocusRef.current = newSmoothed;
-        setFocusProgress(newSmoothed);
-      }
+      const DOOR_DURATION = 4000; // 4s door open
+      const ZOOM_DELAY = 500;
+      const ZOOM_DURATION = 3200; // 3.2s zoom in
 
+      const animate = (time: number) => {
+        const elapsed = time - start;
+        
+        // 1. Door Animation
+        let dProg = Math.min(1, Math.max(0, elapsed / DOOR_DURATION));
+        // ease in-out cubic
+        dProg = dProg < 0.5 ? 4 * dProg * dProg * dProg : 1 - Math.pow(-2 * dProg + 2, 3) / 2;
+        
+        progressRef.current = dProg;
+        setDoorProgress(dProg);
 
-
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [ready]);
+        if (elapsed >= DOOR_DURATION) {
+          setEntered(true);
+          
+          // 2. Zoom Animation
+          const zoomElapsed = elapsed - DOOR_DURATION - ZOOM_DELAY;
+          if (zoomElapsed > 0) {
+            const zProg = Math.min(1, zoomElapsed / ZOOM_DURATION);
+            const easedZoom = easeLuxuryCinematic(zProg);
+            setFocusProgress(easedZoom);
+            
+            if (zProg >= 1) {
+              return; // Done
+            }
+          }
+        }
+        
+        raf = requestAnimationFrame(animate);
+      };
+      
+      raf = requestAnimationFrame(animate);
+      return () => cancelAnimationFrame(raf);
+    }
+    
+  }, [ready, skipIntro, skipDoors]);
 
   const brightness = Math.min(1, Math.max(0, (doorProgress - 0.2) / 0.75));
   const canvasOpacity = Math.min(1, Math.max(0, 1 - (doorProgress - 0.55) / 0.45));
 
   const forceEnter = useCallback(() => {
-    const openDist = getOpenDistance();
-    window.scrollTo(0, openDist);
     progressRef.current = 1;
     setDoorProgress(1);
-    shopLatchedRef.current = true;
-    enteredAtScrollRef.current = openDist;
     setEntered(true);
-  }, [getOpenDistance]);
+    setFocusProgress(1);
+  }, []);
 
   return {
     scrollRef,
@@ -191,3 +133,4 @@ export function useExperienceScroll(ready: boolean, skipIntro = false) {
     forceEnter,
   };
 }
+

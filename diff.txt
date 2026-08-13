@@ -1,0 +1,224 @@
+diff --git a/public/9table.png b/public/9table.png
+deleted file mode 100644
+index 0a29894..0000000
+Binary files a/public/9table.png and /dev/null differ
+diff --git a/public/Kiosk_Centre.glb b/public/Kiosk_Centre.glb
+deleted file mode 100644
+index faac8bb..0000000
+Binary files a/public/Kiosk_Centre.glb and /dev/null differ
+diff --git a/public/claudefixper.glb b/public/claudefixper.glb
+deleted file mode 100644
+index 8ac5d88..0000000
+Binary files a/public/claudefixper.glb and /dev/null differ
+diff --git a/src/components/Experience.tsx b/src/components/Experience.tsx
+index 5e00d1b..f291a1e 100644
+--- a/src/components/Experience.tsx
++++ b/src/components/Experience.tsx
+@@ -36,6 +36,7 @@ function ExperienceInner() {
+     scrollHeight,
+     getOpenDistance,
+     forceEnter,
++    isAtBottom,
+   } = useExperienceScroll(ready, skipIntro);
+ 
+   const handleLoadComplete = useCallback(() => {
+@@ -168,14 +169,20 @@ function ExperienceInner() {
+           opacity={canvasOpacity}
+         />
+       )}
+-
+       {ready && (
+         <div
+           className={`experience-scroll-layer shop-scroll-layer absolute inset-x-0 top-0 z-[45] pointer-events-none`}
+         >
+           <div aria-hidden style={{ height: scrollHeight || "200vh" }} />
+           {entered && (
+-            <div className="pointer-events-auto">
++            <div 
++              className="pointer-events-auto transition-all duration-700 fixed bottom-0 w-full"
++              style={{ 
++                opacity: isAtBottom ? 1 : 0,
++                transform: `translateY(${isAtBottom ? 0 : 20}px)`,
++                pointerEvents: isAtBottom ? 'auto' : 'none' 
++              }}
++            >
+               <Footer />
+             </div>
+           )}
+diff --git a/src/components/GlassDoors.tsx b/src/components/GlassDoors.tsx
+index 0b0229d..7c40b50 100644
+--- a/src/components/GlassDoors.tsx
++++ b/src/components/GlassDoors.tsx
+@@ -40,8 +40,8 @@ function GlassMat() {
+   return (
+     <meshPhysicalMaterial
+       color="#F8E5D0" 
+-      transmission={0.90} 
+-      opacity={0.10} // 10% shade
++      transmission={0.90} // Restored for luxury look
++      opacity={0.10} // Restored original shade
+       transparent={true}
+       roughness={0.08}
+       metalness={0.2}
+diff --git a/src/components/Loader.tsx b/src/components/Loader.tsx
+index c97493d..700e741 100644
+--- a/src/components/Loader.tsx
++++ b/src/components/Loader.tsx
+@@ -2,7 +2,6 @@
+ 
+ import Image from "next/image";
+ import { useCallback, useEffect, useRef, useState } from "react";
+-import LoaderFallingGlitter from "./LoaderFallingGlitter";
+ import {
+   bootImagePipeline,
+   scheduleModelPreloads,
+@@ -94,25 +93,11 @@ export default function Loader({ onComplete }: LoaderProps) {
+         aria-hidden
+       />
+ 
+-      <LoaderFallingGlitter progress={displayProgress} />
+-
+-      <div className="loader-frame pointer-events-none absolute border border-maj-gold/15" />
+-
+       <div className="loader-shell relative z-10 flex flex-col justify-center">
+         <div className="loader-stack animate-fade-up">
+           <div className="loader-logo-wrap">
+             <div className="relative">
+-              <div className="absolute -inset-10 rounded-full bg-maj-gold/14 blur-3xl sm:-inset-12" />
+               <div className="loader-logo-size relative">
+-                <Image
+-                  src="/logo_outline.png"
+-                  alt=""
+-                  fill
+-                  priority
+-                  sizes="(max-width: 640px) 80vw, (max-width: 768px) 48vw, 360px"
+-                  className="loader-logo-outline object-contain object-center"
+-                  aria-hidden
+-                />
+                 <Image
+                   src="/logo.png"
+                   alt="MAJ Boutique"
+diff --git a/src/components/Table3D.tsx b/src/components/Table3D.tsx
+index b09f90d..83ebfcb 100644
+--- a/src/components/Table3D.tsx
++++ b/src/components/Table3D.tsx
+@@ -209,28 +209,21 @@ function ShowcaseProductsGroup({ textureMax, tablePosition }: { textureMax: numb
+ }
+ 
+ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: boolean }) {
+-  const { scene } = useGLTF(getModelUrl("Kiosk_Centre.glb"), true, true, extendGltfLoader);
++  const { scene } = useGLTF(getModelUrl("1.glb"), true, true, extendGltfLoader);
+   const groupRef = useRef<THREE.Group>(null);
+ 
+   const clonedScene = useMemo(() => {
+     if (!scene) return null;
+     const cloned = scene.clone(true);
+     const lightsToRemove: THREE.Object3D[] = [];
+-    const backupsToRemove: THREE.Object3D[] = [];
+     cloned.traverse((child) => {
+       if ((child as any).isLight) {
+         lightsToRemove.push(child);
+       }
+-      if (child.name.includes("HIGHPOLY_BACKUP")) {
+-        backupsToRemove.push(child);
+-      }
+     });
+     lightsToRemove.forEach((light) => {
+       light.parent?.remove(light);
+     });
+-    backupsToRemove.forEach((backup) => {
+-      backup.parent?.remove(backup);
+-    });
+ 
+     cloned.scale.setScalar(1);
+     cloned.position.set(0, 0, 0);
+@@ -307,7 +300,7 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
+               return glassMat;
+             } else if (isMetal || isGold || (mat.color && typeof mat.color.getHex === 'function' && mat.color.getHex() > 0xaaaaaa)) {
+               if (mat.color && typeof mat.color.setHex === 'function') {
+-                mat.color.setHex(0x9a8060); // Darker, less washed out table color
++                mat.color.setHex(0xE4C7A7); // Beautiful shiny light gold
+               }
+               mat.metalness = Math.max(0.7, mat.metalness || 0);
+               mat.roughness = Math.max(0.25, mat.roughness || 0.25); // Slightly rougher to avoid extreme glare
+diff --git a/src/components/product/ProductDetailView.tsx b/src/components/product/ProductDetailView.tsx
+index 6143894..b52b49e 100644
+--- a/src/components/product/ProductDetailView.tsx
++++ b/src/components/product/ProductDetailView.tsx
+@@ -146,7 +146,7 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
+       </div>
+ 
+       <Link
+-        href="/"
++        href="/?skipIntro=true"
+         className="product-detail-back fixed left-4 top-4 z-40 inline-flex items-center gap-2 font-sans text-[9px] uppercase tracking-[0.34em] text-maj-brown/75 transition hover:text-maj-gold sm:left-6 sm:top-6 sm:text-[10px]"
+       >
+         <span className="text-base leading-none">←</span>
+diff --git a/src/hooks/useExperienceScroll.ts b/src/hooks/useExperienceScroll.ts
+index 7f613ec..3b7ec5c 100644
+--- a/src/hooks/useExperienceScroll.ts
++++ b/src/hooks/useExperienceScroll.ts
+@@ -145,16 +145,19 @@ export function useExperienceScroll(ready: boolean, skipIntro = false) {
+         shopLatchedRef.current && focusArmedRef.current
+           ? getShopFocusRawFromScroll(st, openDist, shopRange, enteredAtScrollRef.current)
+           : 0;
+-      const eased = easeLuxuryCinematic(focusRaw);
+-      targetFocusRef.current = eased;
++          
++      // Ensure zoom only increases and never decreases so scroll up doesn't zoom out
++      const clampedFocusRaw = Math.max(targetFocusRef.current || 0, focusRaw);
++      const eased = easeLuxuryCinematic(clampedFocusRaw);
++      targetFocusRef.current = clampedFocusRaw;
+ 
+       const current = smoothedFocusRef.current;
+       const next = current + (eased - current) * 0.11;
+       const newSmoothed = Math.abs(eased - next) < 0.0004 ? eased : next;
+       
+       if (Math.abs(newSmoothed - current) > 0.0001) {
+-        smoothedFocusRef.current = newSmoothed;
+-        setFocusProgress(newSmoothed);
++        smoothedFocusRef.current = Math.max(current, newSmoothed);
++        setFocusProgress(Math.max(current, newSmoothed));
+       }
+ 
+ 
+@@ -165,6 +168,19 @@ export function useExperienceScroll(ready: boolean, skipIntro = false) {
+     return () => cancelAnimationFrame(raf);
+   }, [ready]);
+ 
++  const [isAtBottom, setIsAtBottom] = useState(false);
++
++  useEffect(() => {
++    const handleScroll = () => {
++      const st = window.scrollY || document.documentElement.scrollTop;
++      const sh = document.documentElement.scrollHeight;
++      const ch = window.innerHeight;
++      setIsAtBottom(st + ch >= sh - 100);
++    };
++    window.addEventListener("scroll", handleScroll, { passive: true });
++    return () => window.removeEventListener("scroll", handleScroll);
++  }, []);
++
+   const brightness = Math.min(1, Math.max(0, (doorProgress - 0.2) / 0.75));
+   const canvasOpacity = Math.min(1, Math.max(0, 1 - (doorProgress - 0.55) / 0.45));
+ 
+@@ -189,5 +205,6 @@ export function useExperienceScroll(ready: boolean, skipIntro = false) {
+     canvasOpacity,
+     getOpenDistance,
+     forceEnter,
++    isAtBottom,
+   };
+ }
+diff --git a/src/lib/glbConfig.ts b/src/lib/glbConfig.ts
+index 9ef1fa4..7b35844 100644
+--- a/src/lib/glbConfig.ts
++++ b/src/lib/glbConfig.ts
+@@ -4,7 +4,7 @@ export const GLB_CDN_BASE =
+ 
+ export const SHOP_GLB_FILES = [
+   "door_col.glb",
+-  "Kiosk_Centre.glb",
++  "1.glb",
+   "shelf.glb",
+   "protest.glb",
+ ] as const;
