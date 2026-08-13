@@ -27,8 +27,8 @@ export function isSmallDoorViewport(viewportWidth: number): boolean {
   return viewportWidth < DOOR_MOBILE_BREAKPOINT;
 }
 
-export function getDoorBackgroundImage(viewportWidth: number): "/door_sm.png" | "/door_bg.png" {
-  return isSmallDoorViewport(viewportWidth) ? "/door_sm.png" : "/door_bg.png";
+export function getDoorBackgroundImage(viewportWidth: number): "/door_sm.webp" | "/door_bg.webp" {
+  return isSmallDoorViewport(viewportWidth) ? "/door_sm.webp" : "/door_bg.webp";
 }
 
 export const DOOR_HALF_WIDTH = PANEL_W + 0.08;

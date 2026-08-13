@@ -57,7 +57,7 @@ export const metadata: Metadata = {
     description: siteConfig.description,
     images: [
       {
-        url: "/logo.png",
+        url: "/logo.webp",
         width: 1200,
         height: 630,
         alt: `${siteConfig.name} — luxury jewelry and fashion`,
@@ -68,7 +68,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteConfig.title,
     description: siteConfig.description,
-    images: ["/logo.png"],
+    images: ["/logo.webp"],
   },
   robots: {
     index: true,
@@ -82,8 +82,8 @@ export const metadata: Metadata = {
     },
   },
   icons: {
-    icon: "/logo.png",
-    apple: "/logo.png",
+    icon: "/logo.webp",
+    apple: "/logo.webp",
   },
 };
 
@@ -108,10 +108,10 @@ export default function RootLayout({
             crossOrigin="anonymous"
           />
         )}
-        <link rel="preload" href="/bback.png" as="image" />
-        <link rel="preload" href="/main_mob_bg.png" as="image" />
-        <link rel="preload" href="/logo_outline.png" as="image" />
-        <link rel="preload" href="/logo.png" as="image" />
+        <link rel="preload" href="/bback.webp" as="image" />
+        <link rel="preload" href="/main_mob_bg.webp" as="image" />
+        <link rel="preload" href="/logo_outline.webp" as="image" />
+        <link rel="preload" href="/logo.webp" as="image" />
       </head>
       <body className="font-sans antialiased" suppressHydrationWarning>
         <CustomizationProvider>

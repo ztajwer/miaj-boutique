@@ -8,7 +8,7 @@ import GlassDoors from "./GlassDoors";
 import SceneLighting from "./SceneLighting";
 import LoadingBridge from "./LoadingBridge";
 import { DEFAULT_FRAME } from "@/lib/doorFraming";
-import { EffectComposer, DepthOfField, Vignette } from "@react-three/postprocessing";
+// Removed heavy postprocessing to ensure smooth door opening
 
 import { ContactShadows, View, PerspectiveCamera } from "@react-three/drei";
 import SafeEnvironment from "./SafeEnvironment";
@@ -30,11 +30,7 @@ function DoorSceneContent({
       <CinematicCamera progressRef={progressRef} frameRef={frameRef} />
       <SceneLighting brightness={brightness} />
       <GlassDoors progressRef={progressRef} frameRef={frameRef} />
-      {/* @ts-expect-error disableNormalPass is correct at runtime but missing from types */}
-      <EffectComposer disableNormalPass>
-        <DepthOfField focusDistance={0.02} focalLength={0.15} bokehScale={2.5} height={480} />
-        <Vignette eskil={false} offset={0.1} darkness={1.1} />
-      </EffectComposer>
+      {/* Removed EffectComposer to fix door lag and ensure smooth performance */}
     </>
   );
 }

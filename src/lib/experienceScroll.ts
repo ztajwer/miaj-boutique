@@ -16,8 +16,7 @@ export function getShopFocusStartPx(openDist: number): number {
 
 export function getUnifiedExperienceScrollHeight(openDist: number, shopRange: number): number {
   if (typeof window === "undefined") return 2400;
-  const focusStart = getShopFocusStartPx(openDist);
-  return Math.round(focusStart + shopRange + window.innerHeight * 0.35);
+  return Math.round(openDist + window.innerHeight);
 }
 
 /**

@@ -186,19 +186,25 @@ function ModelFallback() {
   );
 }
 
-function ResponsiveCamera() {
+function ResponsiveCamera({ displaySize }: { displaySize: number }) {
   const { camera, size } = useThree();
 
   useLayoutEffect(() => {
     if (!(camera instanceof THREE.PerspectiveCamera)) return;
     const mobile = size.width < 768;
-    camera.position.set(0, mobile ? 0.12 : 0.08, mobile ? 2.05 : 2.25);
-    camera.fov = mobile ? 32 : 28;
+    const targetY = displaySize * 0.5; // Look at the middle of the product
+    const camY = targetY + (mobile ? 0.04 : 0.02); // Camera slightly above middle
+
+    // Move camera further back to prevent cutting off the product
+    camera.position.set(0, camY, mobile ? 2.8 : 3.0);
+    // Slightly wider FOV to ensure the whole product fits comfortably in the viewport
+    camera.fov = mobile ? 38 : 32;
     camera.near = 0.01;
     camera.far = 100;
-    camera.lookAt(0, mobile ? 0.06 : 0.04, 0);
+    
+    camera.lookAt(0, targetY, 0);
     camera.updateProjectionMatrix();
-  }, [camera, size.width, size.height]);
+  }, [camera, size.width, size.height, displaySize]);
 
   return null;
 }
@@ -214,13 +220,13 @@ function DetailScene({
 }) {
   const { size } = useThree();
   const mobile = size.width < 768;
-  const targetY = mobile ? 0.06 : 0.04;
+  const targetY = displaySize * 0.5; // Orbit center matches camera lookAt
   const minZoom = Math.max(0.22, displaySize * 0.38);
   const maxZoom = mobile ? 5.5 : 6.5;
 
   return (
     <>
-      <ResponsiveCamera />
+      <ResponsiveCamera displaySize={displaySize} />
       <DetailLights />
       <Suspense fallback={null}>
         <SafeEnvironment intensity={1.05} />

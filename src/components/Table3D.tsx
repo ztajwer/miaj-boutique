@@ -36,9 +36,9 @@ function SafeEnvironment({ intensity }: { intensity: number }) {
 }
 
 const SHOWCASE_PRODUCTS: ShowcaseProductConfig[] = [
-  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.25, colorHex: 0xB76E79, mountDelay: 0 }, // Left (Rose Gold)
-  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.25, colorHex: 0xF2F2F2, mountDelay: 0 }, // Center (Shiny Silver)
-  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.25, colorHex: 0xFFD700, mountDelay: 0 }, // Right (Gold)
+  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xB76E79, mountDelay: 0 }, // Left (Rose Gold)
+  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xF2F2F2, mountDelay: 0 }, // Center (Shiny Silver)
+  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xFFD700, mountDelay: 0 }, // Right (Gold)
 ];
 
 function SingleShowcaseProduct({
@@ -89,8 +89,9 @@ function SingleShowcaseProduct({
         });
 
         mesh.material = Array.isArray(mesh.material) ? newMaterials : newMaterials[0];
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
+        // Optimized: disabled real-time shadows on complex meshes to prevent lag, using ContactShadows instead
+        mesh.castShadow = false;
+        mesh.receiveShadow = false;
       }
     });
 
@@ -121,7 +122,7 @@ function SingleShowcaseProduct({
     let targetScale = 1;
     if (maxDim > 0) {
       // Use config.targetMaxDim, or default to a reasonable size if missing
-      targetScale = (config.targetMaxDim || 0.25) / maxDim;
+      targetScale = (config.targetMaxDim || 0.15) / maxDim;
       cloned.scale.setScalar(targetScale);
     }
     
@@ -209,27 +210,20 @@ function ShowcaseProductsGroup({ textureMax, tablePosition }: { textureMax: numb
 }
 
 function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: boolean }) {
-  const { scene } = useGLTF(getModelUrl("Kiosk_Centre.glb"), true, true, extendGltfLoader);
+  const { scene } = useGLTF(getModelUrl("try.glb"), true, true, extendGltfLoader);
   const groupRef = useRef<THREE.Group>(null);
 
   const clonedScene = useMemo(() => {
     if (!scene) return null;
     const cloned = scene.clone(true);
     const lightsToRemove: THREE.Object3D[] = [];
-    const backupsToRemove: THREE.Object3D[] = [];
     cloned.traverse((child) => {
       if ((child as any).isLight) {
         lightsToRemove.push(child);
       }
-      if (child.name.includes("HIGHPOLY_BACKUP")) {
-        backupsToRemove.push(child);
-      }
     });
     lightsToRemove.forEach((light) => {
       light.parent?.remove(light);
-    });
-    backupsToRemove.forEach((backup) => {
-      backup.parent?.remove(backup);
     });
 
     cloned.scale.setScalar(1);
@@ -267,18 +261,16 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
         mesh.frustumCulled = true;
         mesh.raycast = () => null;
         
-        if (!isMobile) {
-          mesh.castShadow = true;
-          mesh.receiveShadow = true;
-        }
+        // Optimized: disable heavy real-time shadows on the table
+        mesh.castShadow = false;
+        mesh.receiveShadow = false;
         if (mesh.material) {
           const isArray = Array.isArray(mesh.material);
           const materials = isArray ? (mesh.material as THREE.Material[]) : [mesh.material as THREE.Material];
           
           const clonedMaterials = materials.map((m) => {
-            const mat = m.clone() as any; // Cast to any to safely check properties
+            const mat = m.clone() as any; 
             
-            // Disable anisotropy on textures to prevent specular aliasing / noise (flickering on camera movement)
             if (mat.map) mat.map.anisotropy = 1;
             if (mat.normalMap) mat.normalMap.anisotropy = 1;
             if (mat.roughnessMap) mat.roughnessMap.anisotropy = 1;
@@ -307,7 +299,7 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
               return glassMat;
             } else if (isMetal || isGold || (mat.color && typeof mat.color.getHex === 'function' && mat.color.getHex() > 0xaaaaaa)) {
               if (mat.color && typeof mat.color.setHex === 'function') {
-                mat.color.setHex(0x9a8060); // Darker, less washed out table color
+                mat.color.setHex(0xE4C7A7); // Lighter gold/beige to match background
               }
               mat.metalness = Math.max(0.7, mat.metalness || 0);
               mat.roughness = Math.max(0.25, mat.roughness || 0.25); // Slightly rougher to avoid extreme glare
@@ -353,7 +345,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
 
   return (
     <div
-      className={`table-3d-wrapper absolute left-[50%] -translate-x-1/2 z-[60] w-[100vw] h-[400px] md:h-[600px] ${mobileLayout ? 'bottom-[57px]' : 'bottom-[-260px]'}`}
+      className={`table-3d-wrapper absolute left-[50%] -translate-x-1/2 z-[60] w-[100vw] h-[500px] md:h-[600px] ${mobileLayout ? 'bottom-[10px]' : 'bottom-[-260px]'}`}
       style={{
         opacity,
         pointerEvents: "auto",
@@ -374,7 +366,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
 
         <Suspense fallback={null}>
           <SafeEnvironment intensity={1.4} />
-          <group scale={mobileLayout ? 0.92 : 1.30} position={mobileLayout ? [0, 0, 0] : [0, -0.30, 0]}>
+          <group scale={mobileLayout ? 1.08 : 1.30} position={mobileLayout ? [0, -0.1, 0] : [0, -0.30, 0]}>
             <TableModel textureMax={textureMax} isMobile={mobileLayout} />
             <ShowcaseProductsGroup textureMax={textureMax} tablePosition={[0, 0, -0.5]} />
           </group>

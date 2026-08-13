@@ -2,7 +2,6 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useRef, useState } from "react";
-import LoaderFallingGlitter from "./LoaderFallingGlitter";
 import {
   bootImagePipeline,
   scheduleModelPreloads,
@@ -94,15 +93,10 @@ export default function Loader({ onComplete }: LoaderProps) {
         aria-hidden
       />
 
-      <LoaderFallingGlitter progress={displayProgress} />
-
-      <div className="loader-frame pointer-events-none absolute border border-maj-gold/15" />
-
       <div className="loader-shell relative z-10 flex flex-col justify-center">
         <div className="loader-stack animate-fade-up">
           <div className="loader-logo-wrap">
             <div className="relative">
-              <div className="absolute -inset-10 rounded-full bg-maj-gold/14 blur-3xl sm:-inset-12" />
               <div className="loader-logo-size relative">
                 <Image
                   src="/logo_outline.webp"

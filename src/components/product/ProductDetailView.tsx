@@ -119,6 +119,7 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
   const others = getAllProducts().filter((item) => item.id !== product.id).slice(0, 3);
 
   useEffect(() => {
+    window.scrollTo(0, 0); // Force scroll to top when detail page opens
     import("@/lib/modelPreload").then((m) => m.prefetchProductGlb(product.modelFile));
     const sync = () => setViewportWidth(window.innerWidth);
     sync();
@@ -132,7 +133,7 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
     <div className="product-detail-immersive relative z-[60] w-full min-h-[100dvh] text-maj-brown">
       <div className="pointer-events-none fixed inset-0 -z-10">
         <Image
-          src={viewportWidth < 768 ? "/main_mob_bg.png" : "/bback.png"}
+          src={viewportWidth < 768 ? "/main_mob_bg.webp" : "/bback.webp"}
           alt=""
           fill
           priority

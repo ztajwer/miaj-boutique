@@ -9,9 +9,9 @@ let imagePipelineStarted = false;
 let modelPipelineScheduled = false;
 let shopStarted = false;
 
-const SHOP_IMAGES = ["/imagemob.png", "/image.png"] as const;
-const DOOR_IMAGES = ["/door_sm.png", "/door_bg.png"] as const;
-const LOADER_IMAGES = ["/bg.png", "/logo_outline.png", "/logo.png"] as const;
+const SHOP_IMAGES = ["/imagemob.webp", "/image.webp"] as const;
+const DOOR_IMAGES = ["/door_sm.webp", "/door_bg.webp"] as const;
+const LOADER_IMAGES = ["/bg.webp", "/logo_outline.webp", "/logo.webp"] as const;
 
 function collectShopGlbUrls(): string[] {
   const urls = new Set<string>();
