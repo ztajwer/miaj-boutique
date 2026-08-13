@@ -85,7 +85,7 @@ export default function Loader({ onComplete }: LoaderProps) {
       }`}
     >
       <Image
-        src="/background.png"
+        src="/background.webp"
         alt=""
         fill
         priority
@@ -105,7 +105,7 @@ export default function Loader({ onComplete }: LoaderProps) {
               <div className="absolute -inset-10 rounded-full bg-maj-gold/14 blur-3xl sm:-inset-12" />
               <div className="loader-logo-size relative">
                 <Image
-                  src="/logo_outline.png"
+                  src="/logo_outline.webp"
                   alt=""
                   fill
                   priority
@@ -114,7 +114,7 @@ export default function Loader({ onComplete }: LoaderProps) {
                   aria-hidden
                 />
                 <Image
-                  src="/logo.png"
+                  src="/logo.webp"
                   alt="MAJ Boutique"
                   fill
                   priority

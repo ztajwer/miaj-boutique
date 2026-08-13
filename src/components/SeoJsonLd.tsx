@@ -7,7 +7,7 @@ export default function SeoJsonLd() {
     name: siteConfig.name,
     description: siteConfig.description,
     url: siteConfig.url,
-    image: `${siteConfig.url}/logo.png`,
+    image: `${siteConfig.url}/logo.webp`,
     priceRange: "$$$",
     currenciesAccepted: "USD",
     paymentAccepted: "Credit Card",

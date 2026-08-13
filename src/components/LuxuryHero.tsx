@@ -18,7 +18,7 @@ export interface LuxuryHeroProps {
   textParallaxPx?: number;
 }
 
-const DEFAULT_IMAGE = "/bback.png";
+const DEFAULT_IMAGE = "/bback.webp";
 
 export default function LuxuryHero({
   imageSrc = DEFAULT_IMAGE,

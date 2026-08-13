@@ -1114,10 +1114,10 @@ canvas {
   overflow: hidden;
 }
 
-/* Mobile only (<768px): door_sm.png locked to exact viewport — not big, not small */
+/* Mobile only (<768px): door_sm.webp locked to exact viewport — not big, not small */
 .door-bg--sm {
   display: block;
-  background-image: url(/door_sm.png);
+  background-image: url(/door_sm.webp);
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 100% 100%;
