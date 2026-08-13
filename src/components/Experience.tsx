@@ -38,14 +38,14 @@ function ExperienceInner() {
     getOpenDistance,
     forceEnter,
     canvasOpacity,
-  } = useExperienceScroll(ready, skipIntro, isMobile);
+  } = useExperienceScroll(ready, skipIntro, false);
 
   const handleLoadComplete = useCallback(() => {
     sessionStorage.setItem("hasWatchedIntro", "true");
     setReady(true);
   }, []);
 
-  const onDoorScreen = ready && !entered && !isMobile;
+  const onDoorScreen = ready && !entered;
   const lenisRef = useRef<any>(null);
 
   useEffect(() => {
