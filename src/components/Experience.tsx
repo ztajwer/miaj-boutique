@@ -94,7 +94,7 @@ function ExperienceInner() {
 
       {ready && (
         <div className="shop-experience boutique-hero-stage fixed inset-0 z-0 overflow-hidden pointer-events-none">
-          <ShopExperience visible={true} entered={entered} focusProgress={autoFocus} />
+          <ShopExperience visible={true} entered={entered} focusProgress={finalFocusProgress} />
         </div>
       )}
 
