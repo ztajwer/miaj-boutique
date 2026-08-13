@@ -110,7 +110,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
     <div
       ref={roomRef}
       className="boutique-room boutique-hero"
-      aria-label="MAJ Boutique showroom"
+      aria-label="MIAJ Boutique showroom"
     >
       <BoutiqueParallaxBg
         mobileVideoSrc={BOUTIQUE_VIDEO_MOBILE}

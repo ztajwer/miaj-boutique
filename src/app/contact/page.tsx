@@ -121,7 +121,7 @@ export default function ContactPage() {
         <div className="rounded-[20px] md:rounded-[30px] border border-[#e8caa9] bg-white/75 backdrop-blur-md p-6 md:p-10 shadow-[0_30px_60px_rgba(77,52,36,0.08)]">
           <div className="text-center">
             <div className="mx-auto w-36 md:w-44">
-              <Image src="/logo.webp" alt="MAJ Boutique" width={288} height={96} className="mx-auto" />
+              <Image src="/logo.webp" alt="MIAJ Boutique" width={288} height={96} className="mx-auto" />
             </div>
             <h2
               className="mt-6 text-2xl md:text-3xl font-semibold text-[#b78a4f]"
@@ -257,7 +257,7 @@ export default function ContactPage() {
             </div>
             <h3 className="mt-5 text-xl font-semibold text-[#8a5f31] font-serif tracking-wide">Message Sent!</h3>
             <p className="mt-3 text-xs leading-relaxed text-[#6f5843] px-1">
-              Thank you for contacting **MAJ Boutique**. Your message has been successfully received. We will respond shortly to your email address.
+              Thank you for contacting **MIAJ Boutique**. Your message has been successfully received. We will respond shortly to your email address.
             </p>
             <button
               onClick={() => setShowSuccessModal(false)}

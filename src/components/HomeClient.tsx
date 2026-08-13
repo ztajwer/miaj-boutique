@@ -8,7 +8,7 @@ const Experience = dynamic(() => import("@/components/Experience"), {
   loading: () => (
     <div className="fixed inset-0 flex flex-col items-center justify-center bg-maj-cream">
       <div className="animate-pulse font-serif text-lg tracking-widest text-[#D4AF37]">
-        MAJ BOUTIQUE
+        MIAJ BOUTIQUE
       </div>
       <p className="mt-4 font-sans text-[10px] uppercase tracking-[0.3em] text-[#3E2723]/60">
         Loading...
@@ -32,7 +32,7 @@ class HomeErrorBoundary extends Component<{ children: ReactNode }, { failed: boo
     if (this.state.failed) {
       return (
         <div className="fixed inset-0 flex flex-col items-center justify-center gap-4 bg-maj-cream">
-          <p className="font-serif text-lg tracking-wide text-maj-brown">MAJ Boutique</p>
+          <p className="font-serif text-lg tracking-wide text-maj-brown">MIAJ Boutique</p>
           <p className="max-w-xs px-6 text-center font-sans text-[10px] leading-relaxed tracking-wide text-maj-brown/60">
             Something went wrong loading the experience. Try a hard refresh.
           </p>

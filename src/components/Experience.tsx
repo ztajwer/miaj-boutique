@@ -113,7 +113,7 @@ function ExperienceInner() {
         >
           <div aria-hidden style={{ height: "100vh" }} />
           {entered && (
-            <div className="pointer-events-auto w-full bg-maj-cream">
+            <div className="pointer-events-auto w-[100vw] relative left-[50%] -translate-x-1/2 bg-maj-cream">
               <Footer />
             </div>
           )}

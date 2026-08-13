@@ -1,10 +1,10 @@
 export const siteConfig = {
-  name: "MAJ Boutique",
-  title: "MAJ Boutique | Luxury Jewelry & Fashion Boutique",
+  name: "MIAJ Boutique",
+  title: "MIAJ Boutique | Luxury Jewelry & Fashion Boutique",
   description:
-    "Step inside MAJ Boutique — an immersive luxury jewelry and fashion experience. Explore curated collections with golden glass doors, ambient sound, and premium 3D presentation.",
+    "Step inside MIAJ Boutique — an immersive luxury jewelry and fashion experience. Explore curated collections with golden glass doors, ambient sound, and premium 3D presentation.",
   keywords: [
-    "MAJ Boutique",
+    "MIAJ Boutique",
     "luxury jewelry",
     "fashion boutique",
     "gold jewelry",

@@ -22,7 +22,7 @@ export default function Footer() {
         {/* Brand Section */}
         <div className="flex flex-col space-y-6">
           <h2 className={`${cormorant.className} text-3xl font-medium text-[#3E2723]`}>
-            MAJ Boutique
+            MIAJ Boutique
           </h2>
           <p className="text-sm text-[#3E2723]/70 leading-relaxed font-sans max-w-sm">
             Discover the epitome of luxury and elegance. We craft timeless pieces that celebrate your unique beauty and style.
@@ -94,7 +94,7 @@ export default function Footer() {
       
       <div className="max-w-7xl mx-auto mt-16 pt-6 border-t border-[#3E2723]/10 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 pb-16 lg:pb-0">
         <p className="text-xs text-[#3E2723]/50 font-sans uppercase tracking-widest">
-          &copy; {new Date().getFullYear()} MAJ Boutique. All rights reserved.
+          &copy; {new Date().getFullYear()} MIAJ Boutique. All rights reserved.
         </p>
         <div className="flex space-x-6 text-xs text-[#3E2723]/50 font-sans uppercase tracking-widest">
           <Link href="#" className="hover:text-[#D4AF37] transition-colors">Privacy Policy</Link>

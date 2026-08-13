@@ -22,8 +22,8 @@ const DEFAULT_IMAGE = "/bback.webp";
 
 export default function LuxuryHero({
   imageSrc = DEFAULT_IMAGE,
-  imageAlt = "MAJ Boutique interior",
-  eyebrow = "MAJ Boutique",
+  imageAlt = "MIAJ Boutique interior",
+  eyebrow = "MIAJ Boutique",
   title = "Timeless Elegance",
   subtitle = "An immersive sanctuary of fine jewelry and couture — crafted for those who move through the world with quiet confidence.",
   bgParallaxPx = CINEMATIC_PARALLAX.bgRangePx,

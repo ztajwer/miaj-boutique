@@ -109,7 +109,7 @@ export default function Loader({ onComplete }: LoaderProps) {
                 />
                 <Image
                   src="/logo.webp"
-                  alt="MAJ Boutique"
+                  alt="MIAJ Boutique"
                   fill
                   priority
                   sizes="(max-width: 640px) 72vw, (max-width: 768px) 48vw, 320px"
