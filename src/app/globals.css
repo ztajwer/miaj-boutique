@@ -20,6 +20,7 @@ html,
 body {
   min-height: 100dvh;
   overscroll-behavior: none;
+  overflow-x: clip;
   background: var(--maj-cream);
   color: var(--maj-brown);
 }
