@@ -39,14 +39,17 @@ function ChampagneMat({ roughness = 0.08 }: { roughness?: number }) {
 function GlassMat() {
   return (
     <meshPhysicalMaterial
-      color="#F8E5D0"
-      transmission={0}
-      opacity={0.6}
+      color="#ffffff"
+      transmission={1.0}
+      opacity={1}
       transparent={true}
-      roughness={0.08}
-      metalness={0.7}
-      ior={1.45}
-      envMapIntensity={3.5}
+      roughness={0.05}
+      metalness={0.1}
+      ior={1.52}
+      thickness={0.05}
+      clearcoat={1.0}
+      clearcoatRoughness={0.05}
+      envMapIntensity={2.5}
       side={THREE.DoubleSide}
       depthWrite={false}
     />
