@@ -40,16 +40,14 @@ function GlassMat() {
   return (
     <meshPhysicalMaterial
       color="#ffffff"
-      transmission={1.0}
-      opacity={1}
+      transmission={0}
+      opacity={0.15}
       transparent={true}
       roughness={0.05}
       metalness={0.1}
-      ior={1.52}
-      thickness={0.05}
       clearcoat={1.0}
       clearcoatRoughness={0.05}
-      envMapIntensity={2.5}
+      envMapIntensity={3.5}
       side={THREE.DoubleSide}
       depthWrite={false}
     />
