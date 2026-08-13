@@ -58,7 +58,7 @@ export default function DoorSceneCanvas({
       <Canvas
         shadows={false}
         dpr={1}
-        gl={{ antialias: false, alpha: true, powerPreference: "default" }}
+        gl={{ antialias: false, alpha: true, stencil: false, powerPreference: "high-performance" }}
         style={{ width: "100%", height: "100%" }}
         onCreated={({ gl }) => {
           gl.setClearColor(0x000000, 0);
