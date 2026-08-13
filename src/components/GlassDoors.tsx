@@ -40,8 +40,8 @@ function GlassMat() {
   return (
     <meshPhysicalMaterial
       color="#F8E5D0" 
-      transmission={0}
-      opacity={0.25}
+      transmission={0.90}
+      opacity={0.10}
       transparent={true}
       roughness={0.08}
       metalness={0.2}
