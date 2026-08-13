@@ -63,6 +63,7 @@ function getCustomProductConfig(
     productId,
     productSizePx: LINE_SHELF_PRODUCT_SIZE_PX,
     displaySize: PRODUCT_SHELF_SCALES[productId] ?? 0.48,
+    colorHex: 0xD4AF37, // Golden default
   };
 }
 
@@ -81,6 +82,7 @@ function getCarouselProductConfig(
     productId,
     productSizePx: 80,
     displaySize: 0.48,
+    colorHex: 0xE8E9EB, // Silver default for carousel
   };
 }
 

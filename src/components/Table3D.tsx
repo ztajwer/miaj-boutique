@@ -36,9 +36,9 @@ function SafeEnvironment({ intensity }: { intensity: number }) {
 }
 
 const SHOWCASE_PRODUCTS: ShowcaseProductConfig[] = [
-  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xB76E79, mountDelay: 0 }, // Left (Rose Gold)
-  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xF2F2F2, mountDelay: 0 }, // Center (Shiny Silver)
-  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xFFD700, mountDelay: 0 }, // Right (Gold)
+  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xD4AF37, mountDelay: 0 }, // Left (Classic Gold)
+  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xE8E9EB, mountDelay: 0 }, // Center (Platinum)
+  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xE5C77A, mountDelay: 0 }, // Right (Soft Gold)
 ];
 
 function SingleShowcaseProduct({
