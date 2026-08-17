@@ -489,7 +489,7 @@ export default function LineShelfProductMini({ config, mountDelay = 0 }: LineShe
             frames={1}
             resolution={256}
           />
-          <Suspense fallback={<ProductPlaceholder />}>
+          <Suspense fallback={null}>
             <ShelfProduct config={config} textureMax={textureMax} customization={customization} isSelected={isSelected} />
           </Suspense>
         </View>

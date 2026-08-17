@@ -158,7 +158,7 @@ function SingleShowcaseProduct({
         onPointerOut={(e) => { e.stopPropagation(); document.body.style.cursor = 'auto'; setHovered(false); }}
       >
         <primitive object={clonedScene} />
-        <ContactShadows position={[0, 0, 0]} opacity={0.6} scale={0.3} blur={1.5} far={0.3} color="#3D2817" />
+        <ContactShadows position={[0, 0, 0]} opacity={0.6} scale={0.3} blur={1.5} far={0.3} color="#3D2817" frames={1} resolution={256} />
       </group>
     </group>
   );
@@ -175,7 +175,7 @@ function DelayedShowcaseProduct({
   position: [number, number, number];
   rotation?: [number, number, number];
 }) {
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(() => (config.mountDelay || 0) <= 0);
 
   useEffect(() => {
     const delay = config.mountDelay || 0;
@@ -306,6 +306,11 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
               mat.envMapIntensity = 1.0; // Optimized & less glaring
               mat.normalMap = null; 
               mat.roughnessMap = null;
+            } else {
+              // Any other material that is not glass or metal/gold (like the black surface)
+              if (mat.color && typeof mat.color.setHex === 'function') {
+                mat.color.setHex(0xf2efe9); // Soft off-white (not very white)
+              }
             }
 
             return mat as THREE.Material;
@@ -345,7 +350,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
 
   return (
     <div
-      className={`table-3d-wrapper absolute left-[50%] -translate-x-1/2 z-[60] w-[100vw] h-[500px] md:h-[600px] ${mobileLayout ? 'bottom-[10px]' : 'bottom-[-260px]'}`}
+      className={`table-3d-wrapper absolute left-[50%] -translate-x-1/2 z-[60] w-full h-[500px] md:h-[600px] ${mobileLayout ? 'bottom-[6dvh]' : 'bottom-[-260px]'}`}
       style={{
         opacity,
         pointerEvents: "auto",
@@ -366,7 +371,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
 
         <Suspense fallback={null}>
           <SafeEnvironment intensity={1.4} />
-          <group scale={mobileLayout ? 1.08 : 1.30} position={mobileLayout ? [0, -0.1, 0] : [0, -0.30, 0]}>
+          <group scale={mobileLayout ? 1.20 : 1.30} position={mobileLayout ? [-0.06, -0.1, 0] : [0, -0.30, 0]}>
             <TableModel textureMax={textureMax} isMobile={mobileLayout} />
             <ShowcaseProductsGroup textureMax={textureMax} tablePosition={[0, 0, -0.5]} />
           </group>
@@ -378,7 +383,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
             scale={15.0}
             blur={2.2}
             far={4.0}
-            resolution={1024}
+            resolution={512}
             color="#3D2817"
             frames={1}
           />

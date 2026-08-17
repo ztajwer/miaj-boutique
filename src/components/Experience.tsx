@@ -92,11 +92,9 @@ function ExperienceInner() {
       {!showCursorGlitter ? null : <CursorGlitterTrail />}
       {!skipIntro && <Loader onComplete={handleLoadComplete} />}
 
-      {ready && (
-        <div className="shop-experience boutique-hero-stage fixed inset-0 z-0 overflow-hidden pointer-events-none">
-          <ShopExperience visible={true} entered={entered} focusProgress={finalFocusProgress} />
-        </div>
-      )}
+      <div className="shop-experience boutique-hero-stage fixed inset-0 z-0 overflow-hidden pointer-events-none">
+        <ShopExperience visible={true} entered={entered} focusProgress={finalFocusProgress} />
+      </div>
 
       {/* Glass doors — shown while user hasn't yet scrolled in */}
       {onDoorScreen && (

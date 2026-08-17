@@ -67,7 +67,7 @@ export default function ProductCarousel3D() {
             }}
           >
             {/* Background removed so products look like they sit directly inside/on the table glass */}
-            <LineShelfProductMini config={getCarouselProductConfig(id, idx)} mountDelay={idx * 120} />
+            <LineShelfProductMini config={getCarouselProductConfig(id, idx)} mountDelay={0} />
           </div>
         );
       })}

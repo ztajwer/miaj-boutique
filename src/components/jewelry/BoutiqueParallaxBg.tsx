@@ -50,14 +50,14 @@ export default function BoutiqueParallaxBg({
     returnSmoothness: 1.1,
     pointerGain: 1.5,
   } : {
-    bgScale: 1.04, // Significantly reduced from default 1.16
-    bgRangePx: 20, // Reduced translation to prevent edge reveal with lower scale
+    bgScale: 1.0, // Fully zoomed out on mobile
+    bgRangePx: 0, // No translation on mobile
   };
 
   useLuxuryParallax(roomRef, bgMediaRef, null, {
     ...CINEMATIC_PARALLAX,
     ...desktopOverrides,
-    enabled: active,
+    enabled: active && !isMobile, // Completely disable parallax on mobile
     motionOut: motionRef,
   });
 

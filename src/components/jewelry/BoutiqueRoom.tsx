@@ -137,31 +137,31 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
             }}
           >
             {/* Left Shelf */}
-            <div className="relative flex flex-col items-center justify-end" style={{ width: "31vw", height: "14vh", maxWidth: "150px" }}>
+            <div className="relative flex flex-col items-center justify-end" style={{ width: "30vw", height: "13vh", maxWidth: "140px" }}>
               <Image src="/shelf.webp" alt="" aria-hidden fill className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
               <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[12%]">
                 <div style={{ width: "65%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
-                  {entered && <LineShelfProductMini config={getCustomProductConfig("protest" as any, 0, "left")} mountDelay={1500} />}
+                  <LineShelfProductMini config={getCustomProductConfig("protest" as any, 0, "left")} mountDelay={1500} />
                 </div>
               </div>
             </div>
 
             {/* Center Shelf */}
-            <div className="relative flex flex-col items-center justify-end" style={{ width: "35vw", height: "16vh", maxWidth: "170px" }}>
+            <div className="relative flex flex-col items-center justify-end" style={{ width: "34vw", height: "15vh", maxWidth: "160px" }}>
               <Image src="/shelf.webp" alt="" aria-hidden fill className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
               <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[12%]">
                 <div style={{ width: "65%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
-                  {entered && <LineShelfProductMini config={getCustomProductConfig("protest" as any, 1, "left")} mountDelay={3000} />}
+                  <LineShelfProductMini config={getCustomProductConfig("protest" as any, 1, "left")} mountDelay={3000} />
                 </div>
               </div>
             </div>
 
             {/* Right Shelf */}
-            <div className="relative flex flex-col items-center justify-end" style={{ width: "31vw", height: "14vh", maxWidth: "150px" }}>
+            <div className="relative flex flex-col items-center justify-end" style={{ width: "30vw", height: "13vh", maxWidth: "140px" }}>
               <Image src="/shelf.webp" alt="" aria-hidden fill className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
               <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[12%]">
                 <div style={{ width: "65%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
-                  {entered && <LineShelfProductMini config={getCustomProductConfig("protest" as any, 2, "right")} mountDelay={4500} />}
+                  <LineShelfProductMini config={getCustomProductConfig("protest" as any, 2, "right")} mountDelay={4500} />
                 </div>
               </div>
             </div>
@@ -185,7 +185,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
             <Image src="/shelf.webp" alt="" aria-hidden fill sizes="(max-width: 1024px) 30vw, 300px" className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
-                {entered && <LineShelfProductMini config={getCustomProductConfig("protest" as any, 0, "left")} mountDelay={0} />}
+                <LineShelfProductMini config={getCustomProductConfig("protest" as any, 0, "left")} mountDelay={0} />
               </div>
             </div>
           </div>
@@ -195,7 +195,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
             <Image src="/shelf.webp" alt="" aria-hidden fill sizes="(max-width: 1024px) 30vw, 300px" className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
-                {entered && <LineShelfProductMini config={getCustomProductConfig("protest" as any, 1, "left")} mountDelay={0} />}
+                <LineShelfProductMini config={getCustomProductConfig("protest" as any, 1, "left")} mountDelay={0} />
               </div>
             </div>
           </div>
@@ -205,7 +205,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
             <Image src="/shelf.webp" alt="" aria-hidden fill sizes="(max-width: 1024px) 30vw, 300px" className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
-                {entered && <LineShelfProductMini config={getCustomProductConfig("protest" as any, 2, "right")} mountDelay={0} />}
+                <LineShelfProductMini config={getCustomProductConfig("protest" as any, 2, "right")} mountDelay={0} />
               </div>
             </div>
           </div>
@@ -222,7 +222,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
           zIndex: 60,
           willChange: "transform"
         }}>
-          {entered && <Table3D opacity={1} isMobile={isMobile} />}
+          <Table3D opacity={1} isMobile={isMobile} />
         </div>
 
       </BoutiqueParallaxBg>

@@ -25,7 +25,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
     tagline: "Timeless elegance, crafted to endure",
     materials: "GOLD VERMEIL • DIAMOND ACCENT",
     features: ["Hand-finished band", "Heritage-inspired silhouette", "Comfort-fit interior"],
-    modelFile: "pro1.glb",
+    modelFile: "protest.glb",
     price: "PKR 48,500",
     description:
       "Inspired by heirloom atelier archives, this ring balances sculptural presence with everyday refinement. Each curve is finished by hand for a weight that feels intentional on the finger.",
@@ -37,7 +37,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
     tagline: "A luminous curve for evening grace",
     materials: "ROSE GOLD • POLISHED BRASS",
     features: ["Articulated links", "Soft hinge closure", "Mirror-polished facets"],
-    modelFile: "pro2.glb",
+    modelFile: "protest.glb",
     price: "PKR 62,000",
     description:
       "The Luna bracelet catches ambient light with a fluid arc designed to move with the wrist. A contemporary classic suited for gala evenings and intimate soirées alike.",
@@ -49,7 +49,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
     tagline: "Regal adornment in rose-gold warmth",
     materials: "GOLD VERMEIL • ENAMEL",
     features: ["Layer-ready profile", "Enamel inlay detail", "Weighted luxury feel"],
-    modelFile: "pro3.glb",
+    modelFile: "protest.glb",
     price: "PKR 85,000",
     description:
       "Ornate bangle pair inspired by royal court motifs — peacock enamel, pearl florals, and warm gold vermeil combine for a statement rooted in South Asian craft tradition.",
@@ -61,7 +61,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
     tagline: "Fluid brilliance that drapes the décolletage",
     materials: "GOLD PLATE • CRYSTAL",
     features: ["Multi-drop cascade", "Adjustable extender", "Light-catching stones"],
-    modelFile: "pro4.glb",
+    modelFile: "protest.glb",
     price: "PKR 72,500",
     description:
       "A cascading silhouette designed to frame the neckline with graduated drops that shimmer under boutique lighting. Layered luxury for the woman who leads every room she enters.",
@@ -73,7 +73,7 @@ export const PRODUCTS: Record<ProductId, Product> = {
     tagline: "Delicate sparkle for every occasion",
     materials: "STERLING SILVER • CZ STONE",
     features: ["Secure post back", "Featherlight wear", "Brilliant-cut facets"],
-    modelFile: "pro5.glb",
+    modelFile: "protest.glb",
     price: "PKR 38,900",
     description:
       "Starlight earrings offer a constellation of micro-facets that catch candlelight and daylight with equal grace — refined enough for daily wear, radiant enough for celebration.",
