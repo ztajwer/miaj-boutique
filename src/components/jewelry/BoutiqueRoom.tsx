@@ -233,6 +233,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
         style={{ zIndex: 60 }}
       >
         <Canvas
+          shadows
           eventSource={roomRef as any}
           className="w-full h-full"
           dpr={typeof window !== 'undefined' && window.innerWidth < 768 ? 1 : [1, 1.5]}
