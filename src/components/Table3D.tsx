@@ -35,38 +35,6 @@ function SafeEnvironment({ intensity }: { intensity: number }) {
   return null;
 }
 
-function MovingAccentLights() {
-  const leftLightRef = useRef<THREE.PointLight>(null);
-  const rightLightRef = useRef<THREE.PointLight>(null);
-  const topLightRef = useRef<THREE.PointLight>(null);
-
-  useFrame((state) => {
-    const t = state.clock.getElapsedTime();
-    // Soft, smooth, and luxurious sweeping movement
-    if (leftLightRef.current) {
-      leftLightRef.current.position.x = -2.5 + Math.sin(t * 0.3) * 1.5;
-      leftLightRef.current.position.z = 1.5 + Math.cos(t * 0.4) * 1.0;
-    }
-    if (rightLightRef.current) {
-      rightLightRef.current.position.x = 2.5 + Math.cos(t * 0.35) * 1.5;
-      rightLightRef.current.position.z = 1.5 + Math.sin(t * 0.45) * 1.0;
-    }
-    if (topLightRef.current) {
-      topLightRef.current.position.x = Math.sin(t * 0.2) * 2.0;
-      topLightRef.current.position.z = Math.cos(t * 0.25) * 2.0;
-    }
-  });
-
-  // Soft, warm, luxurious lighting that doesn't overexpose
-  return (
-    <group position={[0, -0.2, 0]}>
-      <pointLight ref={leftLightRef} position={[-2.5, 1.5, 1.5]} intensity={8} color="#FFB84D" distance={8} decay={1.5} />
-      <pointLight ref={rightLightRef} position={[2.5, 1.5, 1.5]} intensity={8} color="#FFB84D" distance={8} decay={1.5} />
-      <pointLight ref={topLightRef} position={[0, 3, 0]} intensity={12} color="#FCE6C9" distance={10} decay={1.5} />
-    </group>
-  );
-}
-
 const SHOWCASE_PRODUCTS: ShowcaseProductConfig[] = [
   { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xD4AF37, mountDelay: 0 }, // Left (Classic Gold)
   { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xE8E9EB, mountDelay: 0 }, // Center (Platinum)
@@ -178,9 +146,6 @@ function SingleShowcaseProduct({
 
   return (
     <group position={position}>
-      {/* Targeted cool spotlight to create sharp specular highlights on the gold */}
-      <spotLight position={[0, 0.6, 0]} intensity={2.5} color="#F4F0E6" angle={0.4} penumbra={0.5} distance={2} castShadow />
-      
       {/* Floating pivot so the product itself stays centered at the specified position/rotation */}
       <group 
         ref={groupRef}
@@ -296,9 +261,9 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
         mesh.frustumCulled = true;
         mesh.raycast = () => null;
         
-        // Enable shadows for realistic contact shading
-        mesh.castShadow = true;
-        mesh.receiveShadow = true;
+        // Optimized: disable heavy real-time shadows on the table
+        mesh.castShadow = false;
+        mesh.receiveShadow = false;
         if (mesh.material) {
           const isArray = Array.isArray(mesh.material);
           const materials = isArray ? (mesh.material as THREE.Material[]) : [mesh.material as THREE.Material];
@@ -400,13 +365,9 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
           fov={17.5} 
           onUpdate={(c) => c.lookAt(0, 0.24, 0)}
         />
-        {/* Reduced ambient light so jewelry highlights pop */}
-        <ambientLight intensity={0.4} color="#F8F1E9" />
-        <spotLight position={[0, 5, 0]} intensity={1.5} color="#FFF5E6" angle={0.8} penumbra={0.8} castShadow />
-        {/* Front fill light */}
+        <ambientLight intensity={0.9} color="#F8F1E9" />
+        <spotLight position={[0, 5, 0]} intensity={2.0} color="#FFF5E6" angle={0.8} penumbra={0.8} />
         <pointLight position={[0, 1.5, 2.5]} intensity={0.8} color="#F8F1E9" distance={8} />
-        
-        <MovingAccentLights />
 
         <Suspense fallback={null}>
           <SafeEnvironment intensity={1.4} />
