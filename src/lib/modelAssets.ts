@@ -3,7 +3,7 @@
  * 3D models live in Git LFS. Vercel serves ~134-byte pointer files from /public,
  * so production loads real binaries from GitHub's LFS media CDN instead.
  */
-const PRODUCT_FILES = ["protest.glb", "protest.glb", "protest.glb", "protest.glb", "protest.glb"] as const;
+const PRODUCT_FILES = ["ring.glb", "protest.glb", "protest.glb", "protest.glb", "protest.glb"] as const;
 
 /** Arc left→right: pro3, pro4, pro1, pro2, pro5 (pro1 moves to 3rd slot) */
 const PRODUCT_DISPLAY_ORDER = [2, 3, 0, 1, 4] as const;

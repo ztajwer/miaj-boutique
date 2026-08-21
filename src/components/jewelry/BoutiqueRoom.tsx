@@ -151,7 +151,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
               <Image src="/shelf.webp" alt="" aria-hidden fill className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
               <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[12%]">
                 <div style={{ width: "65%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
-                  <LineShelfProductMini config={getCustomProductConfig("protest" as any, 1, "left")} mountDelay={3000} />
+                  <LineShelfProductMini config={getCustomProductConfig("pro1", 1, "left")} mountDelay={3000} />
                 </div>
               </div>
             </div>
@@ -195,7 +195,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
             <Image src="/shelf.webp" alt="" aria-hidden fill sizes="(max-width: 1024px) 30vw, 300px" className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
-                <LineShelfProductMini config={getCustomProductConfig("protest" as any, 1, "left")} mountDelay={0} />
+                <LineShelfProductMini config={getCustomProductConfig("pro1", 1, "left")} mountDelay={0} />
               </div>
             </div>
           </div>

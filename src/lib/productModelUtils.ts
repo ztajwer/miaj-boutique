@@ -22,9 +22,8 @@ function classifyJewelryMaterial(mesh: THREE.Mesh, mat: THREE.MeshStandardMateri
   }
 
   if (productId === "pro1") {
-    if (/dimond/i.test(name)) {
-      return "gem";
-    }
+    // For ring.glb monolithic mesh, use combined shader
+    return "combined";
   }
 
   if (productId === "pro2") {
@@ -128,7 +127,7 @@ function asPhysicalMaterial(mat: THREE.MeshStandardMaterial): THREE.MeshPhysical
 
 export interface CustomizationSettings {
   body: "gold" | "silver" | "bronze";
-  stone: "diamond" | "ruby" | "emerald" | "sapphire" | "amethyst";
+  stone: "mixed" | "diamond" | "ruby" | "emerald" | "sapphire" | "amethyst";
 }
 
 function tuneJewelryMaterial(
@@ -143,7 +142,11 @@ function tuneJewelryMaterial(
   const hasMap = mat.userData.hasMap !== undefined ? Boolean(mat.userData.hasMap) : Boolean(mat.map);
   let tuned = mat;
 
-  if (kind === "gem" || kind === "pearl" || kind === "enamel" || kind === "combined") {
+  // ring.glb is a single mesh with no authored material. Keep its combined
+  // material opaque: full transmission made the entire ring disappear in the
+  // detail renderer. Its shader still uses local position to recolor the top
+  // two stones separately from the metal band.
+  if (kind === "gem" || kind === "pearl" || kind === "enamel") {
     tuned = asPhysicalMaterial(mat);
     // Carry over userData so classification is preserved
     tuned.userData = { ...mat.userData };
@@ -198,7 +201,22 @@ function tuneJewelryMaterial(
         shader.uniforms.uHasCustomBody = tuned.userData.customUniforms.uHasCustomBody;
         shader.uniforms.uHasCustomStone = tuned.userData.customUniforms.uHasCustomStone;
 
-        // Inject uniform declarations
+        // Inject uniform declarations and varying for local position
+        shader.vertexShader = shader.vertexShader.replace(
+          "#include <common>",
+          `
+          #include <common>
+          varying vec3 vLocalPosition;
+          `
+        );
+        shader.vertexShader = shader.vertexShader.replace(
+          "#include <begin_vertex>",
+          `
+          #include <begin_vertex>
+          vLocalPosition = position;
+          `
+        );
+
         shader.fragmentShader = shader.fragmentShader.replace(
           "void main() {",
           `
@@ -206,11 +224,36 @@ function tuneJewelryMaterial(
           uniform vec3 uCustomStoneColor;
           uniform float uHasCustomBody;
           uniform float uHasCustomStone;
+          varying vec3 vLocalPosition;
           void main() {
           `
         );
 
         // Inject custom color blending logic after map_fragment
+
+        // Define special monolithic separation string based on mesh name
+        const isRingObj = /ring[\s_-]?obj/i.test(mesh.name);
+        const monolithicLogic = isRingObj ? `
+          // Special logic for monolithic models (like ring.glb) without transmission maps
+          if (vLocalPosition.y > 9.0) {
+            tVal = 1.0;
+          }
+
+          // If no custom body color is set, force default Golden color for the ring body
+          if (uHasCustomBody < 0.5 && tVal < 0.1) {
+            diffuseColor.rgb = vec3(0.831, 0.686, 0.215); // #D4AF37 Gold
+          }
+
+          // If no custom stone color is set, split the top gems into Red (Ruby) and Purple (Amethyst)
+          if (uHasCustomStone < 0.5 && tVal >= 0.1) {
+            if (vLocalPosition.x > 0.0) {
+              diffuseColor.rgb = vec3(0.878, 0.066, 0.372); // #E0115F Ruby Red
+            } else {
+              diffuseColor.rgb = vec3(0.6, 0.4, 0.8);       // #9966CC Amethyst Purple
+            }
+          }
+        ` : "";
+
         shader.fragmentShader = shader.fragmentShader.replace(
           "#include <map_fragment>",
           `
@@ -222,14 +265,23 @@ function tuneJewelryMaterial(
             float tVal = 0.0;
           #endif
 
+          ${monolithicLogic}
+
           if (uHasCustomBody > 0.5 && tVal < 0.1) {
             // Metallic/opaque part: convert base color texture to grayscale and multiply by custom metal color
             float gray = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
-            diffuseColor.rgb = vec3(gray) * uCustomBodyColor;
+            // Ensure base color is not black if no texture is provided
+            if (length(diffuseColor.rgb) < 0.01) {
+                diffuseColor.rgb = vec3(1.0);
+            } else {
+                diffuseColor.rgb = vec3(gray);
+            }
+            diffuseColor.rgb *= uCustomBodyColor;
           }
 
           if (uHasCustomStone > 0.5 && tVal >= 0.1) {
             // Gemstone/transmissive part: override base color texture with custom stone color
+            // Also split colors if they pick a custom color? No, if custom color is picked, they both become that color.
             diffuseColor.rgb = uCustomStoneColor;
           }
           `
@@ -273,10 +325,16 @@ function tuneJewelryMaterial(
     }
 
     if (customization?.stone) {
-      u.uHasCustomStone.value = 1.0;
       const stone = customization.stone;
-      
-      if (tuned instanceof THREE.MeshPhysicalMaterial) {
+      // The supplied ring is a single mesh. Its two top stone assemblies are
+      // separated in the shader by local position, so this setting preserves
+      // the requested Ruby + Amethyst default pair.
+      u.uHasCustomStone.value = stone === "mixed" ? 0.0 : 1.0;
+
+      if (stone === "mixed") {
+        // The shader's default branch applies Ruby on one top stone and
+        // Amethyst on the other; no whole-model material tint is applied.
+      } else if (tuned instanceof THREE.MeshPhysicalMaterial) {
         if (stone === "diamond") {
           tuned.ior = 2.417;
           tuned.transmission = 1.0;
@@ -603,6 +661,10 @@ export function prepareProductMaterials(
   root.traverse((child) => {
     const mesh = child as THREE.Mesh;
     if (!mesh.isMesh) return;
+
+    if (!mesh.geometry.attributes.normal) {
+      mesh.geometry.computeVertexNormals();
+    }
 
     mesh.castShadow = castShadow;
     mesh.receiveShadow = receiveShadow;

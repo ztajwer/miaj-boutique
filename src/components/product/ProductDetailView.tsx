@@ -31,8 +31,9 @@ function getDefaultBody(materials: string): "gold" | "silver" | "bronze" {
 }
 
 // Helper to determine the default stone based on the product description or materials
-function getDefaultStone(materials: string): "diamond" | "ruby" | "emerald" | "sapphire" | "amethyst" {
+function getDefaultStone(materials: string): "mixed" | "diamond" | "ruby" | "emerald" | "sapphire" | "amethyst" {
   const mats = materials.toLowerCase();
+  if (mats.includes("ruby") && mats.includes("amethyst")) return "mixed";
   if (mats.includes("ruby")) return "ruby";
   if (mats.includes("emerald")) return "emerald";
   if (mats.includes("sapphire")) return "sapphire";
@@ -44,7 +45,7 @@ function getDefaultStone(materials: string): "diamond" | "ruby" | "emerald" | "s
 function calculateCustomizedPrice(
   product: Product,
   body: "gold" | "silver" | "bronze",
-  stone: "diamond" | "ruby" | "emerald" | "sapphire" | "amethyst"
+  stone: "mixed" | "diamond" | "ruby" | "emerald" | "sapphire" | "amethyst"
 ): { priceStr: string; priceNum: number } {
   const basePriceNum = parseInt(product.price.replace(/[^\d]/g, ""), 10);
   if (isNaN(basePriceNum)) return { priceStr: product.price, priceNum: 0 };
@@ -68,6 +69,7 @@ function calculateCustomizedPrice(
 
   // Stone cost differences relative to default stone
   const stoneSurcharge = (s: string) => {
+    if (s === "mixed") return 28000;
     if (s === "diamond") return 25000;
     if (s === "ruby") return 18000;
     if (s === "emerald") return 22000;
@@ -91,6 +93,7 @@ const BODIES = [
 ] as const;
 
 const STONES = [
+  { id: "mixed", name: "Ruby + Amethyst", color: "linear-gradient(135deg, #E0115F 50%, #9966CC 50%)", border: "transparent" },
   { id: "diamond", name: "Diamond / Moissanite", color: "#F0F8FF", border: "rgba(61,43,31,0.15)" },
   { id: "ruby", name: "Ruby Red", color: "#E0115F", border: "transparent" },
   { id: "emerald", name: "Emerald Green", color: "#097969", border: "transparent" },
@@ -246,7 +249,7 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
                       <span
                         className="h-7 w-7 rounded-full shadow-inner"
                         style={{
-                          backgroundColor: stone.color,
+                          background: stone.color,
                           border: stone.border ? `1px solid ${stone.border}` : undefined,
                         }}
                       />

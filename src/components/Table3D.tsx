@@ -283,15 +283,15 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
             if (isGlass) {
               const glassMat = new THREE.MeshPhysicalMaterial({
                 color: '#ffffff',
-                metalness: 0.2,
-                roughness: 0.1,
-                transmission: 0, // Optimized: no heavy screen-space refraction
+                metalness: 0,
+                roughness: 0.07,
+                transmission: 0.32,
                 transparent: true,
-                opacity: 0.25,
+                opacity: 0.38,
                 clearcoat: 1.0,
                 ior: 1.45,
                 thickness: 0.02,
-                envMapIntensity: 1.0,
+                envMapIntensity: 1.25,
                 side: THREE.DoubleSide,
                 depthWrite: false,
               });
@@ -392,5 +392,4 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
     </div>
   );
 }
-
 

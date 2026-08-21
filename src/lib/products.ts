@@ -23,9 +23,9 @@ export const PRODUCTS: Record<ProductId, Product> = {
     title: "Heritage Ring",
     category: "Ring",
     tagline: "Timeless elegance, crafted to endure",
-    materials: "GOLD VERMEIL • DIAMOND ACCENT",
+    materials: "GOLD VERMEIL • RUBY & AMETHYST ACCENTS",
     features: ["Hand-finished band", "Heritage-inspired silhouette", "Comfort-fit interior"],
-    modelFile: "protest.glb",
+    modelFile: "ring.glb",
     price: "PKR 48,500",
     description:
       "Inspired by heirloom atelier archives, this ring balances sculptural presence with everyday refinement. Each curve is finished by hand for a weight that feels intentional on the finger.",

@@ -18,8 +18,9 @@ function getDefaultBody(materials: string): "gold" | "silver" | "bronze" {
   return "gold";
 }
 
-function getDefaultStone(materials: string): "diamond" | "ruby" | "emerald" | "sapphire" | "amethyst" {
+function getDefaultStone(materials: string): "mixed" | "diamond" | "ruby" | "emerald" | "sapphire" | "amethyst" {
   const mats = materials.toLowerCase();
+  if (mats.includes("ruby") && mats.includes("amethyst")) return "mixed";
   if (mats.includes("ruby")) return "ruby";
   if (mats.includes("emerald")) return "emerald";
   if (mats.includes("sapphire")) return "sapphire";

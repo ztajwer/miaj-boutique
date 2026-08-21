@@ -6,7 +6,7 @@ import { PRODUCTS, type ProductId } from "@/lib/products";
 import { getModelUrl } from "@/lib/modelAssets";
 import type { LineShelfProductConfig } from "@/lib/lineShelfProductLayout";
 
-const CAROUSEL_PRODUCT_IDS: ProductId[] = ["pro2", "pro3", "pro4"];
+const CAROUSEL_PRODUCT_IDS: ProductId[] = ["pro2", "pro1", "pro4"];
 
 const CAROUSEL_SCALES: Record<string, number> = {
   pro1: 0.33, // Heritage Ring (made smaller)
