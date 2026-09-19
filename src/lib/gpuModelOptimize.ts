@@ -14,8 +14,6 @@ async function downscaleTextureIfNeededAsync(texture: THREE.Texture, maxSize: nu
   const image = texture.image as any;
   if (!image || typeof image !== "object" || !image.width || !image.height) return;
 
-  texture.anisotropy = 1;
-
   if (image.width <= maxSize && image.height <= maxSize) return;
 
   const scale = maxSize / Math.max(image.width, image.height);

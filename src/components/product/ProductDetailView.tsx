@@ -108,9 +108,9 @@ interface ProductDetailViewProps {
 import { useCustomization } from "@/context/CustomizationContext";
 
 export default function ProductDetailView({ product }: ProductDetailViewProps) {
-  const [viewportWidth, setViewportWidth] = useState(
-    typeof window !== "undefined" ? window.innerWidth : 1280,
-  );
+  // Keep the first render identical on the server and client. The effect below
+  // switches to the mobile layout once the browser viewport is available.
+  const [viewportWidth, setViewportWidth] = useState(1280);
   
   const { customizations, setCustomization } = useCustomization();
   const currentCustomization = customizations[product.id];
@@ -136,7 +136,7 @@ export default function ProductDetailView({ product }: ProductDetailViewProps) {
     <div className="product-detail-immersive relative z-[60] w-full min-h-[100dvh] text-maj-brown">
       <div className="pointer-events-none fixed inset-0 -z-10">
         <Image
-          src={viewportWidth < 768 ? "/main_mob_bg.webp" : "/bback.webp"}
+          src={viewportWidth < 768 ? "/main_mob_bg.webp" : "/bback.png"}
           alt=""
           fill
           priority

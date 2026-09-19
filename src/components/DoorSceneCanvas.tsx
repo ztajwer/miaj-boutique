@@ -10,9 +10,6 @@ import LoadingBridge from "./LoadingBridge";
 import { DEFAULT_FRAME } from "@/lib/doorFraming";
 // Removed heavy postprocessing to ensure smooth door opening
 
-import { ContactShadows, View, PerspectiveCamera } from "@react-three/drei";
-import SafeEnvironment from "./SafeEnvironment";
-
 function DoorSceneContent({
   progressRef,
   brightness,
@@ -24,9 +21,6 @@ function DoorSceneContent({
 
   return (
     <>
-      <Suspense fallback={null}>
-        <SafeEnvironment file="/lebombo_1k.hdr" />
-      </Suspense>
       <CinematicCamera progressRef={progressRef} frameRef={frameRef} />
       <SceneLighting brightness={brightness} />
       <GlassDoors progressRef={progressRef} frameRef={frameRef} />
@@ -48,7 +42,7 @@ export default function DoorSceneCanvas({
 }: DoorSceneCanvasProps) {
   return (
     <div
-      className="door-scene-canvas fixed inset-0 z-[70]"
+      className="door-scene-canvas fixed inset-0 z-[45]"
       style={{
         opacity,
         transition: "opacity 0.6s ease-out",
@@ -57,8 +51,8 @@ export default function DoorSceneCanvas({
     >
       <Canvas
         shadows={false}
-        dpr={1}
-        gl={{ antialias: false, alpha: true, stencil: false, powerPreference: "high-performance" }}
+        dpr={[1, 1.5]}
+        gl={{ antialias: true, alpha: true, stencil: false, powerPreference: "high-performance" }}
         style={{ width: "100%", height: "100%" }}
         onCreated={({ gl }) => {
           gl.setClearColor(0x000000, 0);

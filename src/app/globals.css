@@ -296,7 +296,7 @@ html.detail-page-scroll body {
 
 .boutique-room__parallax-pan {
   position: absolute;
-  inset: -8%;
+  inset: 0;
   perspective: 2400px;
   perspective-origin: 50% 50%;
   transform-style: preserve-3d;
@@ -581,7 +581,7 @@ html.detail-page-scroll body {
 
 .line-shelf__product-interactive:hover,
 .line-shelf__product-interactive--selected {
-  transform: scale(1.02);
+  transform: scale(1.1);
   z-index: 10;
 }
 
@@ -1394,7 +1394,7 @@ canvas {
     height: 43.05vh !important;
   }
   .table-3d-wrapper {
-    bottom: 0vh !important;
+    bottom: -70px !important;
     max-width: none !important;
     height: 55.55vh !important;
   }
@@ -1531,5 +1531,3 @@ canvas {
   background-color: rgba(255, 255, 255, 0.20) !important;
   border-color: rgba(255, 255, 255, 0.38) !important;
 }
-
-

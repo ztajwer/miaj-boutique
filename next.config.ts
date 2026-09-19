@@ -7,8 +7,8 @@ const nextConfig: NextConfig = {
   reactStrictMode: true,
   transpilePackages: ["three", "@react-three/fiber", "@react-three/drei", "three-stdlib"],
   webpack: (config, { isServer }) => {
-    // Only customize client bundles — server splitChunks corrupts .next chunk IDs in dev.
-    if (!isServer) {
+    // Only customize client bundles in production — custom splitChunks in dev corrupts Fast Refresh chunk IDs.
+    if (!isServer && process.env.NODE_ENV === "production") {
       if (config.output) {
         config.output.chunkLoadTimeout = 300000;
       }

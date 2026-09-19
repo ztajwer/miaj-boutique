@@ -41,10 +41,10 @@ export default function BoutiqueParallaxBg({
   }, []);
 
   const desktopOverrides = !isMobile ? {
-    bgRangePx: 20, // slightly more range
+    bgRangePx: 0,
     bgRotateDeg: 0, // Disabled 3D rotation so <View> bounding boxes track perfectly and table moves with bg
-    bgScale: 1.05,
-    expandBoost: 0.03, // a bit more dynamic
+    bgScale: 1.0,
+    expandBoost: 0,
     followSmoothness: 1.8, // Faster, "just a little slow"
     smoothness: 1.2, // Faster, "just a little slow"
     returnSmoothness: 1.1,
@@ -87,28 +87,46 @@ export default function BoutiqueParallaxBg({
         className="boutique-room__parallax-pan boutique-hero__bg-pan"
         style={{
           transform: `scale(${bgScale})`,
-          transformOrigin: "50% 85%", // Zooms in precisely towards the center table
+          transformOrigin: "50% 85%",
           willChange: "transform",
         }}
       >
         <div ref={bgMediaRef} className="boutique-room__parallax-media boutique-hero__bg-media">
-          {isMobile ? (
-            mobileVideoSrc ? (
-              <video
-                ref={videoRef}
-                className="boutique-room__parallax-img boutique-room__parallax-video boutique-hero__bg-img"
-                src={mobileVideoSrc}
-                poster={mobilePosterSrc || undefined}
-                muted
-                playsInline
-                preload="metadata"
-                disablePictureInPicture
-                disableRemotePlayback
-                style={mediaStyle}
-              />
+          <div
+            className="boutique-room__bg-zoom"
+            style={{
+              position: "absolute",
+              inset: 0,
+            }}
+          >
+            {isMobile ? (
+              mobileVideoSrc ? (
+                <video
+                  ref={videoRef}
+                  className="boutique-room__parallax-img boutique-room__parallax-video boutique-hero__bg-img"
+                  src={mobileVideoSrc}
+                  poster={mobilePosterSrc || undefined}
+                  muted
+                  playsInline
+                  preload="metadata"
+                  disablePictureInPicture
+                  disableRemotePlayback
+                  style={mediaStyle}
+                />
+              ) : (
+                <img
+                  src={mobilePosterSrc || desktopSrc || undefined}
+                  alt=""
+                  className="boutique-room__parallax-img boutique-hero__bg-img"
+                  draggable={false}
+                  decoding="async"
+                  fetchPriority="high"
+                  style={mediaStyle}
+                />
+              )
             ) : (
               <img
-                src={mobilePosterSrc || desktopSrc || undefined}
+                src={desktopSrc || undefined}
                 alt=""
                 className="boutique-room__parallax-img boutique-hero__bg-img"
                 draggable={false}
@@ -116,23 +134,13 @@ export default function BoutiqueParallaxBg({
                 fetchPriority="high"
                 style={mediaStyle}
               />
-            )
-          ) : (
-            <img
-              src={desktopSrc || undefined}
-              alt=""
-              className="boutique-room__parallax-img boutique-hero__bg-img"
-              draggable={false}
-              decoding="async"
-              fetchPriority="high"
-              style={mediaStyle}
+            )}
+            <div
+              className="boutique-room__focus-veil boutique-hero__veil"
+              style={{ opacity: veilOpacity }}
+              aria-hidden
             />
-          )}
-          <div
-            className="boutique-room__focus-veil boutique-hero__veil"
-            style={{ opacity: veilOpacity }}
-            aria-hidden
-          />
+          </div>
           {children}
         </div>
       </div>

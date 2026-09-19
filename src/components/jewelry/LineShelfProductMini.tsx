@@ -15,7 +15,6 @@ import {
   LINE_SHELF_PRODUCT_PITCH_RAD,
   type LineShelfProductConfig,
 } from "@/lib/lineShelfProductLayout";
-import { SHOP_GLB_FILES } from "@/lib/glbConfig";
 import { SHOP_LINE_SHELF_PRODUCTS_ENABLED } from "@/lib/shopTableEnabled";
 import { optimizeModelForGpu, optimizeModelForGpuAsync } from "@/lib/gpuModelOptimize";
 import { getDeviceProfile } from "@/lib/deviceProfile";
@@ -134,12 +133,10 @@ const ShelfProductGlb = memo(function ShelfProductGlb({
       // Auto-rotation disabled per user request
       // groupRef.current.rotation.y += delta * 0.5;
 
-      // Scale model in sync with HTML container scale (bigger on hover)
-      let hoverScale = 1.0;
-      if (isSelected) {
-        hoverScale = 1.15;
-      }
-      groupRef.current.scale.lerp(new THREE.Vector3(hoverScale, hoverScale, hoverScale), 0.22);
+      // Keep the model at a stable scale inside the tracked View. The hover
+      // scale belongs on the HTML wrapper so View's scissor bounds grow with it
+      // instead of cutting off the top of the model.
+      groupRef.current.scale.setScalar(1);
     }
   });
 
@@ -215,12 +212,10 @@ const ShelfProductFbx = memo(function ShelfProductFbx({
       // Auto-rotation disabled per user request
       // groupRef.current.rotation.y += delta * 0.5;
 
-      // Scale model in sync with HTML container scale (bigger on hover)
-      let hoverScale = 1.0;
-      if (isSelected) {
-        hoverScale = 1.15;
-      }
-      groupRef.current.scale.lerp(new THREE.Vector3(hoverScale, hoverScale, hoverScale), 0.22);
+      // Keep the model at a stable scale inside the tracked View. The hover
+      // scale belongs on the HTML wrapper so View's scissor bounds grow with it
+      // instead of cutting off the top of the model.
+      groupRef.current.scale.setScalar(1);
     }
   });
 

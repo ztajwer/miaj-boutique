@@ -1,20 +1,27 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { useGLTF, Html, ContactShadows, View, PerspectiveCamera } from "@react-three/drei";
-import { useFrame, useThree, useLoader } from "@react-three/fiber";
+import { useGLTF, Html, ContactShadows, PerspectiveCamera } from "@react-three/drei";
+import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { RGBELoader } from "three-stdlib";
 import { getModelUrl, extendGltfLoader } from "@/lib/modelAssets";
 import { optimizeModelForGpu, optimizeModelForGpuAsync } from "@/lib/gpuModelOptimize";
 import { getDeviceProfile } from "@/lib/deviceProfile";
+import {
+  applyJewelryRendererSettings,
+  fitProductToUniformSize,
+  prepareProductMaterials,
+  type CustomizationSettings,
+} from "@/lib/productModelUtils";
+import { useCustomization } from "@/context/CustomizationContext";
+import type { ProductId } from "@/lib/products";
 import { useRouter } from "next/navigation";
 
 interface ShowcaseProductConfig {
-  productId: string;
+  productId: ProductId;
   modelFile: string;
   targetMaxDim: number;
-  colorHex?: number;
   mountDelay?: number;
 }
 
@@ -36,9 +43,9 @@ function SafeEnvironment({ intensity }: { intensity: number }) {
 }
 
 const SHOWCASE_PRODUCTS: ShowcaseProductConfig[] = [
-  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xD4AF37, mountDelay: 0 }, // Left (Classic Gold)
-  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xE8E9EB, mountDelay: 0 }, // Center (Platinum)
-  { productId: "protest", modelFile: "protest.glb", targetMaxDim: 0.15, colorHex: 0xE5C77A, mountDelay: 0 }, // Right (Soft Gold)
+  { productId: "pro2", modelFile: "protest.glb", targetMaxDim: 0.15, mountDelay: 0 }, // Left — Luna bracelet
+  { productId: "pro1", modelFile: "ring.glb", targetMaxDim: 0.15, mountDelay: 0 }, // Center — Heritage Ring
+  { productId: "pro4", modelFile: "protest.glb", targetMaxDim: 0.15, mountDelay: 0 }, // Right — Cascade necklace
 ];
 
 function SingleShowcaseProduct({
@@ -46,11 +53,13 @@ function SingleShowcaseProduct({
   textureMax,
   position,
   rotation = [0, 0, 0],
+  customization,
 }: {
   config: ShowcaseProductConfig;
   textureMax: number;
   position: [number, number, number];
   rotation?: [number, number, number];
+  customization?: CustomizationSettings;
 }) {
   const { scene: rawScene } = useGLTF(getModelUrl(config.modelFile), true, true, extendGltfLoader);
   const router = useRouter();
@@ -67,73 +76,28 @@ function SingleShowcaseProduct({
     });
     lightsToRemove.forEach((light) => light.parent?.remove(light));
 
+    fitProductToUniformSize(cloned, config.targetMaxDim || 0.18);
+    prepareProductMaterials(cloned, {
+      castShadow: false,
+      receiveShadow: false,
+      customization,
+      productId: config.productId,
+    });
+    optimizeModelForGpu(cloned, textureMax);
+    optimizeModelForGpuAsync(cloned, textureMax);
+
     cloned.traverse((child) => {
       const mesh = child as THREE.Mesh;
-      if (mesh.isMesh && mesh.material) {
-        // Safely handle both array of materials and single materials
-        let materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
-        
-        const newMaterials = materials.map((m) => {
-          const mat = (m as THREE.MeshStandardMaterial).clone();
-          if (config.colorHex) {
-            mat.color.setHex(config.colorHex);
-            mat.roughness = 0.15; // Smooth realistic silver
-          } else {
-            mat.color.setHex(0xD4AF37); // Rich vibrant Gold
-            mat.roughness = 0.18; // Smooth realistic gold
-          }
-          
-          mat.metalness = 1.0;
-          mat.envMapIntensity = 2.0; // Balanced reflection
-          return mat;
-        });
-
-        mesh.material = Array.isArray(mesh.material) ? newMaterials : newMaterials[0];
-        // Optimized: disabled real-time shadows on complex meshes to prevent lag, using ContactShadows instead
+      if (mesh.isMesh) {
+        // Products should remain in front of the transparent glass cover.
+        mesh.renderOrder = 20;
         mesh.castShadow = false;
         mesh.receiveShadow = false;
       }
     });
 
-    cloned.scale.set(1, 1, 1);
-    cloned.position.set(0, 0, 0);
-    cloned.updateMatrixWorld(true);
-
-    const box = new THREE.Box3();
-    let hasMesh = false;
-    cloned.traverse((child) => {
-      if ((child as THREE.Mesh).isMesh) {
-        box.expandByObject(child);
-        hasMesh = true;
-      }
-    });
-    if (!hasMesh) box.setFromObject(cloned);
-
-    const isInvalidBox = box.isEmpty() || isNaN(box.min.x) || isNaN(box.max.x) || !isFinite(box.min.x) || !isFinite(box.max.x);
-    if (isInvalidBox) {
-      box.min.set(-0.05, -0.05, -0.05);
-      box.max.set(0.05, 0.05, 0.05);
-    }
-
-    const size = box.getSize(new THREE.Vector3());
-    const center = box.getCenter(new THREE.Vector3());
-    const maxDim = Math.max(size.x, size.y, size.z);
-    
-    let targetScale = 1;
-    if (maxDim > 0) {
-      // Use config.targetMaxDim, or default to a reasonable size if missing
-      targetScale = (config.targetMaxDim || 0.15) / maxDim;
-      cloned.scale.setScalar(targetScale);
-    }
-    
-    // Perfectly center X and Z, and place the BOTTOM (box.min.y) at Y=0 (since the outer <group> applies `position[1]`)
-    cloned.position.x = -center.x * targetScale;
-    cloned.position.y = (-box.min.y * targetScale) + 0.002;
-    cloned.position.z = -center.z * targetScale;
-
-    optimizeModelForGpu(cloned, textureMax);
     return cloned;
-  }, [rawScene, config.targetMaxDim, config.colorHex, textureMax]);
+  }, [rawScene, config.targetMaxDim, config.productId, customization, textureMax]);
 
   useFrame(() => {
     if (groupRef.current) {
@@ -149,7 +113,7 @@ function SingleShowcaseProduct({
       {/* Floating pivot so the product itself stays centered at the specified position/rotation */}
       <group 
         ref={groupRef}
-        rotation={[Math.PI / 2.5, rotation[1], 0]} 
+        rotation={rotation}
         onClick={(e) => {
           e.stopPropagation();
           router.push(`/product/${config.productId}`);
@@ -169,11 +133,13 @@ function DelayedShowcaseProduct({
   textureMax,
   position,
   rotation = [0, 0, 0],
+  customization,
 }: {
   config: ShowcaseProductConfig;
   textureMax: number;
   position: [number, number, number];
   rotation?: [number, number, number];
+  customization?: CustomizationSettings;
 }) {
   const [ready, setReady] = useState(() => (config.mountDelay || 0) <= 0);
 
@@ -191,27 +157,60 @@ function DelayedShowcaseProduct({
 
   return (
     <Suspense fallback={null}>
-      <SingleShowcaseProduct config={config} textureMax={textureMax} position={position} rotation={rotation} />
+      <SingleShowcaseProduct
+        config={config}
+        textureMax={textureMax}
+        position={position}
+        rotation={rotation}
+        customization={customization}
+      />
     </Suspense>
   );
 }
 
 function ShowcaseProductsGroup({ textureMax, tablePosition }: { textureMax: number; tablePosition: [number, number, number] }) {
-  // Restored exactly to the perfect offset plus a 5px lift (from 0.56 to 0.58)
-  const yOffset = 0.58; 
+  const { customizations } = useCustomization();
+  // Display cushion surface height inside the glass showcase (raised additional 4px for elevated visibility)
+  const yOffset = 0.561;
+
   return (
     <group position={tablePosition}>
-      {/* Exact hexagon bay coordinates */}
-      <DelayedShowcaseProduct config={SHOWCASE_PRODUCTS[0]} textureMax={textureMax} position={[-0.415, yOffset, 0.24]} rotation={[0, Math.PI / 6, 0]} />
-      <DelayedShowcaseProduct config={SHOWCASE_PRODUCTS[1]} textureMax={textureMax} position={[0, yOffset, 0.48]} />
-      <DelayedShowcaseProduct config={SHOWCASE_PRODUCTS[2]} textureMax={textureMax} position={[0.415, yOffset, 0.24]} rotation={[0, -Math.PI / 6, 0]} />
+      {/* Left bay: Luna Bracelet shifted a little bit more left */}
+      <DelayedShowcaseProduct
+        config={SHOWCASE_PRODUCTS[0]}
+        textureMax={textureMax}
+        customization={customizations.pro2}
+        position={[-0.455, yOffset, 0.22]}
+        rotation={[Math.PI / 2.5, Math.PI / 6, 0]}
+      />
+      {/* Front center bay: Heritage Diamond Ring resting inside the front cushion channel */}
+      <DelayedShowcaseProduct
+        config={SHOWCASE_PRODUCTS[1]}
+        textureMax={textureMax}
+        customization={customizations.pro1}
+        position={[0, yOffset, 0.48]}
+        rotation={[Math.PI / 2.5, 0, 0]}
+      />
+      {/* Right bay: Cascade Necklace shifted a little bit more right */}
+      <DelayedShowcaseProduct
+        config={SHOWCASE_PRODUCTS[2]}
+        textureMax={textureMax}
+        customization={customizations.pro4}
+        position={[0.455, yOffset, 0.22]}
+        rotation={[Math.PI / 2.5, -Math.PI / 6, 0]}
+      />
     </group>
   );
 }
 
 function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: boolean }) {
   const { scene } = useGLTF(getModelUrl("1.glb"), true, true, extendGltfLoader);
+  const { gl } = useThree();
   const groupRef = useRef<THREE.Group>(null);
+  const textureAnisotropy = useMemo(
+    () => Math.min(16, gl.capabilities.getMaxAnisotropy()),
+    [gl],
+  );
 
   const clonedScene = useMemo(() => {
     if (!scene) return null;
@@ -261,7 +260,7 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
         mesh.frustumCulled = true;
         mesh.raycast = () => null;
         
-        // Optimized: disable heavy real-time shadows on the table
+        // Disable heavy real-time dynamic shadow passes; table uses optimized high-res baked ContactShadows
         mesh.castShadow = false;
         mesh.receiveShadow = false;
         if (mesh.material) {
@@ -271,10 +270,10 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
           const clonedMaterials = materials.map((m) => {
             const mat = m.clone() as any; 
             
-            if (mat.map) mat.map.anisotropy = 1;
-            if (mat.normalMap) mat.normalMap.anisotropy = 1;
-            if (mat.roughnessMap) mat.roughnessMap.anisotropy = 1;
-            if (mat.metalnessMap) mat.metalnessMap.anisotropy = 1;
+            if (mat.map) mat.map.anisotropy = textureAnisotropy;
+            if (mat.normalMap) mat.normalMap.anisotropy = textureAnisotropy;
+            if (mat.roughnessMap) mat.roughnessMap.anisotropy = textureAnisotropy;
+            if (mat.metalnessMap) mat.metalnessMap.anisotropy = textureAnisotropy;
 
             const isGlass = (mat.name && mat.name.toLowerCase().includes('glass')) || (mat.transmission !== undefined && mat.transmission > 0) || (mat.opacity !== undefined && mat.opacity < 1) || mat.transparent;
             const isMetal = mat.metalness !== undefined && mat.metalness > 0.5;
@@ -299,17 +298,17 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
               return glassMat;
             } else if (isMetal || isGold || (mat.color && typeof mat.color.getHex === 'function' && mat.color.getHex() > 0xaaaaaa)) {
               if (mat.color && typeof mat.color.setHex === 'function') {
-                mat.color.setHex(0xE4C7A7); // Lighter gold/beige to match background
+                mat.color.setHex(0xE4C7A7); // Original light gold/beige trim
               }
               mat.metalness = Math.max(0.7, mat.metalness || 0);
-              mat.roughness = Math.max(0.25, mat.roughness || 0.25); // Slightly rougher to avoid extreme glare
-              mat.envMapIntensity = 1.0; // Optimized & less glaring
-              mat.normalMap = null; 
+              mat.roughness = Math.max(0.25, mat.roughness || 0.25);
+              mat.envMapIntensity = 1.0;
+              mat.normalMap = null;
               mat.roughnessMap = null;
             } else {
-              // Any other material that is not glass or metal/gold (like the black surface)
+              // Original soft off-white structural/display surfaces
               if (mat.color && typeof mat.color.setHex === 'function') {
-                mat.color.setHex(0xf2efe9); // Soft off-white (not very white)
+                mat.color.setHex(0xf2efe9);
               }
             }
 
@@ -322,7 +321,7 @@ function TableModel({ textureMax, isMobile }: { textureMax: number; isMobile: bo
     });
 
     return cloned;
-  }, [scene, textureMax, isMobile]);
+  }, [scene, textureMax, isMobile, textureAnisotropy]);
 
   if (!clonedScene) return null;
 
@@ -350,7 +349,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
 
   return (
     <div
-      className={`table-3d-wrapper absolute left-[50%] -translate-x-1/2 z-[60] w-full h-[500px] md:h-[600px] ${mobileLayout ? 'bottom-[6dvh]' : 'bottom-[-260px]'}`}
+      className={`table-3d-wrapper absolute left-[50%] -translate-x-1/2 z-[60] w-full h-[500px] md:h-[600px] ${mobileLayout ? 'bottom-[6dvh]' : 'bottom-[-290px]'}`}
       style={{
         opacity,
         pointerEvents: "auto",
@@ -358,7 +357,16 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
       }}
       aria-label="3D Display Table Showcase"
     >
-      <View className="w-full h-full pointer-events-auto">
+      <Canvas
+        className="w-full h-full pointer-events-auto"
+        resize={{ offsetSize: true }}
+        dpr={typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 2) : [1, 2]}
+        gl={{ antialias: true, alpha: true, stencil: false, depth: true, powerPreference: "high-performance" }}
+        onCreated={({ gl }) => {
+          gl.setClearColor(0x000000, 0);
+          applyJewelryRendererSettings(gl, 1.15);
+        }}
+      >
         <PerspectiveCamera 
           makeDefault 
           position={[0, 1.8, 5.0]} 
@@ -371,7 +379,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
 
         <Suspense fallback={null}>
           <SafeEnvironment intensity={1.4} />
-          <group scale={mobileLayout ? 1.20 : 1.30} position={mobileLayout ? [-0.06, -0.1, 0] : [0, -0.30, 0]}>
+          <group scale={mobileLayout ? 1.20 : 1.40} position={mobileLayout ? [-0.06, -0.1, 0] : [0, -0.30, 0]}>
             <TableModel textureMax={textureMax} isMobile={mobileLayout} />
             <ShowcaseProductsGroup textureMax={textureMax} tablePosition={[0, 0, -0.5]} />
           </group>
@@ -383,13 +391,12 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
             scale={15.0}
             blur={2.2}
             far={4.0}
-            resolution={512}
+            resolution={1024}
             color="#3D2817"
             frames={1}
           />
         </Suspense>
-      </View>
+      </Canvas>
     </div>
   );
 }
-

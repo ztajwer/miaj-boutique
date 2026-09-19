@@ -22,8 +22,10 @@ function classifyJewelryMaterial(mesh: THREE.Mesh, mat: THREE.MeshStandardMateri
   }
 
   if (productId === "pro1") {
-    // For ring.glb monolithic mesh, use combined shader
-    return "combined";
+    if (/diamond|dimond|dmesh|gem/i.test(name)) {
+      return "gem";
+    }
+    return "gold";
   }
 
   if (productId === "pro2") {
@@ -116,10 +118,9 @@ function asPhysicalMaterial(mat: THREE.MeshStandardMaterial): THREE.MeshPhysical
   physical.depthWrite = mat.depthWrite;
   physical.depthTest = mat.depthTest;
 
-  // Restore MeshPhysicalMaterial identity so the WebGLRenderer uses the correct physical shader program!
+  // Restore MeshPhysicalMaterial identity so the WebGLRenderer uses the correct physical shader program
   physical.type = "MeshPhysicalMaterial";
   (physical as any).isMeshPhysicalMaterial = true;
-  (physical as any).isMeshStandardMaterial = false;
   physical.defines = { ...(physical.defines ?? {}), PHYSICAL: "" };
 
   return physical;
@@ -135,6 +136,7 @@ function tuneJewelryMaterial(
   mat: THREE.MeshStandardMaterial,
   kind: JewelryMaterialKind,
   customization?: CustomizationSettings,
+  productId?: string,
 ): THREE.MeshStandardMaterial {
   ensureJewelryColorSpace(mat);
 
@@ -231,9 +233,10 @@ function tuneJewelryMaterial(
 
         // Inject custom color blending logic after map_fragment
 
-        // Define special monolithic separation string based on mesh name
-        const isRingObj = /ring[\s_-]?obj/i.test(mesh.name);
-        const monolithicLogic = isRingObj ? `
+        // ring.glb is a single mesh, so identify it by product id rather than
+        // relying on an exporter-specific mesh name.
+        const isRingModel = productId === "pro1";
+        const monolithicLogic = isRingModel ? `
           // Special logic for monolithic models (like ring.glb) without transmission maps
           if (vLocalPosition.y > 9.0) {
             tVal = 1.0;
@@ -265,9 +268,14 @@ function tuneJewelryMaterial(
             float tVal = 0.0;
           #endif
 
+          // ring.glb has no separate stone material/transmission map. Its two
+          // stone crowns sit above the band in local space.
+          bool isStonePart = tVal >= 0.1;
+          ${isRingModel ? "isStonePart = vLocalPosition.y > 9.0;" : ""}
+
           ${monolithicLogic}
 
-          if (uHasCustomBody > 0.5 && tVal < 0.1) {
+          if (uHasCustomBody > 0.5 && !isStonePart) {
             // Metallic/opaque part: convert base color texture to grayscale and multiply by custom metal color
             float gray = dot(diffuseColor.rgb, vec3(0.299, 0.587, 0.114));
             // Ensure base color is not black if no texture is provided
@@ -279,7 +287,7 @@ function tuneJewelryMaterial(
             diffuseColor.rgb *= uCustomBodyColor;
           }
 
-          if (uHasCustomStone > 0.5 && tVal >= 0.1) {
+          if (uHasCustomStone > 0.5 && isStonePart) {
             // Gemstone/transmissive part: override base color texture with custom stone color
             // Also split colors if they pick a custom color? No, if custom color is picked, they both become that color.
             diffuseColor.rgb = uCustomStoneColor;
@@ -306,6 +314,15 @@ function tuneJewelryMaterial(
 
     // 3. Apply customizations via uniforms and scalar properties
     const u = tuned.userData.customUniforms;
+    // Material.clone() can preserve uniform values as plain objects when a
+    // cached GLTF material has already been prepared. Rehydrate the colors so
+    // customization remains safe across shelf, table, and detail renderers.
+    if (!(u.uCustomBodyColor.value instanceof THREE.Color)) {
+      u.uCustomBodyColor.value = new THREE.Color(u.uCustomBodyColor.value);
+    }
+    if (!(u.uCustomStoneColor.value instanceof THREE.Color)) {
+      u.uCustomStoneColor.value = new THREE.Color(u.uCustomStoneColor.value);
+    }
     if (customization?.body) {
       u.uHasCustomBody.value = 1.0;
       const body = customization.body;
@@ -437,7 +454,29 @@ function tuneJewelryMaterial(
       tuned.transmission = 0.99;
       tuned.thickness = 0.8;
 
-      if (stone === "diamond") {
+      if (stone === "mixed") {
+        // pro1 mixed defaults: main diamond is Ruby, side gems are Amethyst
+        const isMainDiamond = /dmesh$/i.test(mesh.name) || /diamond/i.test(mesh.name) || mat.name === "Material";
+        if (isMainDiamond) {
+          tuned.roughness = 0.01;
+          tuned.ior = 1.76;
+          tuned.transmission = 0.88;
+          tuned.color.set("#E0115F");
+          if (tuned.attenuationColor) tuned.attenuationColor.set("#E0115F");
+          tuned.attenuationDistance = 0.3;
+          tuned.emissive.set("#E0115F");
+          tuned.emissiveIntensity = 0.15;
+        } else {
+          tuned.roughness = 0.01;
+          tuned.ior = 1.54;
+          tuned.transmission = 0.92;
+          tuned.color.set("#9966CC");
+          if (tuned.attenuationColor) tuned.attenuationColor.set("#9966CC");
+          tuned.attenuationDistance = 0.4;
+          tuned.emissive.set("#9966CC");
+          tuned.emissiveIntensity = 0.1;
+        }
+      } else if (stone === "diamond") {
         tuned.roughness = 0.0;
         tuned.ior = 2.417;
         tuned.transmission = 0.99;
@@ -485,7 +524,10 @@ function tuneJewelryMaterial(
         tuned.emissiveIntensity = 0.1;
       }
     } else {
-      if (stone === "diamond") tuned.color.set("#FFFFFF");
+      if (stone === "mixed") {
+        const isMainDiamond = /dmesh$/i.test(mesh.name) || /diamond/i.test(mesh.name) || mat.name === "Material";
+        tuned.color.set(isMainDiamond ? "#E0115F" : "#9966CC");
+      } else if (stone === "diamond") tuned.color.set("#FFFFFF");
       else if (stone === "ruby") tuned.color.set("#E0115F");
       else if (stone === "emerald") tuned.color.set("#097969");
       else if (stone === "sapphire") tuned.color.set("#0F52BA");
@@ -694,7 +736,7 @@ export function prepareProductMaterials(
         }
         
         const kind = mat.userData.originalKind as JewelryMaterialKind;
-        tuned.push(tuneJewelryMaterial(mesh, mat, kind, customization));
+        tuned.push(tuneJewelryMaterial(mesh, mat, kind, customization, productId));
       } else {
         tuned.push(mat);
       }

@@ -86,18 +86,26 @@ function DetailProductModelGlb({
     lightsToRemove.forEach((light) => {
       light.parent?.remove(light);
     });
+
+    fitProductToUniformSize(cloned, displaySize);
+    optimizeModelForGpu(cloned, 768);
     return cloned;
-  }, [gltfScene]);
+  }, [gltfScene, displaySize]);
 
   useLayoutEffect(() => {
-    fitProductToUniformSize(scene, displaySize);
-    optimizeModelForGpu(scene, 768);
     prepareProductMaterials(scene, { customization, productId });
     scene.traverse((child) => {
       const mesh = child as THREE.Mesh;
-      if (mesh.isMesh) mesh.renderOrder = 12;
+      if (mesh.isMesh) {
+        mesh.renderOrder = 12;
+        if (Array.isArray(mesh.material)) {
+          mesh.material.forEach((m) => { m.needsUpdate = true; });
+        } else if (mesh.material) {
+          mesh.material.needsUpdate = true;
+        }
+      }
     });
-  }, [scene, displaySize, customization, productId]);
+  }, [scene, customization, productId]);
 
   return <primitive object={scene} />;
 }

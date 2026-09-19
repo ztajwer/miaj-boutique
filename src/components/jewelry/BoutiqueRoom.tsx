@@ -29,7 +29,7 @@ interface BoutiqueRoomProps {
   focusProgress?: number;
 }
 
-const BOUTIQUE_IMAGE = "/bback.webp";
+const BOUTIQUE_IMAGE = "/bback.png";
 const BOUTIQUE_VIDEO_MOBILE = "";
 const BOUTIQUE_IMAGE_MOBILE_POSTER = "/main_mob_bg.webp";
 
@@ -138,7 +138,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
           >
             {/* Left Shelf */}
             <div className="relative flex flex-col items-center justify-end" style={{ width: "30vw", height: "13vh", maxWidth: "140px" }}>
-              <Image src="/shelf.webp" alt="" aria-hidden fill className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+              <Image src="/shelf.webp" alt="" aria-hidden fill sizes="30vw" className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
               <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[12%]">
                 <div style={{ width: "65%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
                   <LineShelfProductMini config={getCustomProductConfig("protest" as any, 0, "left")} mountDelay={1500} />
@@ -148,7 +148,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
 
             {/* Center Shelf */}
             <div className="relative flex flex-col items-center justify-end" style={{ width: "34vw", height: "15vh", maxWidth: "160px" }}>
-              <Image src="/shelf.webp" alt="" aria-hidden fill className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+              <Image src="/shelf.webp" alt="" aria-hidden fill sizes="34vw" className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
               <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[12%]">
                 <div style={{ width: "65%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
                   <LineShelfProductMini config={getCustomProductConfig("pro1", 1, "left")} mountDelay={3000} />
@@ -158,7 +158,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
 
             {/* Right Shelf */}
             <div className="relative flex flex-col items-center justify-end" style={{ width: "30vw", height: "13vh", maxWidth: "140px" }}>
-              <Image src="/shelf.webp" alt="" aria-hidden fill className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
+              <Image src="/shelf.webp" alt="" aria-hidden fill sizes="30vw" className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
               <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[12%]">
                 <div style={{ width: "65%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
                   <LineShelfProductMini config={getCustomProductConfig("protest" as any, 2, "right")} mountDelay={4500} />
@@ -181,7 +181,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
           }}
         >
           {/* SHELF */}
-          <div className="relative flex flex-col items-center justify-end" style={{ width: "clamp(120px, 20vw, 300px)", height: "clamp(80px, calc(38vh - 100px), 380px)" }}>
+          <div className="relative flex flex-col items-center justify-end" style={{ width: "calc(clamp(120px, 20vw, 300px) - 15px)", height: "calc(clamp(80px, calc(38vh - 100px), 380px) - 15px)" }}>
             <Image src="/shelf.webp" alt="" aria-hidden fill sizes="(max-width: 1024px) 30vw, 300px" className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
@@ -191,7 +191,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
           </div>
 
           {/* SHELF */}
-          <div className="relative flex flex-col items-center justify-end" style={{ width: "clamp(120px, 20vw, 300px)", height: "clamp(80px, calc(38vh - 100px), 380px)" }}>
+          <div className="relative flex flex-col items-center justify-end" style={{ width: "calc(clamp(120px, 20vw, 300px) - 15px)", height: "calc(clamp(80px, calc(38vh - 100px), 380px) - 15px)" }}>
             <Image src="/shelf.webp" alt="" aria-hidden fill sizes="(max-width: 1024px) 30vw, 300px" className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
@@ -201,7 +201,7 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
           </div>
 
           {/* SHELF */}
-          <div className="relative flex flex-col items-center justify-end" style={{ width: "clamp(120px, 20vw, 300px)", height: "clamp(80px, calc(38vh - 100px), 380px)" }}>
+          <div className="relative flex flex-col items-center justify-end" style={{ width: "calc(clamp(120px, 20vw, 300px) - 15px)", height: "calc(clamp(80px, calc(38vh - 100px), 380px) - 15px)" }}>
             <Image src="/shelf.webp" alt="" aria-hidden fill sizes="(max-width: 1024px) 30vw, 300px" className="absolute inset-0 w-full h-full z-0 pointer-events-none" style={{ objectFit: "fill" }} />
             <div className="pointer-events-auto flex flex-col items-center relative z-10 w-full h-[65%] pb-[10%]">
               <div style={{ width: "80%", height: "100%", zIndex: 20, "--product-size": "100%" } as any}>
@@ -235,8 +235,8 @@ export default function BoutiqueRoom({ visible, entered = false, focusProgress =
         <Canvas
           eventSource={roomRef as any}
           className="w-full h-full"
-          dpr={typeof window !== 'undefined' && window.innerWidth < 768 ? 1 : [1, 1.5]}
-          gl={{ antialias: false, alpha: true, stencil: false, depth: true, powerPreference: "high-performance" }}
+          dpr={typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 2) : [1, 2]}
+          gl={{ antialias: true, alpha: true, stencil: false, depth: true, powerPreference: "high-performance" }}
           onCreated={({ gl }) => {
             gl.setClearColor(0x000000, 0);
             applyJewelryRendererSettings(gl, 1.15);

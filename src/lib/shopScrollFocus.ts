@@ -50,8 +50,8 @@ export function getFocusVeilOpacity(progress: number): number {
 
 export function getFocusBgScale(progress: number): number {
   const isBigScreen = typeof window !== "undefined" && window.innerWidth >= 768;
-  const zoomFactor = isBigScreen ? 0.22 : 0.05;
-  return 1 + easeLuxuryCinematic(progress) * zoomFactor;
+  if (!isBigScreen) return 1;
+  return 1 + easeLuxuryCinematic(progress) * 0.11;
 }
 
 /** Move table down slightly while zooming in */

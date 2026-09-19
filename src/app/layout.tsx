@@ -108,7 +108,7 @@ export default function RootLayout({
             crossOrigin="anonymous"
           />
         )}
-        <link rel="preload" href="/bback.webp" as="image" />
+        <link rel="preload" href="/bback.png" as="image" />
         <link rel="preload" href="/main_mob_bg.webp" as="image" />
         <link rel="preload" href="/logo_outline.webp" as="image" />
         <link rel="preload" href="/logo.webp" as="image" />

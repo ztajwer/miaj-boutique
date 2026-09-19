@@ -45,7 +45,9 @@ function ExperienceInner() {
     setReady(true);
   }, []);
 
-  const onDoorScreen = ready && !entered;
+  // Mount the door scene from the first paint so it warms in parallel with
+  // the showroom background. The loader remains above both until ready.
+  const onDoorScreen = !entered;
   const lenisRef = useRef<any>(null);
 
   useEffect(() => {

@@ -54,87 +54,70 @@ function GlassMat() {
   );
 }
 
-/**
- * BIG premium champagne-gold handle — 15% larger than before.
- * r = 0.048 (was 0.042), height = 2.75 (was 2.4)
- * Focus: thick, bold, polished luxury bar handle.
- */
 function DoorHandle({ side }: { side: "left" | "right" }) {
   const { size } = useThree();
   const isMobile = size.width < 768;
 
-  const x         = side === "left" ? GLASS_W / 2 - 0.12 : -GLASS_W / 2 + 0.12;
-  const height    = isMobile ? 1.7 : 2.4;     // Taller height as requested -> smaller on mobile
-  const r         = isMobile ? 0.052 : 0.038;   // Slimmer width as requested -> wider on mobile
-  const backR     = isMobile ? 0.08 : 0.065;   // bracket radius scaled
-  const mountLen  = 0.14;    // bracket depth
-  const z         = PANEL_D * 0.5 + 0.08;
+  const x = side === "left" ? GLASS_W / 2 - 0.12 : -GLASS_W / 2 + 0.12;
+  const height = isMobile ? 1.7 : 2.4;
+  const r = isMobile ? 0.052 : 0.038;
+  const rosetteR = isMobile ? 0.092 : 0.072;
+  const mountR = isMobile ? 0.052 : 0.042;
+  const mountLen = 0.14;
+  const z = PANEL_D * 0.5 + 0.08;
 
   return (
     <group position={[x, 0, z]}>
 
-      {/* Flat back-plate behind handle */}
-      <mesh position={[0, 0, -0.065]} castShadow>
-        <boxGeometry args={[r * 3.2, height + 0.14, 0.020]} />
-        <ChampagneMat roughness={0.22} />
-      </mesh>
-
-      {/* Main vertical bar */}
+      {/* Single clean pull bar with softened, high-resolution ends. */}
       <mesh castShadow>
-        <cylinderGeometry args={[r, r, height, 36]} />
+        <cylinderGeometry args={[r, r, height, 48]} />
         <ChampagneMat roughness={0.06} />
       </mesh>
 
-      {/* Top mounting bracket */}
-      <mesh
-        position={[0, height / 2 - 0.08, -mountLen / 2]}
-        rotation={[Math.PI / 2, 0, 0]}
-        castShadow
-      >
-        <cylinderGeometry args={[backR, backR, mountLen, 24]} />
-        <ChampagneMat roughness={0.12} />
-      </mesh>
-
-      {/* Bottom mounting bracket */}
-      <mesh
-        position={[0, -height / 2 + 0.08, -mountLen / 2]}
-        rotation={[Math.PI / 2, 0, 0]}
-        castShadow
-      >
-        <cylinderGeometry args={[backR, backR, mountLen, 24]} />
-        <ChampagneMat roughness={0.12} />
-      </mesh>
-
-      {/* Collar ring — upper third */}
-      <mesh position={[0, height * 0.28, 0]} castShadow>
-        <torusGeometry args={[r + 0.009, 0.011, 16, 40]} />
+      <mesh position={[0, height / 2, 0]} castShadow>
+        <sphereGeometry args={[r * 1.22, 32, 20]} />
         <ChampagneMat roughness={0.04} />
       </mesh>
 
-      {/* Collar ring — center */}
-      <mesh position={[0, 0, 0]} castShadow>
-        <torusGeometry args={[r + 0.012, 0.013, 16, 40]} />
-        <ChampagneMat roughness={0.03} />
-      </mesh>
-
-      {/* Collar ring — lower third */}
-      <mesh position={[0, -height * 0.28, 0]} castShadow>
-        <torusGeometry args={[r + 0.009, 0.011, 16, 40]} />
+      <mesh position={[0, -height / 2, 0]} castShadow>
+        <sphereGeometry args={[r * 1.22, 32, 20]} />
         <ChampagneMat roughness={0.04} />
       </mesh>
 
-      {/* Top spherical cap */}
-      <mesh position={[0, height / 2 + 0.030, 0]} castShadow>
-        <sphereGeometry args={[r * 1.6, 28, 28]} />
-        <ChampagneMat roughness={0.03} />
+      {/* Minimal glass rosettes and recessed standoffs. */}
+      <mesh
+        position={[0, height / 2 - 0.06, -mountLen / 2]}
+        rotation={[Math.PI / 2, 0, 0]}
+        castShadow
+      >
+        <cylinderGeometry args={[mountR, mountR * 0.86, mountLen, 32]} />
+        <ChampagneMat roughness={0.12} />
       </mesh>
-
-      {/* Bottom spherical cap */}
-      <mesh position={[0, -height / 2 - 0.030, 0]} castShadow>
-        <sphereGeometry args={[r * 1.6, 28, 28]} />
-        <ChampagneMat roughness={0.03} />
+      <mesh
+        position={[0, -height / 2 + 0.06, -mountLen / 2]}
+        rotation={[Math.PI / 2, 0, 0]}
+        castShadow
+      >
+        <cylinderGeometry args={[mountR, mountR * 0.86, mountLen, 32]} />
+        <ChampagneMat roughness={0.12} />
       </mesh>
-
+      <mesh
+        position={[0, height / 2 - 0.06, -mountLen + 0.012]}
+        rotation={[Math.PI / 2, 0, 0]}
+        castShadow
+      >
+        <cylinderGeometry args={[rosetteR, rosetteR * 0.9, 0.026, 48]} />
+        <ChampagneMat roughness={0.1} />
+      </mesh>
+      <mesh
+        position={[0, -height / 2 + 0.06, -mountLen + 0.012]}
+        rotation={[Math.PI / 2, 0, 0]}
+        castShadow
+      >
+        <cylinderGeometry args={[rosetteR, rosetteR * 0.9, 0.026, 48]} />
+        <ChampagneMat roughness={0.1} />
+      </mesh>
     </group>
   );
 }

@@ -9,18 +9,15 @@ let imagePipelineStarted = false;
 let modelPipelineScheduled = false;
 let shopStarted = false;
 
-const SHOP_IMAGES = ["/imagemob.webp", "/image.webp"] as const;
-const DOOR_IMAGES = ["/door_sm.webp", "/door_bg.webp"] as const;
-const LOADER_IMAGES = ["/bg.webp", "/logo_outline.webp", "/logo.webp"] as const;
+const SHOP_IMAGES = ["/bback.png", "/main_mob_bg.webp"] as const;
+const LOADER_IMAGES = ["/background.webp", "/logo_outline.webp", "/logo.webp"] as const;
 
 function collectShopGlbUrls(): string[] {
   const urls = new Set<string>();
   if (SHOP_SHELVES_ENABLED) urls.add(getModelUrl("shelf.glb"));
-  // Home page always renders shelf + table products via BoutiqueRoom.
-  for (const file of SHOP_GLB_FILES) {
-    if (file === "shelf.glb" && !SHOP_SHELVES_ENABLED) continue;
-    if (file.startsWith("pro") || file === "door_col.glb") urls.add(getModelUrl(file));
-  }
+
+  // Warm only models that are present and used by the current showroom.
+  for (const file of SHOP_GLB_FILES) urls.add(getModelUrl(file));
   if (SHOP_LINE_SHELF_PRODUCTS_ENABLED) {
     for (const url of getLineShelfProductModelUrls()) urls.add(url);
   }
@@ -44,10 +41,6 @@ function triggerGltfPreload(url: string) {
 
 function preloadCoreShowroomModels() {
   const coreUrls = collectShopGlbUrls();
-  if (!coreUrls.includes(getModelUrl("Kiosk_Centre.glb"))) {
-    coreUrls.push(getModelUrl("Kiosk_Centre.glb"));
-  }
-  
   let delay = 0;
   for (const url of coreUrls) {
     setTimeout(() => {
@@ -86,7 +79,7 @@ export function bootImagePipeline() {
   if (imagePipelineStarted) return;
   imagePipelineStarted = true;
 
-  for (const src of [...LOADER_IMAGES, ...DOOR_IMAGES, ...SHOP_IMAGES]) {
+  for (const src of [...LOADER_IMAGES, ...SHOP_IMAGES]) {
     preloadImage(src);
   }
 }
@@ -151,10 +144,6 @@ export function bootShopModels() {
 export function preloadProductModels(): Promise<void> {
   startShopModelLoads();
   return Promise.resolve();
-}
-
-export function preloadDoorImages() {
-  for (const src of DOOR_IMAGES) preloadImage(src);
 }
 
 export function preloadShopImages() {
