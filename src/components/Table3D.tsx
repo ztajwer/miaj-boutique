@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useMemo, useRef, useState } from "react";
-import { useGLTF, Html, ContactShadows, PerspectiveCamera } from "@react-three/drei";
+import { useGLTF, ContactShadows, PerspectiveCamera } from "@react-three/drei";
 import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
 import * as THREE from "three";
 import { RGBELoader } from "three-stdlib";
@@ -341,17 +341,19 @@ interface Table3DProps {
 
 export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps) {
   const profile = useMemo(() => getDeviceProfile(), []);
-  
+
   // Use passed isMobile if provided, otherwise fallback to profile (useful for standalone mounting)
   const mobileLayout = isMobile;
-
   const textureMax = profile.lowEnd ? 1024 : 2048;
+  const canvasDpr = profile.lowEnd ? 1 : mobileLayout ? 1.5 : 2;
 
   return (
     <div
-      className={`table-3d-wrapper absolute left-[50%] -translate-x-1/2 z-[60] w-full h-[500px] md:h-[600px] ${mobileLayout ? 'bottom-[6dvh]' : 'bottom-[-290px]'}`}
+      className="table-3d-wrapper absolute bottom-0 left-[50%] z-[60] h-[500px] w-full -translate-x-1/2 md:h-[600px]"
       style={{
         opacity,
+        // Move the mobile table down by exactly 40px while preserving desktop placement.
+        bottom: mobileLayout ? "calc(6dvh - 40px)" : "-290px",
         pointerEvents: "auto",
         transition: "opacity 0.6s ease-out, transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)",
       }}
@@ -360,7 +362,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
       <Canvas
         className="w-full h-full pointer-events-auto"
         resize={{ offsetSize: true }}
-        dpr={typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, 2) : [1, 2]}
+        dpr={typeof window !== 'undefined' ? Math.min(window.devicePixelRatio || 1, canvasDpr) : [1, 2]}
         gl={{ antialias: true, alpha: true, stencil: false, depth: true, powerPreference: "high-performance" }}
         onCreated={({ gl }) => {
           gl.setClearColor(0x000000, 0);
