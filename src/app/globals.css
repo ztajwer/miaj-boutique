@@ -1380,7 +1380,7 @@ canvas {
   position: absolute !important;
   /* Mobile only: compensate for the Canvas breathing room so the visible table
      finishes about 20px above the bottom edge. */
-  bottom: -96px !important;
+  bottom: -108px !important;
   top: auto !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
