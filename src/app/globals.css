@@ -1378,7 +1378,10 @@ canvas {
 
 .table-3d-wrapper {
   position: absolute !important;
-  bottom: 82px !important;
+  /* Keep the mobile table anchored to the lower viewport on real phone heights.
+     This mirrors Table3D's mobile offset; the previous fixed 82px value made
+     the table sit noticeably too high on short and tall phones alike. */
+  bottom: calc(6dvh - 40px) !important;
   top: auto !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
