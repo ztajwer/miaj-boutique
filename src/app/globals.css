@@ -1378,8 +1378,8 @@ canvas {
 
 .table-3d-wrapper {
   position: absolute !important;
-  /* Small mobile-only nudge lower; desktop positioning remains unchanged. */
-  bottom: max(0px, calc(6dvh - 52px)) !important;
+  /* Mobile only: keep the table anchored to the bottom edge. */
+  bottom: 0 !important;
   top: auto !important;
   left: 50% !important;
   transform: translateX(-50%) !important;

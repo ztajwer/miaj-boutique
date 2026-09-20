@@ -344,7 +344,7 @@ export default function Table3D({ opacity = 1, isMobile = false }: Table3DProps)
 
   // Use passed isMobile if provided, otherwise fallback to profile (useful for standalone mounting)
   const mobileLayout = isMobile;
-  const textureMax = profile.lowEnd ? 1024 : 2048;
+  const textureMax = mobileLayout ? 2048 : profile.lowEnd ? 1024 : 2048;
   const canvasDpr = 2;
 
   return (
