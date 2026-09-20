@@ -1378,8 +1378,9 @@ canvas {
 
 .table-3d-wrapper {
   position: absolute !important;
-  /* Mobile only: keep the table 20px above the bottom edge. */
-  bottom: 20px !important;
+  /* Mobile only: compensate for the Canvas breathing room so the visible table
+     finishes about 20px above the bottom edge. */
+  bottom: -96px !important;
   top: auto !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
